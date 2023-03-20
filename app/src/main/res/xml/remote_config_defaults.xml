@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <!--    Interstitial Ads Keys-->
+    <entry>
+        <key>interSplash</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>interMain</key>
+        <value>0</value>
+    </entry>
+
+
+    <!--    Native Ads Keys-->
+    <entry>
+        <key>nativeSplash</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>nativeHome</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>nativeSample</key>
+        <value>0</value>
+    </entry>
+
+    <!--    Banner Ads Keys-->
+    <entry>
+        <key>bannerHome</key>
+        <value>0</value>
+    </entry>
+    <entry>
+        <key>bannerCollapsible</key>
+        <value>0</value>
+    </entry>
+
+    <!--    Open App Ads Keys-->
+    <entry>
+        <key>openAppAd</key>
+        <value>0</value>
+    </entry>
+
+    <!--    other Keys-->
+    <entry>
+        <key>remoteCounter</key>
+        <value>2</value>
+    </entry>
+
+
+</defaultsMap>

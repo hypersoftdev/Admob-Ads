@@ -1,91 +1,33 @@
 {
   "project_info": {
-    "project_number": "240179671172",
-    "project_id": "sonic-testing-projects",
-    "storage_bucket": "sonic-testing-projects.appspot.com"
+    "project_number": "339429942454",
+    "project_id": "admob-ads-d26d3",
+    "storage_bucket": "admob-ads-d26d3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:240179671172:android:75d8443e87d49b4ab8d2d1",
+        "mobilesdk_app_id": "1:339429942454:android:6dc761a9cb001f6ef93217",
         "android_client_info": {
           "package_name": "com.hypersoft.admobads"
         }
       },
       "oauth_client": [
         {
-          "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
+          "client_id": "339429942454-ue866c632ghvi5a2d5hnmjm1c0ub2233.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDGnIUlpYv2Bo_GC29FxLpES2vhzMz4XPE"
+          "current_key": "AIzaSyAlpFsu2kLXd-xZ3oXtHECu0j7qSpLk08o"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:240179671172:android:33bd251003826c27b8d2d1",
-        "android_client_info": {
-          "package_name": "com.orbitalsonic.admobadsconfigurations"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDGnIUlpYv2Bo_GC29FxLpES2vhzMz4XPE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:240179671172:android:b2a679b3d642042cb8d2d1",
-        "android_client_info": {
-          "package_name": "com.orbitalsonic.videoplayer"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDGnIUlpYv2Bo_GC29FxLpES2vhzMz4XPE"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "240179671172-iaktjeap9fkqvd5jsj35a81he5fko06l.apps.googleusercontent.com",
+              "client_id": "339429942454-ue866c632ghvi5a2d5hnmjm1c0ub2233.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
