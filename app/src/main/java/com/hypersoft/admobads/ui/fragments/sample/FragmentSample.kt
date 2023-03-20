@@ -1,9 +1,9 @@
-package com.orbitalsonic.admobadsconfigurations.ui.fragments.sample
+package com.hypersoft.admobads.ui.fragments.sample
 
-import com.orbitalsonic.admobadsconfigurations.R
+import com.hypersoft.admobads.R
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
 import com.hypersoft.admobads.adsconfig.enums.NativeType
-import com.orbitalsonic.admobadsconfigurations.databinding.FragmentSampleBinding
+import com.hypersoft.admobads.databinding.FragmentSampleBinding
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
@@ -15,7 +15,7 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sam
 
     override fun onViewCreatedEverytime() {}
 
-    private fun loadAds(){
+    private fun loadAds() {
         diComponent.admobNativeAds.loadNativeAds(
             activity,
             binding.adsPlaceHolder,
@@ -23,7 +23,7 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sam
             RemoteConstants.rcvNativeHome,
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
-            NativeType.LARGE,
+            NativeType.FIX,
             object : BannerCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}

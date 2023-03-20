@@ -5,6 +5,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -154,6 +155,10 @@ class AdmobPreLoadNativeAds {
                         }
                         NativeType.FIX -> inflater.inflate(R.layout.admob_native_fix, null) as NativeAdView
                     }
+
+                    val viewGroup: ViewGroup? = adView.parent as ViewGroup?
+                    viewGroup?.removeView(adView)
+
                     adMobNativeContainer.removeAllViews()
                     adMobNativeContainer.addView(adView)
 

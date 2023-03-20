@@ -69,7 +69,7 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             RemoteConstants.rcvNativeHome,
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
-            NativeType.SMALL,
+            NativeType.BANNER,
             object : BannerCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}

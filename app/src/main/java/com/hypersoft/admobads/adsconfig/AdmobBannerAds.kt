@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.*
@@ -36,7 +37,7 @@ class AdmobBannerAds {
                         adsPlaceHolder.visibility = View.VISIBLE
                         adaptiveAdView = AdView(mActivity)
                         adaptiveAdView?.adUnitId = admobAdaptiveIds
-                        adaptiveAdView?.setAdSize(getAdSize(mActivity,adsPlaceHolder))
+                        adaptiveAdView?.setAdSize(getAdSize(mActivity, adsPlaceHolder))
 
                         val adRequest: AdRequest = when (collapsiblePositionType) {
                             CollapsiblePositionType.NONE -> {
@@ -127,6 +128,9 @@ class AdmobBannerAds {
     private fun displayBannerAd(adsPlaceHolder: FrameLayout) {
         try {
             if (adaptiveAdView != null) {
+                val viewGroup: ViewGroup? = adaptiveAdView?.parent as ViewGroup?
+                viewGroup?.removeView(adaptiveAdView)
+
                 adsPlaceHolder.removeAllViews()
                 adsPlaceHolder.addView(adaptiveAdView)
             } else {
@@ -165,7 +169,7 @@ class AdmobBannerAds {
         }
     }
 
-    private fun getAdSize(mActivity: Activity,adContainer: FrameLayout): AdSize {
+    private fun getAdSize(mActivity: Activity, adContainer: FrameLayout): AdSize {
         val display = mActivity.windowManager.defaultDisplay
         val outMetrics = DisplayMetrics()
         display.getMetrics(outMetrics)
