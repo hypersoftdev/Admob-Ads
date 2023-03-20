@@ -1,6 +1,11 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.firebase.crashlytics'
+    id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -11,24 +16,55 @@ android {
         applicationId "com.hypersoft.admobads"
         minSdk 23
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 105
+        versionName "3.7.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
+
+            resValue 'string', 'admob_inter_splash_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_inter_main_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_native_splash_ids', '"ca-app-pub-3940256099942544/2247696110"'
+            resValue 'string', 'admob_native_home_ids', '"ca-app-pub-3940256099942544/2247696110"'
+            resValue 'string', 'admob_banner_home_ids', '"ca-app-pub-3940256099942544/6300978111"'
+            resValue 'string', 'admob_banner_collapse_id', '"ca-app-pub-3940256099942544/2014213617"'
+            resValue 'string', 'admob_open_app_ids', '"ca-app-pub-3940256099942544/3419835294"'
+            resValue 'string', 'admob_app_id', '"ca-app-pub-3940256099942544~3347511713"'
+
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            resValue 'string', 'admob_inter_splash_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_inter_main_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_native_splash_ids', '"ca-app-pub-3940256099942544/2247696110"'
+            resValue 'string', 'admob_native_home_ids', '"ca-app-pub-3940256099942544/2247696110"'
+            resValue 'string', 'admob_banner_home_ids', '"ca-app-pub-3940256099942544/6300978111"'
+            resValue 'string', 'admob_banner_collapse_id', '"ca-app-pub-3940256099942544/2014213617"'
+            resValue 'string', 'admob_open_app_ids', '"ca-app-pub-3940256099942544/3419835294"'
+            resValue 'string', 'admob_app_id', '"ca-app-pub-3940256099942544~3347511713"'
+
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    buildFeatures {
+        dataBinding true
+        viewBinding true
     }
 }
 
@@ -41,4 +77,35 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    // SDP layout size && SSP Text sizes
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+
+// firebase configuration
+    implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    // Firebase Remote Config (Kotlin)
+    implementation 'com.google.firebase:firebase-config-ktx'
+    // Firebase Analytics (Kotlin)
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    // Firebase Crashlytics (Kotlin)
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+
+    // navigation components
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+
+    // View Model
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
+
+    // Koin for dependency injection
+    implementation "io.insert-koin:koin-android:3.3.2"
+
+    // required to avoid crash on Android 12 API 31
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
+
+    // Admob ads
+    implementation 'com.google.android.gms:play-services-ads:21.5.0'
+
 }
