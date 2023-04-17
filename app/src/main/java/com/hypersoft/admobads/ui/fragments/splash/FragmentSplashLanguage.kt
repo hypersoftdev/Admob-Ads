@@ -1,9 +1,11 @@
 package com.hypersoft.admobads.ui.fragments.splash
 
+import androidx.lifecycle.lifecycleScope
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.FragmentSplashLanguageBinding
 import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
 import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.helpers.observers.GlobalEvent
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
@@ -11,7 +13,16 @@ class FragmentSplashLanguage : BaseFragment<FragmentSplashLanguageBinding>(R.lay
 
     override fun onViewCreatedOneTime() {
         binding.mbContinueLanguage.setOnClickListener { onContinueClick() }
-        showNativeAd()
+
+
+        GlobalEvent.isPreLoadNativeLoaded.observe(viewLifecycleOwner){
+            if (it){
+                lifecycleScope.launchWhenResumed {
+                    showNativeAd()
+                }
+            }
+        }
+
     }
 
     override fun onViewCreatedEverytime() {}

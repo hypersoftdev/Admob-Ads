@@ -23,6 +23,7 @@ import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
 import com.hypersoft.admobads.adsconfig.constants.AdsConstants.adMobPreloadNativeAd
 import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isNativeLoading
 import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.helpers.observers.GlobalEvent.isPreLoadNativeLoaded
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -76,6 +77,7 @@ class AdmobPreLoadNativeAds {
                                             bannerCallBack.onAdFailedToLoad(loadAdError.message)
                                             adMobPreloadNativeAd = null
                                             isNativeLoading = false
+                                            isPreLoadNativeLoaded.value = false
                                             super.onAdFailedToLoad(loadAdError)
                                         }
 
@@ -83,6 +85,7 @@ class AdmobPreLoadNativeAds {
                                             super.onAdLoaded()
                                             Log.d(AD_TAG, "admob native onAdLoaded")
                                             isNativeLoading = false
+                                            isPreLoadNativeLoaded.value = true
                                             bannerCallBack.onAdLoaded()
 
                                         }
