@@ -27,6 +27,7 @@ android {
 
             resValue 'string', 'admob_inter_splash_ids', '"ca-app-pub-3940256099942544/1033173712"'
             resValue 'string', 'admob_inter_main_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
             resValue 'string', 'admob_native_splash_ids', '"ca-app-pub-3940256099942544/2247696110"'
             resValue 'string', 'admob_native_home_ids', '"ca-app-pub-3940256099942544/2247696110"'
             resValue 'string', 'admob_banner_home_ids', '"ca-app-pub-3940256099942544/6300978111"'
@@ -42,6 +43,7 @@ android {
         debug {
             resValue 'string', 'admob_inter_splash_ids', '"ca-app-pub-3940256099942544/1033173712"'
             resValue 'string', 'admob_inter_main_ids', '"ca-app-pub-3940256099942544/1033173712"'
+            resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
             resValue 'string', 'admob_native_splash_ids', '"ca-app-pub-3940256099942544/2247696110"'
             resValue 'string', 'admob_native_home_ids', '"ca-app-pub-3940256099942544/2247696110"'
             resValue 'string', 'admob_banner_home_ids', '"ca-app-pub-3940256099942544/6300978111"'
