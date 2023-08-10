@@ -5,5 +5,6 @@ Admob Ads configurations with Firebase
 2. Collapsible Banner
 3. Interstitial Ads
 4. Native Ads
-5. App Open Ad
+5. Rewarded Ads
+6. App Open Ad
 
