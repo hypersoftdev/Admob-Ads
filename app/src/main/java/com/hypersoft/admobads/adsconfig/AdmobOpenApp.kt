@@ -13,6 +13,7 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isOpenAdLoading
 import com.hypersoft.admobads.adsconfig.constants.AdsConstants.mAppOpenAd
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvOpenApp
 import com.hypersoft.admobads.helpers.koin.DIComponent
@@ -44,6 +45,7 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
         val loadCallback: AppOpenAdLoadCallback = object : AppOpenAdLoadCallback() {
             override fun onAdLoaded(appOpenAd: AppOpenAd) {
                 super.onAdLoaded(appOpenAd)
+                isOpenAdLoading = false
                 mAppOpenAd = appOpenAd
                 Log.d(AD_TAG, "open is loaded")
 
@@ -74,18 +76,21 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 super.onAdFailedToLoad(loadAdError)
                 Log.d(AD_TAG, "open Ad is FailedToLoad")
+                isOpenAdLoading = false
                 mAppOpenAd = null
             }
         }
 
         if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
-            try {
-                AppOpenAd.load(
-                    myApplication,
-                    myApplication.getString(R.string.admob_open_app_ids),
-                    AdRequest.Builder().build(),
-                    loadCallback
-                )
+            if (mAppOpenAd == null && !isOpenAdLoading) {
+                isOpenAdLoading = true
+                try {
+                    AppOpenAd.load(
+                        myApplication,
+                        myApplication.getString(R.string.admob_open_app_ids),
+                        AdRequest.Builder().build(),
+                        loadCallback
+                    )
 //            AppOpenAd.load(
 //                myApplication,
 //                myApplication.getString(R.string.admob_open_app_ids),
@@ -93,8 +98,10 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
 //                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
 //                loadCallback
 //            )
-            } catch (ignored: Exception) {
+                } catch (ignored: Exception) {
+                }
             }
+
 
         }
     }
