@@ -20,6 +20,8 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
     private var isNativeLoadedOrFailed = false
     private var mCounter: Int = 0
 
+    private var startTime = 0L
+
     override fun onViewCreatedOneTime() {
         fetchRemoteConfiguration()
     }
@@ -45,6 +47,7 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
         if (isAdded) {
             Log.d("AdsInformation", "Call Open App Ad")
             diComponent.admobOpenApp.fetchAd()
+            startTime = System.currentTimeMillis()
             when (rcvInterSplash) {
                 0 -> {
                     isInterstitialLoadOrFailed = true
@@ -64,6 +67,9 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
 
                             override fun onAdLoaded() {
                                 isInterstitialLoadOrFailed = true
+                                val endTime = System.currentTimeMillis()
+                                val loadingTime:Int = ((endTime - startTime)/1000).toInt()
+                                Log.d("AdsInformation", "InterLoadingTime: ${loadingTime}s")
                             }
 
                             override fun onPreloaded() {
@@ -96,6 +102,9 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
 
                             override fun onAdLoaded() {
                                 isNativeLoadedOrFailed = true
+                                val endTime = System.currentTimeMillis()
+                                val loadingTime:Int = ((endTime - startTime)/1000).toInt()
+                                Log.d("AdsInformation", "NativeLoadingTime: ${loadingTime}s")
                             }
                             override fun onAdImpression() {}
                             override fun onPreloaded() {}
