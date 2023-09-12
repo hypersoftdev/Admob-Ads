@@ -69,12 +69,7 @@ class AdmobNativeAds {
                             val builder: AdLoader.Builder = AdLoader.Builder(mActivity, admobNativeIds)
                             val adLoader =
                                 builder.forNativeAd { unifiedNativeAd: NativeAd? ->
-                                    if (!mActivity.isDestroyed && !mActivity.isFinishing) {
-                                        adMobNativeAd = unifiedNativeAd
-                                    } else {
-                                        unifiedNativeAd?.destroy()
-                                        return@forNativeAd
-                                    }
+                                    adMobNativeAd = unifiedNativeAd
                                 }
                                     .withAdListener(object : AdListener() {
                                         override fun onAdImpression() {
