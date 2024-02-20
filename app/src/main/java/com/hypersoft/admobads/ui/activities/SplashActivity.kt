@@ -7,7 +7,6 @@ import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.ActivitySplashBinding
 
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkCaseType()

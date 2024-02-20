@@ -2,19 +2,16 @@ package com.hypersoft.admobads.ui.fragments.sample
 
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.FragmentBannerBinding
-import com.hypersoft.admobads.adsconfig.AdmobBannerAds
+import com.hypersoft.admobads.adsconfig.AdmobBanner
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.enums.CollapsiblePositionType
+import com.hypersoft.admobads.adsconfig.enums.BannerType
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.helpers.observers.SingleLiveEvent
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
 class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_banner) {
 
-    /**
-     * Don't use AdmobBannerAds in DI
-     */
-    private val admobBannerAds by lazy { AdmobBannerAds() }
+    private val admobBanner by lazy { AdmobBanner() }
     private val adsObserver = SingleLiveEvent<Boolean>()
     private var isCollapsibleOpen = false
     private var isBackPressed = false
@@ -45,7 +42,7 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_ban
                 if (!isBackPressed){
                     isBackPressed = true
                     if (isCollapsibleOpen){
-                        admobBannerAds.bannerOnDestroy()
+                        admobBanner.bannerOnDestroy()
                         binding.adsBannerPlaceHolder.removeAllViews()
                     }else{
                         onBack()
@@ -62,21 +59,20 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_ban
     }
 
     private fun loadAds(){
-        admobBannerAds.loadBannerAds(
+        admobBanner.loadBannerAds(
             activity,
             binding.adsBannerPlaceHolder,
-            getResString(R.string.admob_banner_collapse_id),
-            RemoteConstants.rcvBannerCollapsible,
+            getResString(R.string.admob_banner_ids),
+            RemoteConstants.rcvBannerAd,
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
-            CollapsiblePositionType.BOTTOM,
+            BannerType.COLLAPSIBLE_BOTTOM,
             object : BannerCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
                 override fun onAdImpression() {}
                 override fun onPreloaded() {}
                 override fun onAdClicked() {}
-                override fun onAdSwipeGestureClicked() {}
                 override fun onAdClosed() {
                     isCollapsibleOpen = false
 
@@ -95,17 +91,17 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_ban
     }
 
     override fun onPause() {
-        admobBannerAds.bannerOnPause()
+        admobBanner.bannerOnPause()
         super.onPause()
     }
 
     override fun onResume() {
-        admobBannerAds.bannerOnResume()
+        admobBanner.bannerOnResume()
         super.onResume()
     }
 
     override fun onDestroy() {
-        admobBannerAds.bannerOnDestroy()
+        admobBanner.bannerOnDestroy()
         super.onDestroy()
     }
 }

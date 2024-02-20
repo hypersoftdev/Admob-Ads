@@ -8,10 +8,11 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.databinding.ActivityMainBinding
+import com.hypersoft.admobads.adsconfig.AdmobInterstitial
 import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterMain
+import com.hypersoft.admobads.databinding.ActivityMainBinding
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvRemoteCounter
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.totalCount
 import com.hypersoft.admobads.helpers.utils.CleanMemory
@@ -21,12 +22,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    /**
-     *  No need to setContentView()
-     */
+    private val admobInterstitial by lazy { AdmobInterstitial() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setSupportActionBar(binding.materialToolbar)
         initNavController()
     }
 
@@ -34,8 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private fun initNavController() {
         navController =
             (supportFragmentManager.findFragmentById(binding.navHostFragmentContainer.id) as NavHostFragment).navController
-        appBarConfiguration =
-            AppBarConfiguration(setOf(R.id.fragmentHome))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.fragmentHome))
         setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
@@ -45,7 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     fun checkCounter(){
         try {
-            if (diComponent.admobInterstitialAds.isInterstitialLoaded()){
+            if (admobInterstitial.isInterstitialLoaded()){
                 showInterstitialAd()
                 totalCount += 1
             }else{
@@ -63,10 +62,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
 
     fun loadInterstitialAd(){
-        diComponent.admobInterstitialAds.loadInterstitialAd(
+        admobInterstitial.loadInterstitialAd(
             this,
-            getString(R.string.admob_inter_main_ids),
-            rcvInterMain,
+            getString(R.string.admob_inter_ids),
+            rcvInterAd,
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
             object : InterstitialOnLoadCallBack {
@@ -78,7 +77,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     }
 
     fun showInterstitialAd(){
-        diComponent.admobInterstitialAds.showInterstitialAd(
+        admobInterstitial.showInterstitialAd(
             this,
             object : InterstitialOnShowCallBack {
                 override fun onAdDismissedFullScreenContent() {}

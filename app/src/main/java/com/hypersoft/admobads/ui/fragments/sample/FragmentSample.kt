@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.ui.fragments.sample
 
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.adsconfig.AdmobNative
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
 import com.hypersoft.admobads.adsconfig.enums.NativeType
 import com.hypersoft.admobads.databinding.FragmentSampleBinding
@@ -9,6 +10,8 @@ import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
 class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sample) {
 
+    private val admobNative by lazy { AdmobNative() }
+
     override fun onViewCreatedOneTime() {
         loadAds()
     }
@@ -16,14 +19,14 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sam
     override fun onViewCreatedEverytime() {}
 
     private fun loadAds() {
-        diComponent.admobNativeAds.loadNativeAds(
+        admobNative.loadNativeAds(
             activity,
             binding.adsPlaceHolder,
-            getResString(R.string.admob_native_home_ids),
-            RemoteConstants.rcvNativeHome,
+            getResString(R.string.admob_native_ids),
+            RemoteConstants.rcvNativeAd,
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
-            NativeType.FIX,
+            NativeType.LARGE,
             object : BannerCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
@@ -32,7 +35,6 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sam
                 override fun onAdClicked() {}
                 override fun onAdClosed() {}
                 override fun onAdOpened() {}
-                override fun onAdSwipeGestureClicked() {}
             }
         )
     }

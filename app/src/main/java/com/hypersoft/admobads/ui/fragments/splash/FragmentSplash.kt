@@ -5,18 +5,21 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.databinding.FragmentSplashBinding
+import com.hypersoft.admobads.adsconfig.AdmobInterstitial
 import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
 import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterSplash
+import com.hypersoft.admobads.databinding.FragmentSplashBinding
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
 class FragmentSplash : BaseFragment<FragmentSplashBinding>(R.layout.fragment_splash) {
 
+    private val admobInterstitial by lazy { AdmobInterstitial() }
+
     private val mHandler = Handler(Looper.getMainLooper())
     private val adsRunner = Runnable { checkAdvertisement() }
-    private var isInterstitialLoadOrFailed = false
+    private var isInterLoadOrFailed = false
     private var mCounter: Int = 0
 
     private var startTime = 0L
@@ -44,81 +47,79 @@ class FragmentSplash : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
 
     private fun loadAds() {
         if (isAdded) {
-            Log.d("AdsInformation", "Call Open App Ad")
-            diComponent.admobOpenApp.fetchAd()
             startTime = System.currentTimeMillis()
-            when (rcvInterSplash) {
+            when (rcvInterAd) {
                 0 -> {
-                    isInterstitialLoadOrFailed = true
+                    isInterLoadOrFailed = true
                 }
                 1 -> {
                     Log.d("AdsInformation", "Call Admob Splash Interstitial")
-                    diComponent.admobInterstitialAds.loadInterstitialAd(
+                    admobInterstitial.loadInterstitialAd(
                         activity,
-                        getResString(R.string.admob_inter_splash_ids),
-                        rcvInterSplash,
+                        getResString(R.string.admob_inter_ids),
+                        rcvInterAd,
                         diComponent.sharedPreferenceUtils.isAppPurchased,
                         diComponent.internetManager.isInternetConnected,
                         object : InterstitialOnLoadCallBack {
                             override fun onAdFailedToLoad(adError: String) {
-                                isInterstitialLoadOrFailed = true
+                                isInterLoadOrFailed = true
                             }
 
                             override fun onAdLoaded() {
-                                isInterstitialLoadOrFailed = true
+                                isInterLoadOrFailed = true
                                 val endTime = System.currentTimeMillis()
                                 val loadingTime:Int = ((endTime - startTime)/1000).toInt()
                                 Log.d("AdsInformation", "InterLoadingTime: ${loadingTime}s")
                             }
 
                             override fun onPreloaded() {
-                                isInterstitialLoadOrFailed = true
+                                isInterLoadOrFailed = true
                             }
 
                         })
                 }
                 else -> {
-                    isInterstitialLoadOrFailed = true
+                    isInterLoadOrFailed = true
                 }
             }
         }
-
-
     }
 
     private fun checkAdvertisement() {
-        if (mCounter < 12) {
-            try {
-                mCounter++
-                if (isInterstitialLoadOrFailed) {
-                    mHandler.removeCallbacks { adsRunner }
-                    moveNext()
-                }else{
-                    mHandler.removeCallbacks { adsRunner }
-                    mHandler.postDelayed(
-                        adsRunner,
-                        (1000)
-                    )
+        if (diComponent.internetManager.isInternetConnected) {
+            if (mCounter < 16) {
+                try {
+                    mCounter++
+                    if (isInterLoadOrFailed) {
+                        moveNext()
+                        mHandler.removeCallbacks { adsRunner }
+                    } else {
+                        mHandler.removeCallbacks { adsRunner }
+                        mHandler.postDelayed(
+                            adsRunner,
+                            (1000)
+                        )
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("checkAdvertisementTAG", "${e.message}")
                 }
-
-            } catch (e: Exception) {
-                Log.e("AdsInformation","${e.message}")
+            } else {
+                moveNext()
+                mHandler.removeCallbacks { adsRunner }
             }
-
         } else {
-            isInterstitialLoadOrFailed = true
-            mHandler.removeCallbacks { adsRunner }
-            moveNext()
+            moveNext(3000)
         }
 
     }
 
-    private fun  moveNext(timeMili:Long = 500) {
-        if (isAdded){
-            withDelay(timeMili) {
-                lifecycleScope.launchWhenResumed {
+    private fun  moveNext(timeMilli:Long = 500) {
+        withDelay(timeMilli) {
+            lifecycleScope.launchWhenResumed {
+                if (isAdded){
                     (activity as SplashActivity).nextActivity()
-                    diComponent.admobInterstitialAds.showInterstitialAd(activity,object : InterstitialOnShowCallBack {
+                    admobInterstitial.showInterstitialAd(activity,object : InterstitialOnShowCallBack {
                         override fun onAdDismissedFullScreenContent() {}
                         override fun onAdFailedToShowFullScreenContent() {}
                         override fun onAdShowedFullScreenContent() {}
@@ -130,13 +131,21 @@ class FragmentSplash : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        mHandler.removeCallbacks(adsRunner)
+    override fun onPause() {
+        super.onPause()
+        stopHandler()
     }
 
     override fun onResume() {
         super.onResume()
+        resumeHandler()
+    }
+
+    private fun stopHandler() {
+        mHandler.removeCallbacks(adsRunner)
+    }
+
+    private fun resumeHandler() {
         mHandler.post(adsRunner)
     }
 

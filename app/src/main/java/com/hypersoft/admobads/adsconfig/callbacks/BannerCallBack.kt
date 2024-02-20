@@ -8,5 +8,4 @@ interface BannerCallBack {
     fun onAdClicked()
     fun onAdClosed()
     fun onAdOpened()
-    fun onAdSwipeGestureClicked()
 }

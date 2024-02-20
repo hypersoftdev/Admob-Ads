@@ -4,6 +4,5 @@ enum class NativeType {
     BANNER,
     SMALL,
     LARGE,
-    LARGE_ADJUSTED,
-    FIX
+    LARGE_ADJUSTED
 }

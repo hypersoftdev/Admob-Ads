@@ -1,6 +1,5 @@
 package com.hypersoft.admobads.adsconfig
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -9,114 +8,121 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.ads.mediation.admob.AdMobAdapter
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.enums.CollapsiblePositionType
+import com.hypersoft.admobads.adsconfig.enums.BannerType
 
-class AdmobBannerAds {
+class AdmobBanner {
 
     private var adaptiveAdView: AdView? = null
 
-    private val AD_TAG = "AdsInformation"
+    /**
+     * 0 = Ads Off
+     * 1 = Collapsible Banner
+     * 2 = Adaptive Banner
+     */
 
-    @SuppressLint("VisibleForTests")
     fun loadBannerAds(
         activity: Activity?,
         adsPlaceHolder: FrameLayout,
-        admobAdaptiveIds: String,
+        bannerId: String,
         adEnable: Int,
         isAppPurchased: Boolean,
         isInternetConnected: Boolean,
-        collapsiblePositionType: CollapsiblePositionType = CollapsiblePositionType.NONE,
+        bannerType: BannerType = BannerType.ADAPTIVE_BANNER,
         bannerCallBack: BannerCallBack
     ) {
         activity?.let { mActivity ->
             try {
-                if (isInternetConnected && adEnable != 0 && !isAppPurchased && admobAdaptiveIds.isNotEmpty()) {
+                if (isInternetConnected && adEnable != 0 && !isAppPurchased && bannerId.isNotEmpty()) {
                     adsPlaceHolder.visibility = View.VISIBLE
                     adaptiveAdView = AdView(mActivity)
-                    adaptiveAdView?.adUnitId = admobAdaptiveIds
-                    adaptiveAdView?.setAdSize(getAdSize(mActivity, adsPlaceHolder))
+                    adaptiveAdView?.adUnitId = bannerId
+                    try {
+                        adaptiveAdView?.setAdSize(getAdSize(mActivity, adsPlaceHolder))
+                    }catch (ex:Exception){
+                        adaptiveAdView?.setAdSize(AdSize.BANNER)
+                    }
 
-                    val adRequest: AdRequest = when (collapsiblePositionType) {
-                        CollapsiblePositionType.NONE -> {
-                            AdRequest
-                                .Builder()
-                                .build()
+                    val adRequest: AdRequest =   when(adEnable){
+                        1 -> when (bannerType) {
+                            BannerType.ADAPTIVE_BANNER -> {
+                                AdRequest
+                                    .Builder()
+                                    .build()
+                            }
+                            BannerType.COLLAPSIBLE_BOTTOM -> {
+                                AdRequest
+                                    .Builder()
+                                    .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
+                                        putString("collapsible", "bottom")
+                                    })
+                                    .build()
+                            }
+                            BannerType.COLLAPSIBLE_TOP -> {
+                                AdRequest
+                                    .Builder()
+                                    .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
+                                        putString("collapsible", "top")
+                                    })
+                                    .build()
+                            }
                         }
-                        CollapsiblePositionType.BOTTOM -> {
-                            AdRequest
-                                .Builder()
-                                .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
-                                    putString("collapsible", "bottom")
-                                })
-                                .build()
-                        }
-                        CollapsiblePositionType.TOP -> {
-                            AdRequest
-                                .Builder()
-                                .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
-                                    putString("collapsible", "top")
-                                })
-                                .build()
-                        }
+                        else -> AdRequest
+                            .Builder()
+                            .build()
                     }
 
                     adaptiveAdView?.loadAd(adRequest)
                     adaptiveAdView?.adListener = object : AdListener() {
                         override fun onAdLoaded() {
-                            Log.d(AD_TAG, "admob banner onAdLoaded")
+                            Log.d("AdsInformation", "admob banner onAdLoaded")
                             displayBannerAd(adsPlaceHolder)
                             bannerCallBack.onAdLoaded()
                         }
 
                         override fun onAdFailedToLoad(adError: LoadAdError) {
-                            Log.e(AD_TAG, "admob banner onAdFailedToLoad")
+                            Log.e("AdsInformation", "admob banner onAdFailedToLoad: ${adError.message}")
                             adsPlaceHolder.visibility = View.GONE
                             bannerCallBack.onAdFailedToLoad(adError.message)
                         }
 
                         override fun onAdImpression() {
-                            Log.d(AD_TAG, "admob banner onAdImpression")
+                            Log.d("AdsInformation", "admob banner onAdImpression")
                             bannerCallBack.onAdImpression()
                             super.onAdImpression()
                         }
 
                         override fun onAdClicked() {
-                            Log.d(AD_TAG, "admob banner onAdClicked")
+                            Log.d("AdsInformation", "admob banner onAdClicked")
                             bannerCallBack.onAdClicked()
                             super.onAdClicked()
                         }
 
                         override fun onAdClosed() {
-                            Log.d(AD_TAG, "admob banner onAdClosed")
+                            Log.d("AdsInformation", "admob banner onAdClosed")
                             bannerCallBack.onAdClosed()
                             super.onAdClosed()
                         }
 
                         override fun onAdOpened() {
-                            Log.d(AD_TAG, "admob banner onAdOpened")
+                            Log.d("AdsInformation", "admob banner onAdOpened")
                             bannerCallBack.onAdOpened()
                             super.onAdOpened()
-                        }
-
-                        override fun onAdSwipeGestureClicked() {
-                            Log.d(AD_TAG, "admob banner onAdSwipeGestureClicked")
-                            bannerCallBack.onAdSwipeGestureClicked()
-                            super.onAdSwipeGestureClicked()
                         }
                     }
                 } else {
                     adsPlaceHolder.removeAllViews()
                     adsPlaceHolder.visibility = View.GONE
-                    Log.e(AD_TAG, "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
+                    Log.e("AdsInformation", "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
                     bannerCallBack.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
-
                 }
             } catch (ex: Exception) {
-                adsPlaceHolder.removeAllViews()
-                adsPlaceHolder.visibility = View.GONE
-                Log.e(AD_TAG, "${ex.message}")
+                Log.e("AdsInformation", "${ex.message}")
                 bannerCallBack.onAdFailedToLoad("${ex.message}")
             }
         }
@@ -126,7 +132,7 @@ class AdmobBannerAds {
     private fun displayBannerAd(adsPlaceHolder: FrameLayout) {
         try {
             if (adaptiveAdView != null) {
-                val viewGroup: ViewGroup? = adaptiveAdView?.parent as ViewGroup?
+                val viewGroup: ViewGroup? = adaptiveAdView?.parent as? ViewGroup?
                 viewGroup?.removeView(adaptiveAdView)
 
                 adsPlaceHolder.removeAllViews()
@@ -136,7 +142,7 @@ class AdmobBannerAds {
                 adsPlaceHolder.visibility = View.GONE
             }
         } catch (ex: Exception) {
-            Log.e(AD_TAG, "inflateBannerAd: ${ex.message}")
+            Log.e("AdsInformation", "inflateBannerAd: ${ex.message}")
         }
 
     }
@@ -145,7 +151,7 @@ class AdmobBannerAds {
         try {
             adaptiveAdView?.pause()
         } catch (ex: Exception) {
-            Log.e(AD_TAG, "bannerOnPause: ${ex.message}")
+            Log.e("AdsInformation", "bannerOnPause: ${ex.message}")
         }
 
     }
@@ -154,7 +160,7 @@ class AdmobBannerAds {
         try {
             adaptiveAdView?.resume()
         } catch (ex: Exception) {
-            Log.e(AD_TAG, "bannerOnPause: ${ex.message}")
+            Log.e("AdsInformation", "bannerOnPause: ${ex.message}")
         }
     }
 
@@ -163,10 +169,12 @@ class AdmobBannerAds {
             adaptiveAdView?.destroy()
             adaptiveAdView = null
         } catch (ex: Exception) {
-            Log.e(AD_TAG, "bannerOnPause: ${ex.message}")
+            Log.e("AdsInformation", "bannerOnPause: ${ex.message}")
         }
     }
 
+    @Suppress("DEPRECATION")
+    @Throws(Exception::class)
     private fun getAdSize(mActivity: Activity, adContainer: FrameLayout): AdSize {
         val display = mActivity.windowManager.defaultDisplay
         val outMetrics = DisplayMetrics()
@@ -182,6 +190,5 @@ class AdmobBannerAds {
         val adWidth = (adWidthPixels / density).toInt()
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(mActivity, adWidth)
     }
-
 
 }

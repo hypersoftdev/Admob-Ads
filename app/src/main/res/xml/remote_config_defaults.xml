@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- START xml_defaults -->
 <defaultsMap>
-    <!--    Interstitial Ads Keys-->
+    <!--    Interstitial-->
     <entry>
-        <key>interSplash</key>
-        <value>0</value>
-    </entry>
-    <entry>
-        <key>interMain</key>
-        <value>0</value>
+        <key>interstitial_ad</key>
+        <value>1</value>
     </entry>
 
 
-    <!--    Native Ads Keys-->
+    <!--    Rewarded-->
     <entry>
-        <key>nativeSplash</key>
-        <value>0</value>
+        <key>rewarded_ad</key>
+        <value>1</value>
     </entry>
     <entry>
-        <key>nativeHome</key>
-        <value>0</value>
-    </entry>
-    <entry>
-        <key>nativeSample</key>
-        <value>0</value>
+        <key>rewarded_inter_ad</key>
+        <value>1</value>
     </entry>
 
-    <!--    Banner Ads Keys-->
+
+    <!--    Native-->
     <entry>
-        <key>bannerHome</key>
-        <value>0</value>
-    </entry>
-    <entry>
-        <key>bannerCollapsible</key>
-        <value>0</value>
+        <key>native_ad</key>
+        <value>1</value>
     </entry>
 
-    <!--    Open App Ads Keys-->
+
+    <!--    Banner-->
     <entry>
-        <key>openAppAd</key>
-        <value>0</value>
+        <key>banner_ad</key>
+        <value>1</value>
     </entry>
 
-    <!--    other Keys-->
+
+    <!--    OpenApp-->
     <entry>
-        <key>remoteCounter</key>
-        <value>2</value>
+        <key>app_open_ad</key>
+        <value>1</value>
     </entry>
 
+
+    <!--    Others-->
+    <entry>
+        <key>counter</key>
+        <value>3</value>
+    </entry>
 
 </defaultsMap>
