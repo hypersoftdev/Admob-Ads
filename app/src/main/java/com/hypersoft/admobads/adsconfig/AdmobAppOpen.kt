@@ -15,26 +15,29 @@ import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isOpenAdLoading
 import com.hypersoft.admobads.adsconfig.constants.AdsConstants.mAppOpenAd
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvOpenApp
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvAppOpen
 import com.hypersoft.admobads.helpers.koin.DIComponent
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import java.util.*
 
-class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
+class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
     ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
     private var loadTime: Long = 0
-    private val diComponent = DIComponent()
-    private val AD_TAG = "AdsInformation"
+    protected val diComponent by lazy { DIComponent() }
+
+    /**
+     * 0 = Ads Off
+     * 1 = Ads On
+     */
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() {
         try {
-            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
+            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
                 showAdIfAvailable()
             }
-        } catch (ignored: Exception) {
-        }
+        } catch (ignored: Exception) {}
     }
 
     fun fetchAd() {
@@ -47,7 +50,7 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
                 super.onAdLoaded(appOpenAd)
                 isOpenAdLoading = false
                 mAppOpenAd = appOpenAd
-                Log.d(AD_TAG, "open is loaded")
+                Log.d("AdsInformation", "open is loaded")
 
                 mAppOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
@@ -62,7 +65,7 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         if (appOpenListener != null) {
                             appOpenListener?.onOpenAdClosed()
-                            Log.d(AD_TAG, "open is FailedToShow")
+                            Log.d("AdsInformation", "open is FailedToShow")
                         }
                     }
 
@@ -75,40 +78,30 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
 
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 super.onAdFailedToLoad(loadAdError)
-                Log.d(AD_TAG, "open Ad is FailedToLoad")
+                Log.d("AdsInformation", "open Ad is FailedToLoad")
                 isOpenAdLoading = false
                 mAppOpenAd = null
             }
         }
 
-        if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
+        if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
             if (mAppOpenAd == null && !isOpenAdLoading) {
                 isOpenAdLoading = true
                 try {
                     AppOpenAd.load(
                         myApplication,
-                        myApplication.getString(R.string.admob_open_app_ids),
+                        myApplication.getString(R.string.admob_app_open_ids),
                         AdRequest.Builder().build(),
                         loadCallback
                     )
-//            AppOpenAd.load(
-//                myApplication,
-//                myApplication.getString(R.string.admob_open_app_ids),
-//                AdRequest.Builder().build(),
-//                AppOpenAd.APP_OPEN_AD_ORIENTATION_PORTRAIT,
-//                loadCallback
-//            )
-                } catch (ignored: Exception) {
-                }
+                } catch (ignored: Exception) {}
             }
-
-
         }
     }
 
     private fun showAdIfAvailable() {
         try {
-            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvOpenApp != 0) {
+            if (!diComponent.sharedPreferenceUtils.isAppPurchased && rcvAppOpen != 0) {
                 if (currentActivity is SplashActivity || currentActivity is AdActivity)
                     return
 
@@ -116,8 +109,7 @@ class AdmobOpenApp(private val myApplication: Application) : LifecycleObserver,
             } else {
                 fetchAd()
             }
-        } catch (ignored: Exception) {
-        }
+        } catch (ignored: Exception) {}
     }
 
     private var appOpenListener: AppOpenListener? = null

@@ -20,13 +20,13 @@ object FirebaseUtils {
      *      }
      */
 
-    fun Throwable.recordException(log: String) {
+    fun Throwable.recordException(logTag: String) {
         try {
-            FirebaseCrashlytics.getInstance().log(log)
+            FirebaseCrashlytics.getInstance().log(logTag)
             FirebaseCrashlytics.getInstance().recordException(this)
-            Log.e(TAG_FIREBASE, "recordException: ${this.message.toString()}")
+            Log.e(logTag, "recordException: ${this.message.toString()}")
         } catch (e: Exception) {
-            Log.e(TAG_FIREBASE, "recordException: ${this.message.toString()}")
+            Log.e(logTag, "recordException: ${this.message.toString()}")
         }
     }
 

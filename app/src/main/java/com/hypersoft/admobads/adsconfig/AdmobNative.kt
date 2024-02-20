@@ -20,68 +20,82 @@ import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.adMobPreloadNativeAd
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isNativeLoading
+import com.hypersoft.admobads.adsconfig.constants.AdsConstants.preloadNativeAd
 import com.hypersoft.admobads.adsconfig.enums.NativeType
-import com.hypersoft.admobads.helpers.observers.GlobalEvent.isPreLoadNativeLoaded
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AdmobPreLoadNativeAds {
-
-    private val AD_TAG = "AdsInformation"
+class AdmobNative {
 
     /**
-     * only load native ad
+     * 0 = Ads Off
+     * 1 = Ads On
+     */
+
+    private var adMobNativeAd: NativeAd? = null
+
+    /**
+     * load native ad and show
      */
     fun loadNativeAds(
         activity: Activity?,
-        admobNativeIds: String,
+        adsPlaceHolder: FrameLayout,
+        nativeId: String,
         adEnable: Int,
         isAppPurchased: Boolean,
         isInternetConnected: Boolean,
+        nativeType: NativeType,
         bannerCallBack: BannerCallBack
     ) {
         val handlerException = CoroutineExceptionHandler { coroutineContext, throwable ->
-            Log.e("adStatus", "${throwable.message}")
+            Log.e("AdsInformation", "${throwable.message}")
             bannerCallBack.onAdFailedToLoad("${throwable.message}")
         }
-        activity?.let {mActivity ->
+        activity?.let { mActivity ->
             try {
-                if (isInternetConnected && adEnable != 0 && !isAppPurchased && !isNativeLoading && admobNativeIds.isNotEmpty()) {
-                    isNativeLoading = true
-                    if (adMobPreloadNativeAd == null) {
+                if (isInternetConnected && adEnable != 0 && !isAppPurchased && nativeId.isNotEmpty()) {
+                    adsPlaceHolder.visibility = View.VISIBLE
+
+                    // reuse of preloaded native ad
+                    // if miss first native then use it next
+                    if (preloadNativeAd != null) {
+                        adMobNativeAd = preloadNativeAd
+                        preloadNativeAd = null
+                        Log.d("AdsInformation", "admob native onAdLoaded")
+                        bannerCallBack.onPreloaded()
+                        displayNativeAd(mActivity, adsPlaceHolder, nativeType)
+                        return
+                    }
+                    if (adMobNativeAd == null) {
                         CoroutineScope(Dispatchers.IO + handlerException).launch {
-                            val builder: AdLoader.Builder = AdLoader.Builder(mActivity, admobNativeIds)
+                            val builder: AdLoader.Builder = AdLoader.Builder(mActivity, nativeId)
                             val adLoader =
                                 builder.forNativeAd { unifiedNativeAd: NativeAd? ->
-                                    adMobPreloadNativeAd = unifiedNativeAd
+                                    adMobNativeAd = unifiedNativeAd
                                 }
                                     .withAdListener(object : AdListener() {
                                         override fun onAdImpression() {
                                             super.onAdImpression()
-                                            Log.d(AD_TAG, "admob native onAdImpression")
+                                            Log.d("AdsInformation", "admob native onAdImpression")
                                             bannerCallBack.onAdImpression()
-                                            adMobPreloadNativeAd = null
+                                            adMobNativeAd = null
                                         }
 
                                         override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                            Log.e(AD_TAG, "admob native onAdFailedToLoad: " + loadAdError.message)
+                                            Log.e("AdsInformation", "admob native onAdFailedToLoad: ${loadAdError.message}")
                                             bannerCallBack.onAdFailedToLoad(loadAdError.message)
-                                            adMobPreloadNativeAd = null
-                                            isNativeLoading = false
-                                            isPreLoadNativeLoaded.value = false
+                                            adsPlaceHolder.visibility = View.GONE
+                                            adMobNativeAd = null
                                             super.onAdFailedToLoad(loadAdError)
                                         }
 
                                         override fun onAdLoaded() {
                                             super.onAdLoaded()
-                                            Log.d(AD_TAG, "admob native onAdLoaded")
-                                            isNativeLoading = false
-                                            isPreLoadNativeLoaded.value = true
+                                            Log.d("AdsInformation", "admob native onAdLoaded")
                                             bannerCallBack.onAdLoaded()
+                                            displayNativeAd(mActivity, adsPlaceHolder, nativeType)
 
                                         }
 
@@ -93,41 +107,23 @@ class AdmobPreLoadNativeAds {
                                     )
                                     .build()
                             adLoader.loadAd(AdRequest.Builder().build())
+
                         }
                     } else {
-                        isNativeLoading = false
-                        Log.e(AD_TAG, "Native is already loaded")
+                        Log.e("AdsInformation", "Native is already loaded")
                         bannerCallBack.onPreloaded()
+                        displayNativeAd(mActivity, adsPlaceHolder, nativeType)
                     }
 
                 } else {
-                    Log.e(AD_TAG, "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
+                    adsPlaceHolder.visibility = View.GONE
+                    Log.e("AdsInformation", "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
                     bannerCallBack.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
                 }
 
             } catch (ex: Exception) {
-                isNativeLoading = false
-                Log.e(AD_TAG, "${ex.message}")
+                Log.e("AdsInformation", "${ex.message}")
                 bannerCallBack.onAdFailedToLoad("${ex.message}")
-
-            }
-        }
-    }
-
-    /**
-     * show native ads from preload ads
-     */
-    fun showNativeAds(
-        activity: Activity?,
-        adsPlaceHolder: FrameLayout,
-        nativeType: NativeType,
-    ) {
-        activity?.let {mActivity ->
-            adMobPreloadNativeAd?.let {
-                adsPlaceHolder.visibility = View.VISIBLE
-                displayNativeAd(mActivity, adsPlaceHolder, nativeType)
-            } ?: kotlin.run {
-                adsPlaceHolder.visibility = View.GONE
             }
         }
     }
@@ -139,28 +135,26 @@ class AdmobPreLoadNativeAds {
     ) {
         activity?.let { mActivity ->
             try {
-                adMobPreloadNativeAd?.let { ad ->
+                adMobNativeAd?.let { ad ->
                     val inflater = LayoutInflater.from(mActivity)
 
                     val adView: NativeAdView = when (nativeType) {
-                        NativeType.BANNER -> inflater.inflate(R.layout.admob_native_banner, null) as NativeAdView
-                        NativeType.SMALL -> inflater.inflate(R.layout.admob_native_small, null) as NativeAdView
-                        NativeType.LARGE -> inflater.inflate(R.layout.admob_native_large, null) as NativeAdView
+                        NativeType.BANNER -> inflater.inflate(R.layout.native_banner, null) as NativeAdView
+                        NativeType.SMALL -> inflater.inflate(R.layout.native_small, null) as NativeAdView
+                        NativeType.LARGE -> inflater.inflate(R.layout.native_large, null) as NativeAdView
                         NativeType.LARGE_ADJUSTED -> if (isSupportFullScreen(mActivity)) {
-                            inflater.inflate(R.layout.admob_native_large, null) as NativeAdView
+                            inflater.inflate(R.layout.native_large, null) as NativeAdView
                         } else {
-                            inflater.inflate(R.layout.admob_native_small, null) as NativeAdView
+                            inflater.inflate(R.layout.native_small, null) as NativeAdView
                         }
-                        NativeType.FIX -> inflater.inflate(R.layout.admob_native_fix, null) as NativeAdView
                     }
-
                     val viewGroup: ViewGroup? = adView.parent as ViewGroup?
                     viewGroup?.removeView(adView)
 
                     adMobNativeContainer.removeAllViews()
                     adMobNativeContainer.addView(adView)
 
-                    if (nativeType == NativeType.LARGE || nativeType == NativeType.FIX) {
+                    if (nativeType == NativeType.LARGE) {
                         val mediaView: MediaView = adView.findViewById(R.id.media_view)
                         adView.mediaView = mediaView
                     }
@@ -191,18 +185,16 @@ class AdmobPreLoadNativeAds {
                             bodyView.visibility = View.VISIBLE
                             (bodyView as TextView).text = ad.body
                         }
-
                     }
 
                     //Call to Action
                     adView.callToActionView?.let { ctaView ->
                         if (ad.callToAction == null) {
-                            ctaView.visibility = View.INVISIBLE
+                            ctaView.visibility = View.GONE
                         } else {
                             ctaView.visibility = View.VISIBLE
                             (ctaView as Button).text = ad.callToAction
                         }
-
                     }
 
                     //Icon
@@ -213,11 +205,9 @@ class AdmobPreLoadNativeAds {
                             (iconView as ImageView).setImageDrawable(ad.icon?.drawable)
                             iconView.visibility = View.VISIBLE
                         }
-
                     }
 
                     adView.advertiserView?.let { adverView ->
-
                         if (ad.advertiser == null) {
                             adverView.visibility = View.GONE
                         } else {
@@ -229,7 +219,7 @@ class AdmobPreLoadNativeAds {
                     adView.setNativeAd(ad)
                 }
             } catch (ex: Exception) {
-                Log.e(AD_TAG, "displayNativeAd: ${ex.message}")
+                Log.e("AdsInformation", "displayNativeAd: ${ex.message}")
             }
         }
     }
@@ -245,5 +235,4 @@ class AdmobPreLoadNativeAds {
         }
         return false
     }
-
 }

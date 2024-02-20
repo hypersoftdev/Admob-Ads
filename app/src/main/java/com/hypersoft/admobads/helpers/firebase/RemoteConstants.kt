@@ -3,52 +3,97 @@ package com.hypersoft.admobads.helpers.firebase
 object RemoteConstants {
 
     /**
-     * Remote Config keys
+     * Interstitial Remote Config keys
      */
 
-    const val INTER_SPLASH_KEY = "interSplash"
-    const val INTER_MAIN_KEY = "interMain"
-    const val NATIVE_SPLASH_KEY = "nativeSplash"
-    const val NATIVE_HOME_KEY = "nativeHome"
-    const val NATIVE_SAMPLE_KEY = "nativeSample"
-    const val BANNER_HOME_KEY = "bannerHome"
-    const val BANNER_COLLAPSIBLE_KEY = "bannerCollapsible"
-    const val OPEN_APP_AD_KEY = "openAppAd"
-    const val REMOTE_COUNTER_KEY = "remoteCounter"
-
+    const val INTERSTITIAL_AD_KEY = "interstitial_ad"
 
     /**
-     * Constants
+     * Interstitial Remote Constants
      *  -> rcv:  denotes 'remote configuration values'
      *  -> Note
      *         0:   Ads off
      *         1:   Admob Active
-     *         2:   Facebook Active
      */
 
-    var rcvInterSplash: Int = 0
-    var rcvInterMain: Int = 0
-    var rcvNativeSplash: Int = 0
-    var rcvNativeHome: Int = 0
-    var rcvNativeSample: Int = 0
-    var rcvBannerHome: Int = 0
-    var rcvBannerCollapsible: Int = 0
-    var rcvOpenApp: Int = 0
-    var rcvRemoteCounter: Int = 2
-    var totalCount : Int = 0
+    var rcvInterAd: Int = 1
 
 
+    /**
+     * Rewarded Remote Config keys
+     */
+    const val REWARDED_AD_KEY = "rewarded_ad"
+    const val REWARDED_INTER_AD_KEY = "rewarded_inter_ad"
 
-    fun reset() {
-        rcvInterSplash = 0
-        rcvInterMain = 0
-        rcvNativeSplash = 0
-        rcvNativeHome = 0
-        rcvNativeSample = 0
-        rcvBannerHome = 0
-        rcvBannerCollapsible = 0
-        rcvOpenApp = 0
-        rcvRemoteCounter = 0
-        totalCount = 0
-    }
+    /**
+     * Rewarded Remote Constants
+     *  -> rcv:  denotes 'remote configuration values'
+     *  -> Note
+     *         0:   Ads off
+     *         1:   Admob Active
+     */
+
+    var rcvRewardAd: Int = 1
+    var rcvRewardInterAd: Int = 1
+
+    /**
+     * Native Remote Config keys
+     */
+    const val NATIVE_AD_KEY = "native_ad"
+
+    /**
+     * Native Remote Constants
+     *  -> rcv:  denotes 'remote configuration values'
+     *  -> Note
+     *         0:   Ads off
+     *         1:   Admob Active
+     */
+
+    var rcvNativeAd: Int = 1
+
+
+    /**
+     * Banner Remote Config keys
+     */
+    const val BANNER_AD_KEY = "banner_ad"
+
+    /**
+     * Banner Remote Constants
+     *  -> rcv:  denotes 'remote configuration values'
+     *  -> Note
+     *         0:   Ads off
+     *         1:   Collapsible
+     *         2:   Adaptive
+     */
+
+    var rcvBannerAd: Int = 1
+
+
+    /**
+     * AppOpen Remote Config keys
+     */
+    const val APP_OPEN_KEY = "app_open_ad"
+
+    /**
+     * OpenApp Remote Constants
+     *  -> rcv:  denotes 'remote configuration values'
+     *  -> Note
+     *         0:   Ads off
+     *         1:   Admob Active
+     */
+
+    var rcvAppOpen: Int = 1
+
+    /**
+     * Others Remote Config keys
+     */
+    const val COUNTER_KEY = "counter"
+
+    /**
+     * Others Remote Constants
+     */
+
+    var rcvRemoteCounter: Int = 3
+    var totalCount : Int = 3
+
 }

@@ -1,40 +1,43 @@
 package com.hypersoft.admobads.helpers.firebase
 
+import android.content.SharedPreferences
 import android.util.Log
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.get
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.firebase.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.get
+import com.google.firebase.remoteconfig.remoteConfig
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.BANNER_COLLAPSIBLE_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.BANNER_HOME_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.INTER_MAIN_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.INTER_SPLASH_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.NATIVE_HOME_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.NATIVE_SAMPLE_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.NATIVE_SPLASH_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.OPEN_APP_AD_KEY
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants.REMOTE_COUNTER_KEY
-import com.hypersoft.admobads.helpers.managers.InternetManager
 import com.hypersoft.admobads.helpers.firebase.FirebaseUtils.recordException
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.APP_OPEN_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.BANNER_AD_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.COUNTER_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.INTERSTITIAL_AD_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.NATIVE_AD_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.REWARDED_AD_KEY
+import com.hypersoft.admobads.helpers.firebase.RemoteConstants.REWARDED_INTER_AD_KEY
+import com.hypersoft.admobads.helpers.managers.InternetManager
 
-class RemoteConfiguration(private val internetManager: InternetManager) {
+class RemoteConfiguration(private val internetManager: InternetManager, private val sharedPreferences: SharedPreferences) {
 
-    private val configTag = "REMOTE_CONFIG"
-    private val remoteConfig = Firebase.remoteConfig
+    private val configTag = "TAG_REMOTE_CONFIG"
 
     fun checkRemoteConfig(callback: (fetchSuccessfully: Boolean) -> Unit) {
         if (internetManager.isInternetConnected) {
-            val configSettings = remoteConfigSettings { minimumFetchIntervalInSeconds = 2 }
+            val remoteConfig = Firebase.remoteConfig
+            val configSettings = com.google.firebase.remoteconfig.remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 2
+            }
             remoteConfig.setConfigSettingsAsync(configSettings)
             remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
             fetchRemoteValues(callback)
         } else {
+            Log.d(configTag, "checkRemoteConfig: Internet Not Found!")
             callback.invoke(false)
         }
     }
 
     private fun fetchRemoteValues(callback: (fetchSuccessfully: Boolean) -> Unit) {
+        val remoteConfig = Firebase.remoteConfig
         remoteConfig.fetchAndActivate().addOnCompleteListener {
             if (it.isSuccessful) {
                 try {
@@ -48,22 +51,93 @@ class RemoteConfiguration(private val internetManager: InternetManager) {
                 Log.d(configTag, "fetchRemoteValues: ${it.exception}")
                 callback.invoke(false)
             }
+        }.addOnFailureListener {
+            Log.d(configTag, "fetchRemoteValues: ${it.message}")
+            callback.invoke(false)
         }
     }
 
     @Throws(Exception::class)
     private fun updateRemoteValues(callback: (fetchSuccessfully: Boolean) -> Unit) {
-        RemoteConstants.rcvInterSplash = remoteConfig[INTER_SPLASH_KEY].asLong().toInt()
-        RemoteConstants.rcvInterMain = remoteConfig[INTER_MAIN_KEY].asLong().toInt()
-        RemoteConstants.rcvNativeSplash = remoteConfig[NATIVE_SPLASH_KEY].asLong().toInt()
-        RemoteConstants.rcvNativeHome = remoteConfig[NATIVE_HOME_KEY].asLong().toInt()
-        RemoteConstants.rcvNativeSample = remoteConfig[NATIVE_SAMPLE_KEY].asLong().toInt()
-        RemoteConstants.rcvBannerHome = remoteConfig[BANNER_HOME_KEY].asLong().toInt()
-        RemoteConstants.rcvBannerCollapsible = remoteConfig[BANNER_COLLAPSIBLE_KEY].asLong().toInt()
-        RemoteConstants.rcvOpenApp = remoteConfig[OPEN_APP_AD_KEY].asLong().toInt()
-        RemoteConstants.rcvRemoteCounter = remoteConfig[REMOTE_COUNTER_KEY].asLong().toInt()
+        val remoteConfig = Firebase.remoteConfig
 
+        setPrefRemoteValues(remoteConfig)
+        getPrefRemoteValues()
         Log.d(configTag, "checkRemoteConfig: Fetched Successfully")
         callback.invoke(true)
+    }
+
+    fun getPrefRemoteValues() {
+        /**
+         * Interstitial
+         */
+        RemoteConstants.rcvInterAd = sharedPreferences.getInt(INTERSTITIAL_AD_KEY, 1)
+
+        /**
+         * Rewarded
+         */
+        RemoteConstants.rcvRewardAd = sharedPreferences.getInt(REWARDED_AD_KEY, 1)
+        RemoteConstants.rcvRewardInterAd = sharedPreferences.getInt(REWARDED_INTER_AD_KEY, 1)
+
+        /**
+         * Native
+         */
+        RemoteConstants.rcvNativeAd = sharedPreferences.getInt(NATIVE_AD_KEY, 1)
+
+        /**
+         * Banner
+         */
+        RemoteConstants.rcvBannerAd = sharedPreferences.getInt(BANNER_AD_KEY, 1)
+
+        /**
+         * OpenApp
+         */
+        RemoteConstants.rcvAppOpen = sharedPreferences.getInt(APP_OPEN_KEY, 1)
+
+        /**
+         * Others
+         */
+        RemoteConstants.rcvRemoteCounter = sharedPreferences.getInt(COUNTER_KEY, 3)
+
+        RemoteConstants.totalCount = RemoteConstants.rcvRemoteCounter
+
+    }
+
+    @Throws(Exception::class)
+    private fun setPrefRemoteValues(remoteConfig: FirebaseRemoteConfig) {
+        sharedPreferences.edit().apply {
+            /**
+             * Interstitial Remote Config
+             */
+            putInt(INTERSTITIAL_AD_KEY, remoteConfig[INTERSTITIAL_AD_KEY].asLong().toInt())
+
+            /**
+             * Rewarded Remote Config
+             */
+            putInt(REWARDED_AD_KEY, remoteConfig[REWARDED_AD_KEY].asLong().toInt())
+            putInt(REWARDED_INTER_AD_KEY, remoteConfig[REWARDED_INTER_AD_KEY].asLong().toInt())
+
+            /**
+             * Native Remote Config
+             */
+            putInt(NATIVE_AD_KEY, remoteConfig[NATIVE_AD_KEY].asLong().toInt())
+
+            /**
+             * Banner Remote Config
+             */
+            putInt(BANNER_AD_KEY, remoteConfig[BANNER_AD_KEY].asLong().toInt())
+
+            /**
+             * OpenApp Remote Config
+             */
+            putInt(APP_OPEN_KEY, remoteConfig[APP_OPEN_KEY].asLong().toInt())
+
+            /**
+             * Others Remote Config
+             */
+            putInt(COUNTER_KEY, remoteConfig[COUNTER_KEY].asLong().toInt())
+
+            apply()
+        }
     }
 }

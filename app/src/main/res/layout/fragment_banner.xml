@@ -23,14 +23,15 @@
             android:id="@+id/ads_banner_place_holder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/adsBgColor"
+            android:background="@color/adsColor"
             android:maxHeight="70dp"
             app:layout_constraintHeight_max="70dp"
+            tools:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             >
-
             <include
                 layout="@layout/loading_ad"
                 android:layout_width="match_parent"
