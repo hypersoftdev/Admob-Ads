@@ -8,6 +8,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 abstract class BaseNavFragment : FragmentGeneral() {
 
     var callback: OnBackPressedCallback? = null

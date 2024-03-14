@@ -12,6 +12,13 @@ import com.hypersoft.admobads.BuildConfig
 import com.hypersoft.admobads.helpers.firebase.FirebaseUtils.recordException
 import com.hypersoft.admobads.helpers.koin.DIComponent
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes layoutId: Int) : AppCompatActivity() {
 
     protected val binding by lazy {

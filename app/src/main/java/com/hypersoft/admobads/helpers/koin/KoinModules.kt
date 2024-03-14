@@ -9,6 +9,13 @@ import com.hypersoft.admobads.helpers.preferences.SharedPreferenceUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 private val managerModules = module {
     single { InternetManager(androidContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager) }
 }

@@ -17,6 +17,13 @@ import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvRemoteCounter
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.totalCount
 import com.hypersoft.admobads.helpers.utils.CleanMemory
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
 
     private lateinit var navController: NavController

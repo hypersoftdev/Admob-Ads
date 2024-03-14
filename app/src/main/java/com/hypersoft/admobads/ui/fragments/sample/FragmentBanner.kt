@@ -9,6 +9,13 @@ import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.helpers.observers.SingleLiveEvent
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_banner) {
 
     private val admobBanner by lazy { AdmobBanner() }

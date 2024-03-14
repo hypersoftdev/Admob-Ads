@@ -9,6 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import com.hypersoft.admobads.helpers.koin.DIComponent
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 abstract class BaseFragment<T : ViewDataBinding>(@LayoutRes private val layoutId: Int) : BaseNavFragment() {
 
     /**

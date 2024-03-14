@@ -20,6 +20,13 @@ import com.hypersoft.admobads.helpers.koin.DIComponent
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import java.util.*
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
     ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
