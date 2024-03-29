@@ -6,6 +6,13 @@ import androidx.navigation.fragment.NavHostFragment
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.ActivitySplashBinding
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class SplashActivity : BaseActivity<ActivitySplashBinding>(R.layout.activity_splash) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

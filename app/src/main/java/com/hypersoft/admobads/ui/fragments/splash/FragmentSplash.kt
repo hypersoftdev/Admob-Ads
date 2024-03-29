@@ -13,6 +13,13 @@ import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class FragmentSplash : BaseFragment<FragmentSplashBinding>(R.layout.fragment_splash) {
 
     private val admobInterstitial by lazy { AdmobInterstitial() }

@@ -18,6 +18,13 @@ import com.hypersoft.admobads.helpers.listeners.RapidSafeListener.setOnRapidClic
 import com.hypersoft.admobads.ui.activities.MainActivity
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
 
     private val admobBanner by lazy { AdmobBanner() }

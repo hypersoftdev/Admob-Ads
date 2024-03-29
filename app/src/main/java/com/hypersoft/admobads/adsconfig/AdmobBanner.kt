@@ -16,6 +16,13 @@ import com.google.android.gms.ads.LoadAdError
 import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
 import com.hypersoft.admobads.adsconfig.enums.BannerType
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class AdmobBanner {
 
     private var adaptiveAdView: AdView? = null

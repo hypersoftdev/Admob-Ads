@@ -17,6 +17,13 @@ import com.hypersoft.admobads.helpers.firebase.RemoteConstants.REWARDED_AD_KEY
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.REWARDED_INTER_AD_KEY
 import com.hypersoft.admobads.helpers.managers.InternetManager
 
+/**
+ * @Author: Muhammad Yaqoob
+ * @Date: 14,March,2024.
+ * @Accounts
+ *      -> https://github.com/orbitalsonic
+ *      -> https://www.linkedin.com/in/myaqoob7
+ */
 class RemoteConfiguration(private val internetManager: InternetManager, private val sharedPreferences: SharedPreferences) {
 
     private val configTag = "TAG_REMOTE_CONFIG"
