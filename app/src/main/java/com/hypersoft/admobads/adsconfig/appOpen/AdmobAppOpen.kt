@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.adsconfig
+package com.hypersoft.admobads.adsconfig.appOpen
 
 import android.app.Activity
 import android.app.Application
@@ -9,16 +9,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
-import com.google.android.gms.ads.*
+import com.google.android.gms.ads.AdActivity
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isOpenAdLoading
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.mAppOpenAd
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants.isOpenAdLoading
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants.mAppOpenAd
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvAppOpen
 import com.hypersoft.admobads.helpers.koin.DIComponent
 import com.hypersoft.admobads.ui.activities.SplashActivity
-import java.util.*
+import java.util.Date
 
 /**
  * @Author: Muhammad Yaqoob
@@ -31,7 +35,7 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
     ActivityLifecycleCallbacks {
     private var currentActivity: Activity? = null
     private var loadTime: Long = 0
-    protected val diComponent by lazy { DIComponent() }
+    private val diComponent by lazy { DIComponent() }
 
     /**
      * 0 = Ads Off
@@ -57,10 +61,11 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
                 super.onAdLoaded(appOpenAd)
                 isOpenAdLoading = false
                 mAppOpenAd = appOpenAd
-                Log.d("AdsInformation", "open is loaded")
+                Log.i("AdsInformation", "appOpen onAdLoaded")
 
                 mAppOpenAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {
+                        Log.d("AdsInformation", "appOpen onAdDismissedFullScreenContent")
                         mAppOpenAd = null
                         isShowingAd = false
                         fetchAd()
@@ -72,11 +77,12 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         if (appOpenListener != null) {
                             appOpenListener?.onOpenAdClosed()
-                            Log.d("AdsInformation", "open is FailedToShow")
+                            Log.e("AdsInformation", "appOpen onAdFailedToShowFullScreenContent")
                         }
                     }
 
                     override fun onAdShowedFullScreenContent() {
+                        Log.d("AdsInformation", "appOpen onAdShowedFullScreenContent")
                         isShowingAd = true
                     }
                 }
@@ -85,7 +91,7 @@ class AdmobAppOpen(private val myApplication: Application) : LifecycleObserver,
 
             override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                 super.onAdFailedToLoad(loadAdError)
-                Log.d("AdsInformation", "open Ad is FailedToLoad")
+                Log.e("AdsInformation", "appOpen onAdFailedToLoad")
                 isOpenAdLoading = false
                 mAppOpenAd = null
             }

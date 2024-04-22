@@ -1,7 +1,6 @@
-package com.hypersoft.admobads.adsconfig
+package com.hypersoft.admobads.adsconfig.natives
 
 import android.app.Activity
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -19,9 +18,10 @@ import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.preloadNativeAd
-import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.adsconfig.natives.callbacks.NativeCallBack
+import com.hypersoft.admobads.adsconfig.natives.enums.NativeType
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants.preloadNativeAd
+import com.hypersoft.admobads.adsconfig.utils.ScreenUtils.isSupportFullScreen
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -54,84 +54,110 @@ class AdmobNative {
         isAppPurchased: Boolean,
         isInternetConnected: Boolean,
         nativeType: NativeType,
-        bannerCallBack: BannerCallBack
+        nativeCallBack: NativeCallBack? = null
     ) {
         val handlerException = CoroutineExceptionHandler { coroutineContext, throwable ->
             Log.e("AdsInformation", "${throwable.message}")
-            bannerCallBack.onAdFailedToLoad("${throwable.message}")
+            nativeCallBack?.onAdFailedToLoad("${throwable.message}")
         }
-        activity?.let { mActivity ->
-            try {
-                if (isInternetConnected && adEnable != 0 && !isAppPurchased && nativeId.isNotEmpty()) {
-                    adsPlaceHolder.visibility = View.VISIBLE
 
-                    // reuse of preloaded native ad
-                    // if miss first native then use it next
-                    if (preloadNativeAd != null) {
-                        adMobNativeAd = preloadNativeAd
-                        preloadNativeAd = null
-                        Log.d("AdsInformation", "admob native onAdLoaded")
-                        bannerCallBack.onPreloaded()
-                        displayNativeAd(mActivity, adsPlaceHolder, nativeType)
-                        return
-                    }
-                    if (adMobNativeAd == null) {
-                        CoroutineScope(Dispatchers.IO + handlerException).launch {
-                            val builder: AdLoader.Builder = AdLoader.Builder(mActivity, nativeId)
-                            val adLoader =
-                                builder.forNativeAd { unifiedNativeAd: NativeAd? ->
-                                    adMobNativeAd = unifiedNativeAd
-                                }
-                                    .withAdListener(object : AdListener() {
-                                        override fun onAdImpression() {
-                                            super.onAdImpression()
-                                            Log.d("AdsInformation", "admob native onAdImpression")
-                                            bannerCallBack.onAdImpression()
-                                            adMobNativeAd = null
-                                        }
+        if (isAppPurchased) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Premium user")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Premium user")
+            return
+        }
 
-                                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                            Log.e("AdsInformation", "admob native onAdFailedToLoad: ${loadAdError.message}")
-                                            bannerCallBack.onAdFailedToLoad(loadAdError.message)
-                                            adsPlaceHolder.visibility = View.GONE
-                                            adMobNativeAd = null
-                                            super.onAdFailedToLoad(loadAdError)
-                                        }
+        if (adEnable == 0) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Remote config is off")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Remote config is off")
+            return
+        }
 
-                                        override fun onAdLoaded() {
-                                            super.onAdLoaded()
-                                            Log.d("AdsInformation", "admob native onAdLoaded")
-                                            bannerCallBack.onAdLoaded()
-                                            displayNativeAd(mActivity, adsPlaceHolder, nativeType)
+        if (isInternetConnected.not()) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Internet is not connected")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Internet is not connected")
+            return
+        }
 
-                                        }
+        if (activity == null) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Context is null")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Context is null")
+            return
+        }
 
-                                    }).withNativeAdOptions(
-                                        com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
-                                            .setAdChoicesPlacement(
-                                                NativeAdOptions.ADCHOICES_TOP_RIGHT
-                                            ).build()
-                                    )
-                                    .build()
-                            adLoader.loadAd(AdRequest.Builder().build())
+        if (activity.isFinishing || activity.isDestroyed) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> activity is finishing or destroyed")
+              nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> activity is finishing or destroyed")
+            return
+        }
 
-                        }
-                    } else {
-                        Log.e("AdsInformation", "Native is already loaded")
-                        bannerCallBack.onPreloaded()
-                        displayNativeAd(mActivity, adsPlaceHolder, nativeType)
-                    }
+        if (nativeId.trim().isEmpty()) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Ad id is empty")
+              nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Ad id is empty")
+            return
+        }
 
-                } else {
-                    adsPlaceHolder.visibility = View.GONE
-                    Log.e("AdsInformation", "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
-                    bannerCallBack.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
-                }
-
-            } catch (ex: Exception) {
-                Log.e("AdsInformation", "${ex.message}")
-                bannerCallBack.onAdFailedToLoad("${ex.message}")
+        try {
+            adsPlaceHolder.visibility = View.VISIBLE
+            // reuse of preloaded native ad
+            // if miss first native then use it next
+            if (preloadNativeAd != null) {
+                adMobNativeAd = preloadNativeAd
+                preloadNativeAd = null
+                Log.i("AdsInformation", "admob native onPreloaded")
+                nativeCallBack?.onPreloaded()
+                displayNativeAd(activity, adsPlaceHolder, nativeType)
+                return
             }
+            if (adMobNativeAd == null) {
+                CoroutineScope(Dispatchers.IO + handlerException).launch {
+                    val builder: AdLoader.Builder = AdLoader.Builder(activity, nativeId)
+                    val adLoader =
+                        builder.forNativeAd { unifiedNativeAd: NativeAd? ->
+                            adMobNativeAd = unifiedNativeAd
+                        }
+                            .withAdListener(object : AdListener() {
+                                override fun onAdImpression() {
+                                    super.onAdImpression()
+                                    Log.d("AdsInformation", "admob native onAdImpression")
+                                    nativeCallBack?.onAdImpression()
+                                    adMobNativeAd = null
+                                }
+
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    Log.e("AdsInformation", "admob native onAdFailedToLoad: ${loadAdError.message}")
+                                    nativeCallBack?.onAdFailedToLoad(loadAdError.message)
+                                    adsPlaceHolder.visibility = View.GONE
+                                    adMobNativeAd = null
+                                    super.onAdFailedToLoad(loadAdError)
+                                }
+
+                                override fun onAdLoaded() {
+                                    super.onAdLoaded()
+                                    Log.i("AdsInformation", "admob native onAdLoaded")
+                                    nativeCallBack?.onAdLoaded()
+                                    displayNativeAd(activity, adsPlaceHolder, nativeType)
+
+                                }
+
+                            }).withNativeAdOptions(
+                                com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+                                    .setAdChoicesPlacement(
+                                        NativeAdOptions.ADCHOICES_TOP_RIGHT
+                                    ).build()
+                            )
+                            .build()
+                    adLoader.loadAd(AdRequest.Builder().build())
+
+                }
+            } else {
+                Log.e("AdsInformation", "Native is already onPreloaded")
+                nativeCallBack?.onPreloaded()
+                displayNativeAd(activity, adsPlaceHolder, nativeType)
+            }
+        } catch (ex: Exception) {
+            Log.e("AdsInformation", "${ex.message}")
+            nativeCallBack?.onAdFailedToLoad("${ex.message}")
         }
     }
 
@@ -149,7 +175,7 @@ class AdmobNative {
                         NativeType.BANNER -> inflater.inflate(R.layout.native_banner, null) as NativeAdView
                         NativeType.SMALL -> inflater.inflate(R.layout.native_small, null) as NativeAdView
                         NativeType.LARGE -> inflater.inflate(R.layout.native_large, null) as NativeAdView
-                        NativeType.LARGE_ADJUSTED -> if (isSupportFullScreen(mActivity)) {
+                        NativeType.LARGE_ADJUSTED -> if (mActivity.isSupportFullScreen()) {
                             inflater.inflate(R.layout.native_large, null) as NativeAdView
                         } else {
                             inflater.inflate(R.layout.native_small, null) as NativeAdView
@@ -166,7 +192,7 @@ class AdmobNative {
                         adView.mediaView = mediaView
                     }
                     if (nativeType == NativeType.LARGE_ADJUSTED) {
-                        if (isSupportFullScreen(mActivity)) {
+                        if (mActivity.isSupportFullScreen()) {
                             val mediaView: MediaView = adView.findViewById(R.id.media_view)
                             adView.mediaView = mediaView
                         }
@@ -229,17 +255,5 @@ class AdmobNative {
                 Log.e("AdsInformation", "displayNativeAd: ${ex.message}")
             }
         }
-    }
-
-    private fun isSupportFullScreen(activity: Activity): Boolean {
-        try {
-            val outMetrics = DisplayMetrics()
-            activity.windowManager.defaultDisplay.getMetrics(outMetrics)
-            if (outMetrics.heightPixels > 1280) {
-                return true
-            }
-        } catch (ignored: Exception) {
-        }
-        return false
     }
 }

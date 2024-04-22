@@ -8,9 +8,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.AdmobInterstitial
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.AdmobInterstitial
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnLoadCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnShowCallBack
 import com.hypersoft.admobads.databinding.ActivityMainBinding
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvRemoteCounter

@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.adsconfig.enums
+package com.hypersoft.admobads.adsconfig.natives.enums
 
 /**
  * @Author: Muhammad Yaqoob

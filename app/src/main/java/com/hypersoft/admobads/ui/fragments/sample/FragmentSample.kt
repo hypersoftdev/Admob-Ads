@@ -1,9 +1,9 @@
 package com.hypersoft.admobads.ui.fragments.sample
 
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.AdmobNative
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.adsconfig.natives.AdmobNative
+import com.hypersoft.admobads.adsconfig.natives.callbacks.NativeCallBack
+import com.hypersoft.admobads.adsconfig.natives.enums.NativeType
 import com.hypersoft.admobads.databinding.FragmentSampleBinding
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
@@ -34,14 +34,11 @@ class FragmentSample : BaseFragment<FragmentSampleBinding>(R.layout.fragment_sam
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
             NativeType.LARGE,
-            object : BannerCallBack {
+            object : NativeCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
                 override fun onAdImpression() {}
                 override fun onPreloaded() {}
-                override fun onAdClicked() {}
-                override fun onAdClosed() {}
-                override fun onAdOpened() {}
             }
         )
     }

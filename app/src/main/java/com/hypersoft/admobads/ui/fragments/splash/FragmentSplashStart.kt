@@ -5,10 +5,11 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.AdmobInterstitial
-import com.hypersoft.admobads.adsconfig.AdmobNativePreload
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.AdmobInterstitial
+import com.hypersoft.admobads.adsconfig.natives.AdmobNativePreload
+import com.hypersoft.admobads.adsconfig.banners.callbacks.BannerCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnLoadCallBack
+import com.hypersoft.admobads.adsconfig.natives.callbacks.NativeCallBack
 import com.hypersoft.admobads.databinding.FragmentSplashStartBinding
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvNativeAd
@@ -105,7 +106,7 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
                         rcvNativeAd,
                         diComponent.sharedPreferenceUtils.isAppPurchased,
                         diComponent.internetManager.isInternetConnected,
-                        object : BannerCallBack {
+                        object : NativeCallBack {
                             override fun onAdFailedToLoad(adError: String) {
                                 isNativeLoadedOrFailed = true
                             }
@@ -116,11 +117,6 @@ class FragmentSplashStart : BaseFragment<FragmentSplashStartBinding>(R.layout.fr
                                 val loadingTime:Int = ((endTime - startTime)/1000).toInt()
                                 Log.d("AdsInformation", "NativeLoadingTime: ${loadingTime}s")
                             }
-                            override fun onAdImpression() {}
-                            override fun onPreloaded() {}
-                            override fun onAdClicked() {}
-                            override fun onAdClosed() {}
-                            override fun onAdOpened() {}
                         })
                 }
                 else -> {

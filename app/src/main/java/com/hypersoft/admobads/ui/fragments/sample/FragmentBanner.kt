@@ -1,10 +1,10 @@
 package com.hypersoft.admobads.ui.fragments.sample
 
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.adsconfig.banners.AdmobBanner
+import com.hypersoft.admobads.adsconfig.banners.callbacks.BannerCallBack
+import com.hypersoft.admobads.adsconfig.banners.enums.BannerType
 import com.hypersoft.admobads.databinding.FragmentBannerBinding
-import com.hypersoft.admobads.adsconfig.AdmobBanner
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.enums.BannerType
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.helpers.observers.SingleLiveEvent
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment
@@ -75,11 +75,6 @@ class FragmentBanner : BaseFragment<FragmentBannerBinding>(R.layout.fragment_ban
             diComponent.internetManager.isInternetConnected,
             BannerType.COLLAPSIBLE_BOTTOM,
             object : BannerCallBack {
-                override fun onAdFailedToLoad(adError: String) {}
-                override fun onAdLoaded() {}
-                override fun onAdImpression() {}
-                override fun onPreloaded() {}
-                override fun onAdClicked() {}
                 override fun onAdClosed() {
                     isCollapsibleOpen = false
 

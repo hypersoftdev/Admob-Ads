@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.adsconfig.callbacks
+package com.hypersoft.admobads.adsconfig.rewarded.callbacks
 
 /**
  * @Author: Muhammad Yaqoob
@@ -8,7 +8,7 @@ package com.hypersoft.admobads.adsconfig.callbacks
  *      -> https://www.linkedin.com/in/myaqoob7
  */
 interface RewardedOnLoadCallBack {
-    fun onAdFailedToLoad(adError:String)
-    fun onAdLoaded()
-    fun onPreloaded()
+    fun onAdFailedToLoad(adError:String){}
+    fun onAdLoaded(){}
+    fun onPreloaded(){}
 }

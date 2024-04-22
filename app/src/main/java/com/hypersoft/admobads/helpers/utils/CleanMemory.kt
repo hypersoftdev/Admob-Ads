@@ -1,7 +1,6 @@
 package com.hypersoft.admobads.helpers.utils
 
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants
-import com.hypersoft.admobads.helpers.firebase.RemoteConstants
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants
 
 /**
  * @Author: Muhammad Yaqoob
