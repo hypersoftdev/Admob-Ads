@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.adsconfig.constants
+package com.hypersoft.admobads.adsconfig.utils
 
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.interstitial.InterstitialAd

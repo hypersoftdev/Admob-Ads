@@ -2,17 +2,16 @@ package com.hypersoft.admobads.ui.fragments.home
 
 import android.util.Log
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.adsconfig.banners.AdmobBanner
+import com.hypersoft.admobads.adsconfig.banners.callbacks.BannerCallBack
+import com.hypersoft.admobads.adsconfig.banners.enums.BannerType
+import com.hypersoft.admobads.adsconfig.natives.AdmobNative
+import com.hypersoft.admobads.adsconfig.natives.callbacks.NativeCallBack
+import com.hypersoft.admobads.adsconfig.natives.enums.NativeType
+import com.hypersoft.admobads.adsconfig.rewarded.AdmobRewarded
+import com.hypersoft.admobads.adsconfig.rewarded.callbacks.RewardedOnLoadCallBack
+import com.hypersoft.admobads.adsconfig.rewarded.callbacks.RewardedOnShowCallBack
 import com.hypersoft.admobads.databinding.FragmentHomeBinding
-import com.hypersoft.admobads.adsconfig.AdmobBanner
-import com.hypersoft.admobads.adsconfig.AdmobNative
-import com.hypersoft.admobads.adsconfig.AdmobRewarded
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.RewardedOnLoadCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.RewardedOnShowCallBack
-import com.hypersoft.admobads.adsconfig.enums.BannerType
-import com.hypersoft.admobads.adsconfig.enums.NativeType
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants
 import com.hypersoft.admobads.helpers.listeners.RapidSafeListener.setOnRapidClickSafeListener
 import com.hypersoft.admobads.ui.activities.MainActivity
@@ -85,12 +84,10 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
         admobRewarded.showRewardedAd(
             activity,
             object : RewardedOnShowCallBack {
-                override fun onAdClicked() {}
                 override fun onAdDismissedFullScreenContent() {}
                 override fun onAdFailedToShowFullScreenContent() {}
                 override fun onAdShowedFullScreenContent() {}
                 override fun onUserEarnedReward() {}
-                override fun onAdImpression() {}
             }
         )
     }
@@ -109,10 +106,6 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
                 override fun onAdImpression() {}
-                override fun onPreloaded() {}
-                override fun onAdClicked() {}
-                override fun onAdClosed() {}
-                override fun onAdOpened() {}
             }
         )
 
@@ -125,14 +118,10 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
             diComponent.sharedPreferenceUtils.isAppPurchased,
             diComponent.internetManager.isInternetConnected,
             NativeType.BANNER,
-            object : BannerCallBack {
+            object : NativeCallBack {
                 override fun onAdFailedToLoad(adError: String) {}
                 override fun onAdLoaded() {}
                 override fun onAdImpression() {}
-                override fun onPreloaded() {}
-                override fun onAdClicked() {}
-                override fun onAdClosed() {}
-                override fun onAdOpened() {}
             }
         )
     }

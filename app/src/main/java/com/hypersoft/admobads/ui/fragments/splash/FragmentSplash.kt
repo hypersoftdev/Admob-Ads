@@ -5,9 +5,9 @@ import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.AdmobInterstitial
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnLoadCallBack
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.AdmobInterstitial
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnLoadCallBack
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnShowCallBack
 import com.hypersoft.admobads.databinding.FragmentSplashBinding
 import com.hypersoft.admobads.helpers.firebase.RemoteConstants.rcvInterAd
 import com.hypersoft.admobads.ui.activities.SplashActivity
@@ -126,7 +126,8 @@ class FragmentSplash : BaseFragment<FragmentSplashBinding>(R.layout.fragment_spl
             lifecycleScope.launchWhenResumed {
                 if (isAdded){
                     (activity as SplashActivity).nextActivity()
-                    admobInterstitial.showInterstitialAd(activity,object : InterstitialOnShowCallBack {
+                    admobInterstitial.showInterstitialAd(activity,object :
+                        InterstitialOnShowCallBack {
                         override fun onAdDismissedFullScreenContent() {}
                         override fun onAdFailedToShowFullScreenContent() {}
                         override fun onAdShowedFullScreenContent() {}

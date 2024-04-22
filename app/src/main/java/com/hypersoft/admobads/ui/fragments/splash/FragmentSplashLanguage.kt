@@ -1,10 +1,10 @@
 package com.hypersoft.admobads.ui.fragments.splash
 
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.AdmobInterstitial
-import com.hypersoft.admobads.adsconfig.AdmobNativePreload
-import com.hypersoft.admobads.adsconfig.callbacks.InterstitialOnShowCallBack
-import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.adsconfig.interstitial.AdmobInterstitial
+import com.hypersoft.admobads.adsconfig.natives.AdmobNativePreload
+import com.hypersoft.admobads.adsconfig.interstitial.callbacks.InterstitialOnShowCallBack
+import com.hypersoft.admobads.adsconfig.natives.enums.NativeType
 import com.hypersoft.admobads.databinding.FragmentSplashLanguageBinding
 import com.hypersoft.admobads.ui.activities.SplashActivity
 import com.hypersoft.admobads.ui.fragments.base.BaseFragment

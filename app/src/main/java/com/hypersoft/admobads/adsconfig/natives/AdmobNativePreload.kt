@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.adsconfig
+package com.hypersoft.admobads.adsconfig.natives
 
 import android.app.Activity
 import android.util.DisplayMetrics
@@ -19,10 +19,10 @@ import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.adsconfig.callbacks.BannerCallBack
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.isNativeLoading
-import com.hypersoft.admobads.adsconfig.constants.AdsConstants.preloadNativeAd
-import com.hypersoft.admobads.adsconfig.enums.NativeType
+import com.hypersoft.admobads.adsconfig.natives.callbacks.NativeCallBack
+import com.hypersoft.admobads.adsconfig.natives.enums.NativeType
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants.isNativeLoading
+import com.hypersoft.admobads.adsconfig.utils.AdsConstants.preloadNativeAd
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,72 +51,107 @@ class AdmobNativePreload {
         adEnable: Int,
         isAppPurchased: Boolean,
         isInternetConnected: Boolean,
-        bannerCallBack: BannerCallBack
+        nativeCallBack: NativeCallBack? = null
     ) {
         val handlerException = CoroutineExceptionHandler { coroutineContext, throwable ->
             Log.e("AdsInformation", "${throwable.message}")
-            bannerCallBack.onAdFailedToLoad("${throwable.message}")
+            nativeCallBack?.onAdFailedToLoad("${throwable.message}")
         }
-        activity?.let { mActivity ->
-            try {
-                if (isInternetConnected && adEnable != 0 && !isAppPurchased && !isNativeLoading && nativeId.isNotEmpty()) {
-                    isNativeLoading = true
-                    if (preloadNativeAd == null) {
-                        CoroutineScope(Dispatchers.IO + handlerException).launch {
-                            val builder: AdLoader.Builder = AdLoader.Builder(mActivity, nativeId)
-                            val adLoader =
-                                builder.forNativeAd { unifiedNativeAd: NativeAd? ->
-                                    preloadNativeAd = unifiedNativeAd
-                                }
-                                    .withAdListener(object : AdListener() {
-                                        override fun onAdImpression() {
-                                            super.onAdImpression()
-                                            Log.d("AdsInformation", "admob native onAdImpression")
-                                            bannerCallBack.onAdImpression()
-                                            preloadNativeAd = null
-                                        }
 
-                                        override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                                            Log.e("AdsInformation", "admob native onAdFailedToLoad: ${loadAdError.message}")
-                                            bannerCallBack.onAdFailedToLoad(loadAdError.message)
-                                            preloadNativeAd = null
-                                            isNativeLoading = false
-                                            super.onAdFailedToLoad(loadAdError)
-                                        }
+        if (isAppPurchased) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Premium user")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Premium user")
+            return
+        }
 
-                                        override fun onAdLoaded() {
-                                            super.onAdLoaded()
-                                            Log.d("AdsInformation", "admob native onAdLoaded")
-                                            isNativeLoading = false
-                                            bannerCallBack.onAdLoaded()
-                                        }
+        if (adEnable == 0) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Remote config is off")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Remote config is off")
+            return
+        }
 
-                                    }).withNativeAdOptions(
-                                        com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
-                                            .setAdChoicesPlacement(
-                                                NativeAdOptions.ADCHOICES_TOP_RIGHT
-                                            ).build()
-                                    )
-                                    .build()
-                            adLoader.loadAd(AdRequest.Builder().build())
+        if (isInternetConnected.not()) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Internet is not connected")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Internet is not connected")
+            return
+        }
+
+        if (activity == null) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Context is null")
+            nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Context is null")
+            return
+        }
+
+        if (activity.isFinishing || activity.isDestroyed) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> activity is finishing or destroyed")
+              nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> activity is finishing or destroyed")
+            return
+        }
+
+        if (nativeId.trim().isEmpty()) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> Ad id is empty")
+              nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> Ad id is empty")
+            return
+        }
+
+        if (isNativeLoading) {
+            Log.e("AdsInformation", "onAdFailedToLoad -> native is loading...")
+              nativeCallBack?.onAdFailedToLoad("onAdFailedToLoad -> native is loading...")
+            return
+        }
+
+        try {
+            isNativeLoading = true
+            if (preloadNativeAd == null) {
+                CoroutineScope(Dispatchers.IO + handlerException).launch {
+                    val builder: AdLoader.Builder = AdLoader.Builder(activity, nativeId)
+                    val adLoader =
+                        builder.forNativeAd { unifiedNativeAd: NativeAd? ->
+                            preloadNativeAd = unifiedNativeAd
                         }
-                    } else {
-                        isNativeLoading = false
-                        Log.e("AdsInformation", "Native is already loaded")
-                        bannerCallBack.onPreloaded()
-                    }
+                            .withAdListener(object : AdListener() {
+                                override fun onAdImpression() {
+                                    super.onAdImpression()
+                                    Log.d("AdsInformation", "admob native onAdImpression")
+                                    nativeCallBack?.onAdImpression()
+                                    preloadNativeAd = null
+                                }
 
-                } else {
-                    Log.e("AdsInformation", "adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
-                    bannerCallBack.onAdFailedToLoad("adEnable = $adEnable, isAppPurchased = $isAppPurchased, isInternetConnected = $isInternetConnected")
+                                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
+                                    Log.e("AdsInformation", "admob native onAdFailedToLoad: ${loadAdError.message}")
+                                    nativeCallBack?.onAdFailedToLoad(loadAdError.message)
+                                    preloadNativeAd = null
+                                    isNativeLoading = false
+                                    super.onAdFailedToLoad(loadAdError)
+                                }
+
+                                override fun onAdLoaded() {
+                                    super.onAdLoaded()
+                                    Log.i("AdsInformation", "admob native onAdLoaded")
+                                    isNativeLoading = false
+                                    nativeCallBack?.onAdLoaded()
+                                }
+
+                            }).withNativeAdOptions(
+                                com.google.android.gms.ads.nativead.NativeAdOptions.Builder()
+                                    .setAdChoicesPlacement(
+                                        NativeAdOptions.ADCHOICES_TOP_RIGHT
+                                    ).build()
+                            )
+                            .build()
+                    adLoader.loadAd(AdRequest.Builder().build())
                 }
-
-            } catch (ex: Exception) {
+            } else {
                 isNativeLoading = false
-                Log.e("AdsInformation", "${ex.message}")
-                bannerCallBack.onAdFailedToLoad("${ex.message}")
-
+                Log.e("AdsInformation", "Native is already loaded")
+                nativeCallBack?.onPreloaded()
             }
+
+        } catch (ex: Exception) {
+            isNativeLoading = false
+            Log.e("AdsInformation", "${ex.message}")
+            nativeCallBack?.onAdFailedToLoad("${ex.message}")
+
         }
     }
 

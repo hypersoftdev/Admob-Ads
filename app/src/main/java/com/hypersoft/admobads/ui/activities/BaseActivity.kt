@@ -8,7 +8,6 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import com.hypersoft.admobads.BuildConfig
 import com.hypersoft.admobads.helpers.firebase.FirebaseUtils.recordException
 import com.hypersoft.admobads.helpers.koin.DIComponent
 
@@ -50,18 +49,6 @@ abstract class BaseActivity<T : ViewDataBinding>(@LayoutRes layoutId: Int) : App
             }
         } catch (ex: Exception) {
             ex.recordException("showToast : ${javaClass.simpleName}")
-        }
-    }
-
-    protected fun debugToast(message: String) {
-        try {
-            runOnUiThread {
-                if (BuildConfig.DEBUG) {
-                    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                }
-            }
-        } catch (ex: Exception) {
-            ex.recordException("debugToast : ${javaClass.simpleName}")
         }
     }
 }
