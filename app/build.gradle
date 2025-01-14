@@ -10,14 +10,14 @@ plugins {
 
 android {
     namespace 'com.hypersoft.admobads'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.hypersoft.admobads"
         minSdk 24
-        targetSdk 34
-        versionCode 107
-        versionName "3.7.7"
+        targetSdk 35
+        versionCode 200
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -63,44 +63,41 @@ android {
         dataBinding true
         viewBinding true
         buildConfig true
+        resValues true
     }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.12.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.android.material:material:1.12.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
 
     // SDP layout size && SSP Text sizes
-    implementation 'com.intuit.sdp:sdp-android:1.1.0'
-    implementation 'com.intuit.ssp:ssp-android:1.1.0'
+    implementation 'com.intuit.sdp:sdp-android:1.1.1'
+    implementation 'com.intuit.ssp:ssp-android:1.1.1'
 
-// firebase configuration
-    implementation platform('com.google.firebase:firebase-bom:32.7.2')
-    // Firebase Remote Config (Kotlin)
+    // Firebase configuration
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-config'
-    // Firebase Analytics (Kotlin)
     implementation 'com.google.firebase:firebase-analytics'
-    // Firebase Crashlytics (Kotlin)
     implementation 'com.google.firebase:firebase-crashlytics'
 
-    // navigation components
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    // Navigation components
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.5'
 
     // View Model
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.7'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7'
 
     // Koin for dependency injection
-    implementation "io.insert-koin:koin-android:3.4.0"
+    implementation "io.insert-koin:koin-android:4.0.1"
 
     // Work
-    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.work:work-runtime-ktx:2.10.0'
 
     // Admob ads
-    implementation 'com.google.android.gms:play-services-ads:22.6.0'
-
+    implementation 'com.google.android.gms:play-services-ads:23.6.0'
 }
