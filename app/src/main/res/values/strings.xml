@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Admob Ads</string>
+    <string name="visit_site">Visit Site</string>
+
+    <string name="entrance_screen">Entrance Screen</string>
+    <string name="language_screen">Language Screen</string>
+    <string name="loading_native">Loading Native…</string>
 </resources>

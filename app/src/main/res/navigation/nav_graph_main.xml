@@ -25,11 +25,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
+
     <fragment
         android:id="@+id/fragmentSample"
         android:name="com.hypersoft.admobads.ui.fragments.sample.FragmentSample"
         android:label="FragmentSample"
         tools:layout="@layout/fragment_sample"/>
+
     <fragment
         android:id="@+id/fragmentBanner"
         android:name="com.hypersoft.admobads.ui.fragments.sample.FragmentBanner"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentEntrance">
+
+    <fragment
+        android:id="@+id/fragmentEntrance"
+        android:name="com.hypersoft.admobads.newPackage.app.entrance.FragmentEntrance"
+        android:label="fragment_entrance"
+        tools:layout="@layout/fragment_entrance" >
+        <action
+            android:id="@+id/action_fragmentEntrance_to_fragmentLanguage"
+            app:destination="@id/fragmentLanguage"
+            app:popUpTo="@id/fragmentEntrance"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentLanguage"
+        android:name="com.hypersoft.admobads.newPackage.app.language.FragmentLanguage"
+        android:label="fragment_language"
+        tools:layout="@layout/fragment_language" />
+</navigation>

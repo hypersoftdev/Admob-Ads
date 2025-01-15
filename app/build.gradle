@@ -13,7 +13,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId "com.hypersoft.admobads"
+        applicationId "com.hypersoft.admobads.testing"
         minSdk 24
         targetSdk 35
         versionCode 200
@@ -24,6 +24,13 @@ android {
 
     buildTypes {
         release {
+            resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_exit_id", "ca-app-pub-3940256099942544/2247696110"
+
+
             resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'
             resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
             resValue 'string', 'admob_rewarded_inter_ids', '"ca-app-pub-3940256099942544/5354046379"'
@@ -38,6 +45,13 @@ android {
         }
 
         debug {
+            resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_exit_id", "ca-app-pub-3940256099942544/2247696110"
+
+
             resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'
             resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
             resValue 'string', 'admob_rewarded_inter_ids', '"ca-app-pub-3940256099942544/5354046379"'
@@ -73,6 +87,9 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+
+    // Activity extension
+    implementation 'androidx.activity:activity-ktx:1.9.3'
 
     // SDP layout size && SSP Text sizes
     implementation 'com.intuit.sdp:sdp-android:1.1.1'

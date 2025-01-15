@@ -1,39 +1,29 @@
 {
-  "project_info": {
-    "project_number": "339429942454",
-    "project_id": "admob-ads-d26d3",
-    "storage_bucket": "admob-ads-d26d3.appspot.com"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:339429942454:android:6dc761a9cb001f6ef93217",
-        "android_client_info": {
-          "package_name": "com.hypersoft.admobads"
-        }
-      },
-      "oauth_client": [
+    "project_info": {
+        "project_number": "139790355625",
+        "project_id": "base-project-62f1f",
+        "storage_bucket": "base-project-62f1f.firebasestorage.app"
+    },
+    "client": [
         {
-          "client_id": "339429942454-ue866c632ghvi5a2d5hnmjm1c0ub2233.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAlpFsu2kLXd-xZ3oXtHECu0j7qSpLk08o"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "339429942454-ue866c632ghvi5a2d5hnmjm1c0ub2233.apps.googleusercontent.com",
-              "client_type": 3
+            "client_info": {
+                "mobilesdk_app_id": "1:139790355625:android:1a87f7ee35e7fdad4d6db8",
+                "android_client_info": {
+                    "package_name": "com.hypersoft.admobads.testing"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyANQenLwYEwE8KDCU32yKN-Yfyat5cn9cQ"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
             }
-          ]
         }
-      }
-    }
-  ],
-  "configuration_version": "1"
+    ],
+    "configuration_version": "1"
 }
