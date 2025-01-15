@@ -4,22 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".newPackage.app.language.FragmentLanguage">
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mbContinueLanguage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="@string/_continue"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    tools:context=".FragmentOnBoarding">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/language_screen"
+        android:text="@string/on_boarding_screen"
         android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,8 +20,18 @@
         app:layout_constraintVertical_bias="0.2"
         app:layout_constraintWidth_percent="0.9" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbContinueOnBoarding"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:text="@string/_continue"
+        app:layout_constraintBottom_toTopOf="@+id/nativeAdOnBoarding"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.hypersoft.admobads.newPackage.ads.natives.presentation.ui.AdNativeLargeView
-        android:id="@+id/nativeAdLanguage"
+        android:id="@+id/nativeAdOnBoarding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#DCDCDC"

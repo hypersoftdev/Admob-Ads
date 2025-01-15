@@ -14,9 +14,15 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     private val viewModelNative by activityViewModel<ViewModelNative>()
 
     override fun onViewCreated() {
-        loadNative()
+        initRemoteConfigs()
         initObservers()
-        withDelay(1000) { navigateScreen() }
+    }
+
+    private fun initRemoteConfigs() {
+        diComponent.remoteConfiguration.checkRemoteConfig {
+            loadNative()
+            withDelay(1000) { navigateScreen() }
+        }
     }
 
     private fun loadNative() {
@@ -24,8 +30,13 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     }
 
     private fun initObservers() {
-        viewModelNative.adViewLiveData.observe(viewLifecycleOwner) { navigateScreen() }
-        viewModelNative.loadFailedLiveData.observe(viewLifecycleOwner) { navigateScreen() }
+        viewModelNative.adViewLiveData.observe(viewLifecycleOwner) { onNativeResponse() }
+        viewModelNative.loadFailedLiveData.observe(viewLifecycleOwner) { onNativeResponse() }
+    }
+
+    private fun onNativeResponse() {
+        binding.mtvTextEntrance.setText(R.string.native_response)
+        navigateScreen()
     }
 
     private fun navigateScreen() {

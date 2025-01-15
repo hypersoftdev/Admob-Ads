@@ -2,6 +2,7 @@ package com.hypersoft.admobads.oldPackage.ui.fragments.home
 
 import android.util.Log
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.databinding.FragmentHome2Binding
 import com.hypersoft.admobads.oldPackage.adsconfig.banners.AdmobBanner
 import com.hypersoft.admobads.oldPackage.adsconfig.banners.callbacks.BannerCallBack
 import com.hypersoft.admobads.oldPackage.adsconfig.banners.enums.BannerType
@@ -24,7 +25,7 @@ import com.hypersoft.admobads.oldPackage.ui.fragments.base.BaseFragment
  *      -> https://github.com/orbitalsonic
  *      -> https://www.linkedin.com/in/myaqoob7
  */
-class FragmentHome : BaseFragment<FragmentHomeBinding>(R.layout.fragment_home) {
+class FragmentHome : BaseFragment<FragmentHome2Binding>(R.layout.fragment_home2) {
 
     private val admobBanner by lazy { AdmobBanner() }
     private val admobNative by lazy { AdmobNative() }

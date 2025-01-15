@@ -2,7 +2,7 @@ package com.hypersoft.admobads.newPackage.utilities.base.fragments
 
 import android.view.LayoutInflater
 import androidx.viewbinding.ViewBinding
-import com.hypersoft.admobads.oldPackage.helpers.koin.DIComponent
+import com.hypersoft.admobads.newPackage.di.DIComponent
 
 /**
  * Created by: Sohaib Ahmed

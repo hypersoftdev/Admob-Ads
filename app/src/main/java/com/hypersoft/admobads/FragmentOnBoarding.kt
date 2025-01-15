@@ -1,29 +1,34 @@
-package com.hypersoft.admobads.newPackage.app.language
+package com.hypersoft.admobads
 
 import android.view.View
-import com.hypersoft.admobads.R
-import com.hypersoft.admobads.databinding.FragmentLanguageBinding
+import com.hypersoft.admobads.databinding.FragmentOnBoardingBinding
+import com.hypersoft.admobads.newPackage.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.newPackage.utilities.base.fragments.BaseFragment
 import com.hypersoft.admobads.newPackage.utilities.extensions.navigateTo
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
-class FragmentLanguage : BaseFragment<FragmentLanguageBinding>(FragmentLanguageBinding::inflate) {
+class FragmentOnBoarding : BaseFragment<FragmentOnBoardingBinding>(FragmentOnBoardingBinding::inflate) {
 
     private val viewModelNative by activityViewModel<ViewModelNative>()
 
     override fun onViewCreated() {
+        loadNativeAd()
         initObservers()
 
-        binding.mbContinueLanguage.setOnClickListener { navigateTo(R.id.fragmentLanguage, R.id.action_fragmentLanguage_to_fragmentOnBoarding) }
+        binding.mbContinueOnBoarding.setOnClickListener { navigateTo(R.id.fragmentOnBoarding, R.id.action_fragmentOnBoarding_to_fragmentHome) }
+    }
+
+    private fun loadNativeAd() {
+        viewModelNative.loadNativeAd(NativeAdKey.ON_BOARDING)
     }
 
     private fun initObservers() {
         viewModelNative.adViewLiveData.observe(viewLifecycleOwner) {
-            binding.nativeAdLanguage.setNativeAd(it)
+            binding.nativeAdOnBoarding.setNativeAd(it)
         }
         viewModelNative.loadFailedLiveData.observe(viewLifecycleOwner) {
-            binding.nativeAdLanguage.visibility = View.GONE
+            binding.nativeAdOnBoarding.visibility = View.GONE
         }
     }
 }

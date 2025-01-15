@@ -26,8 +26,8 @@ import com.hypersoft.admobads.newPackage.utilities.utils.Constants.TAG
 abstract class ParentActivity<T : ViewBinding>(private val bindingFactory: (LayoutInflater) -> T) : AppCompatActivity() {
 
     protected val binding by lazy { bindingFactory(layoutInflater) }
-    protected var includeTopPadding = false
-    protected var includeBottomPadding = false
+    protected var includeTopPadding = true
+    protected var includeBottomPadding = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         onPreCreated()
