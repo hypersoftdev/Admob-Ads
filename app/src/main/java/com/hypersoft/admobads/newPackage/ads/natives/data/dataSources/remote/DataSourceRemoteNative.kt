@@ -9,7 +9,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.hypersoft.admobads.newPackage.utilities.utils.Constants.TAG_ADS
-import com.hypersoft.admobads.newPackage.ads.natives.domain.entities.ItemNativeAd
+import com.hypersoft.admobads.newPackage.ads.natives.data.entities.ItemNativeAd
 import java.lang.ref.WeakReference
 
 /**

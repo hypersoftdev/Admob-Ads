@@ -1,6 +1,6 @@
-package com.hypersoft.admobads.newPackage.ads.natives.domain.entities
+package com.hypersoft.admobads.newPackage.ads.interstitial.data.entities
 
-import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.interstitial.InterstitialAd
 
 /**
  * Created by: Sohaib Ahmed
@@ -11,8 +11,8 @@ import com.google.android.gms.ads.nativead.NativeAd
  * - GitHub: https://github.com/epegasus
  */
 
-data class ItemNativeAd(
+data class ItemInterstitialAd(
     val adId: String,
-    val nativeAd: NativeAd,
+    val interstitialAd: InterstitialAd,
     val impressionReceived: Boolean = false
 )

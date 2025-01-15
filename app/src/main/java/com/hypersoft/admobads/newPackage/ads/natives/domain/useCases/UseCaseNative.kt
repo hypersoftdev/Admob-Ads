@@ -3,8 +3,8 @@ package com.hypersoft.admobads.newPackage.ads.natives.domain.useCases
 import android.content.Context
 import android.util.Log
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.newPackage.ads.natives.data.repositories.RepositoryNative
-import com.hypersoft.admobads.newPackage.ads.natives.domain.entities.ItemNativeAd
+import com.hypersoft.admobads.newPackage.ads.natives.data.repositories.RepositoryNativeImpl
+import com.hypersoft.admobads.newPackage.ads.natives.data.entities.ItemNativeAd
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.newPackage.utilities.manager.InternetManager
 import com.hypersoft.admobads.newPackage.utilities.manager.SharedPreferencesUtils
@@ -20,7 +20,7 @@ import com.hypersoft.admobads.newPackage.utilities.utils.Constants.TAG_ADS
  */
 
 class UseCaseNative(
-    private val repositoryNative: RepositoryNative,
+    private val repositoryNativeImpl: RepositoryNativeImpl,
     private val sharedPreferenceUtils: SharedPreferencesUtils,
     private val internetManager: InternetManager,
     private val context: Context
@@ -50,7 +50,7 @@ class UseCaseNative(
 
     fun loadNativeAd(nativeAdKey: NativeAdKey, callback: (ItemNativeAd?) -> Unit) {
         validateAndLoadAd(nativeAdKey, callback) { adId ->
-            repositoryNative.fetchNativeAd(adKey = nativeAdKey.value, adId = adId, callback = callback)
+            repositoryNativeImpl.fetchNativeAd(adKey = nativeAdKey.value, adId = adId, callback = callback)
         }
     }
 

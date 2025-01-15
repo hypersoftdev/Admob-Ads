@@ -5,7 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.local.DataSourceLocalNative
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.remote.DataSourceRemoteNative
-import com.hypersoft.admobads.newPackage.ads.natives.data.repositories.RepositoryNative
+import com.hypersoft.admobads.newPackage.ads.natives.data.repositories.RepositoryNativeImpl
 import com.hypersoft.admobads.newPackage.ads.natives.domain.useCases.UseCaseNative
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.newPackage.utilities.firebase.RemoteConfiguration
@@ -41,7 +41,7 @@ class KoinModules {
     private val nativeAdModule = module {
         single { DataSourceLocalNative() }
         single { DataSourceRemoteNative(context = get()) }
-        single { RepositoryNative(get(), get()) }
+        single { RepositoryNativeImpl(get(), get()) }
         single { UseCaseNative(get(), get(), get(), get()) }
         viewModel { ViewModelNative(get()) }
     }

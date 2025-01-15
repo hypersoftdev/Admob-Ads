@@ -2,6 +2,8 @@ package com.hypersoft.admobads.newPackage.app.entrance
 
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.FragmentEntranceBinding
+import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.enums.InterAdKey
+import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.viewModels.ViewModelInterstitial
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.newPackage.utilities.base.fragments.BaseFragment
@@ -12,6 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceBinding::inflate) {
 
     private val viewModelNative by activityViewModel<ViewModelNative>()
+    private val viewModelInterstitial by activityViewModel<ViewModelInterstitial>()
 
     override fun onViewCreated() {
         initRemoteConfigs()
@@ -21,12 +24,17 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     private fun initRemoteConfigs() {
         diComponent.remoteConfiguration.checkRemoteConfig {
             loadNative()
+            loadInterstitial()
             withDelay(1000) { navigateScreen() }
         }
     }
 
     private fun loadNative() {
         viewModelNative.loadNativeAd(NativeAdKey.LANGUAGE)
+    }
+
+    private fun loadInterstitial() {
+        viewModelInterstitial.laodInterAd(InterAdKey.SPLASH)
     }
 
     private fun initObservers() {

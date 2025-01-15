@@ -1,6 +1,6 @@
 package com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.local
 
-import com.hypersoft.admobads.newPackage.ads.natives.domain.entities.ItemNativeAd
+import com.hypersoft.admobads.newPackage.ads.natives.data.entities.ItemNativeAd
 import kotlin.collections.iterator
 
 /**

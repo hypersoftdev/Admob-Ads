@@ -1,10 +1,11 @@
 package com.hypersoft.admobads.newPackage.ads.natives.data.repositories
 
 import android.util.Log
-import com.hypersoft.admobads.newPackage.utilities.utils.Constants
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.local.DataSourceLocalNative
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.remote.DataSourceRemoteNative
-import com.hypersoft.admobads.newPackage.ads.natives.domain.entities.ItemNativeAd
+import com.hypersoft.admobads.newPackage.ads.natives.data.entities.ItemNativeAd
+import com.hypersoft.admobads.newPackage.ads.natives.domain.repository.RepositoryNative
+import com.hypersoft.admobads.newPackage.utilities.utils.Constants
 
 /**
  * Created by: Sohaib Ahmed
@@ -15,12 +16,9 @@ import com.hypersoft.admobads.newPackage.ads.natives.domain.entities.ItemNativeA
  * - GitHub: https://github.com/epegasus
  */
 
-class RepositoryNative(
-    private val dataSourceLocalNative: DataSourceLocalNative,
-    private val dataSourceRemoteNative: DataSourceRemoteNative
-) {
+class RepositoryNativeImpl(private val dataSourceLocalNative: DataSourceLocalNative, private val dataSourceRemoteNative: DataSourceRemoteNative) : RepositoryNative {
 
-    fun fetchNativeAd(adKey: String, adId: String, callback: (ItemNativeAd?) -> Unit) {
+    override fun fetchNativeAd(adKey: String, adId: String, callback: (ItemNativeAd?) -> Unit) {
         val cachedAd = dataSourceLocalNative.getCachedNativeAd(adKey)
         if (cachedAd != null) {
             Log.d(Constants.TAG_ADS, "$adKey -> fetchNativeAd: Reshowing Ad")

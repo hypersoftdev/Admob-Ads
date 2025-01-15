@@ -78,11 +78,17 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
         // Save this value anywhere
         sharedPreferencesUtils.apply {
             try {
+                rcInterSplash = remoteConfig[interSplash].asLong().toInt()
+                rcInterOnBoarding = remoteConfig[interOnBoarding].asLong().toInt()
+
                 rcNativeLanguage = remoteConfig[nativeLanguage].asLong().toInt()
                 rcNativeOnBoarding = remoteConfig[nativeOnBoarding].asLong().toInt()
                 rcNativeHome = remoteConfig[nativeHome].asLong().toInt()
                 rcNativeFeature = remoteConfig[nativeFeature].asLong().toInt()
                 rcNativeExit = remoteConfig[nativeExit].asLong().toInt()
+
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterSplash -> ${remoteConfig[interSplash].asLong().toInt()}")
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterOnBoarding -> ${remoteConfig[interOnBoarding].asLong().toInt()}")
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeLanguage -> ${remoteConfig[nativeLanguage].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeOnBoarding -> ${remoteConfig[nativeOnBoarding].asLong().toInt()}")
