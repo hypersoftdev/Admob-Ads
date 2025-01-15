@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/fragmentOnBoarding"
-        android:name="com.hypersoft.admobads.FragmentOnBoarding"
+        android:name="com.hypersoft.admobads.newPackage.app.onBoarding.FragmentOnBoarding"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding">
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/fragmentHome"
-        android:name="com.hypersoft.admobads.FragmentHome"
+        android:name="com.hypersoft.admobads.newPackage.app.home.FragmentHome"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
 </navigation>

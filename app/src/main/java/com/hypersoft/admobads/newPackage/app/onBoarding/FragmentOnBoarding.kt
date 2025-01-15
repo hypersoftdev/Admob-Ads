@@ -1,6 +1,7 @@
-package com.hypersoft.admobads
+package com.hypersoft.admobads.newPackage.app.onBoarding
 
 import android.view.View
+import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.FragmentOnBoardingBinding
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.ViewModelNative

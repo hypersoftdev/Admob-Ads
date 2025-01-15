@@ -5,11 +5,10 @@
     <string name="entrance_screen">Entrance Screen</string>
     <string name="language_screen">Language Screen</string>
     <string name="on_boarding_screen">OnBoarding Screen</string>
-    
+    <string name="home_screen">Home Screen</string>
+
     <string name="loading_native">Loading Native…</string>
     <string name="native_response">Native Responded</string>
     
     <string name="_continue">Continue</string>
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
