@@ -1,7 +1,6 @@
 package com.hypersoft.admobads.ads.natives.data.dataSources.local
 
 import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
-import kotlin.collections.iterator
 
 /**
  * Created by: Sohaib Ahmed
@@ -33,5 +32,17 @@ class AdCache {
 
     fun put(adKey: String, itemNativeAd: ItemNativeAd) {
         adCache[adKey] = itemNativeAd
+    }
+
+    /**
+     *  Only delete if impression is received else if ignore
+     */
+
+    fun deleteAd(adKey: String) {
+        adCache[adKey]?.let {
+            if (it.impressionReceived) {
+                adCache.remove(adKey)
+            }
+        }
     }
 }

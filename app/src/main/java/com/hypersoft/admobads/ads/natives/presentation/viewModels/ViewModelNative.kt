@@ -35,4 +35,8 @@ class ViewModelNative(private val useCaseNative: UseCaseNative) : ViewModel() {
             }
         }
     }
+
+    fun destroyNative(nativeAdKey: NativeAdKey) {
+        useCaseNative.destroyNative(nativeAdKey)
+    }
 }

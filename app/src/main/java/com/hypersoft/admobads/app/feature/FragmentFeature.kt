@@ -35,6 +35,6 @@ class FragmentFeature : BaseFragment<FragmentFeatureBinding>(FragmentFeatureBind
 
     override fun onDestroy() {
         super.onDestroy()
-        //viewModelNative.destroyNative(NativeAdKey.FEATURE)
+        viewModelNative.destroyNative(NativeAdKey.FEATURE)
     }
 }

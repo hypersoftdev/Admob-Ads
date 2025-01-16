@@ -3,8 +3,8 @@ package com.hypersoft.admobads.ads.natives.domain.useCases
 import android.content.Context
 import android.util.Log
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.ads.natives.data.repositories.RepositoryNativeImpl
 import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
+import com.hypersoft.admobads.ads.natives.data.repositories.RepositoryNativeImpl
 import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.utilities.manager.InternetManager
 import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
@@ -88,5 +88,9 @@ class UseCaseNative(
                 loadAdAction(adId)
             }
         }
+    }
+
+    fun destroyNative(nativeAdKey: NativeAdKey) {
+        repositoryNativeImpl.destroyNative(nativeAdKey.value)
     }
 }

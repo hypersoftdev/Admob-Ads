@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.ads.natives.data.dataSources.local
 
 import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
+import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 
 /**
  * Created by: Sohaib Ahmed
@@ -29,5 +30,9 @@ class DataSourceLocalNative {
 
     fun putCachedNativeAd(adKey: String, itemNativeAd: ItemNativeAd) {
         adCache.put(adKey, itemNativeAd)
+    }
+
+    fun destroyNative(adKey: String) {
+        adCache.deleteAd(adKey)
     }
 }
