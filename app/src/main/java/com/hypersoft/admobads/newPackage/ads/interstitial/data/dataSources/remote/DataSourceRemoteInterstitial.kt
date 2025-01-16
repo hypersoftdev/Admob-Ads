@@ -22,18 +22,24 @@ import kotlinx.coroutines.flow.callbackFlow
 class DataSourceRemoteInterstitial(private val context: Context) {
 
     fun fetchInterAd(adKey: String, adId: String) = callbackFlow<InterstitialAd?> {
-        InterstitialAd.load(context, adId, AdRequest.Builder().build(), object : InterstitialAdLoadCallback() {
+        val adRequest = AdRequest.Builder().build()
+
+        val adLoadCallback = object : InterstitialAdLoadCallback() {
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
                 Log.i(TAG_ADS, "$adKey -> loadInterstitial: onAdLoaded")
                 trySend(interstitialAd)
+                close()
             }
 
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 Log.e(TAG_ADS, "$adKey -> loadInterstitial: onAdFailedToLoad: ${adError.message}")
                 trySend(null)
+                close()
             }
-        })
+        }
 
-        awaitClose()
+        InterstitialAd.load(context, adId, adRequest, adLoadCallback)
+
+        awaitClose {}
     }
 }

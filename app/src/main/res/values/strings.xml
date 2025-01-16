@@ -8,7 +8,10 @@
     <string name="home_screen">Home Screen</string>
 
     <string name="loading_native">Loading Native…</string>
+    <string name="loading_inter">Loading Inter…</string>
     <string name="native_response">Native Responded</string>
-    
+    <string name="inter_response">Inter Responded</string>
+
     <string name="_continue">Continue</string>
+    <string name="navigate">Navigate</string>
 </resources>

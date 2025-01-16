@@ -3,6 +3,10 @@ package com.hypersoft.admobads.newPackage.di
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
+import com.hypersoft.admobads.newPackage.ads.interstitial.data.dataSources.remote.DataSourceRemoteInterstitial
+import com.hypersoft.admobads.newPackage.ads.interstitial.data.repositories.RepositoryInterstitialImpl
+import com.hypersoft.admobads.newPackage.ads.interstitial.domain.useCases.UseCaseInterstitial
+import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.viewModels.ViewModelInterstitial
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.local.DataSourceLocalNative
 import com.hypersoft.admobads.newPackage.ads.natives.data.dataSources.remote.DataSourceRemoteNative
 import com.hypersoft.admobads.newPackage.ads.natives.data.repositories.RepositoryNativeImpl
@@ -46,5 +50,12 @@ class KoinModules {
         viewModel { ViewModelNative(get()) }
     }
 
-    val modulesList = listOf(utilsModules, managerModules, firebaseModule, nativeAdModule)
+    private val interAdModule = module {
+        single { DataSourceRemoteInterstitial(context = get()) }
+        single { RepositoryInterstitialImpl(get()) }
+        single { UseCaseInterstitial(get(), get(), get(), androidContext().resources) }
+        viewModel { ViewModelInterstitial(get()) }
+    }
+
+    val modulesList = listOf(utilsModules, managerModules, firebaseModule, nativeAdModule, interAdModule)
 }

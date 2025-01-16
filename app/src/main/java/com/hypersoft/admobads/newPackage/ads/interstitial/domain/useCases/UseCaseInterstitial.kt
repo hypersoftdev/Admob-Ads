@@ -2,14 +2,16 @@ package com.hypersoft.admobads.newPackage.ads.interstitial.domain.useCases
 
 import android.content.res.Resources
 import android.util.Log
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.newPackage.ads.interstitial.data.entities.ItemInterstitialAd
 import com.hypersoft.admobads.newPackage.ads.interstitial.data.repositories.RepositoryInterstitialImpl
+import com.hypersoft.admobads.newPackage.ads.interstitial.domain.sealed.InterResponse
 import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.enums.InterAdKey
-import com.hypersoft.admobads.newPackage.ads.natives.data.entities.ItemNativeAd
 import com.hypersoft.admobads.newPackage.utilities.manager.InternetManager
 import com.hypersoft.admobads.newPackage.utilities.manager.SharedPreferencesUtils
 import com.hypersoft.admobads.newPackage.utilities.utils.Constants.TAG_ADS
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 
 /**
  * Created by: Sohaib Ahmed
@@ -27,6 +29,7 @@ class UseCaseInterstitial(
     private val resources: Resources
 ) {
 
+    private var interstitialAd: InterstitialAd? = null
     private val isAdLoading = false
 
     private fun checkRemoteConfig(interAdKey: InterAdKey): Boolean {
@@ -43,50 +46,75 @@ class UseCaseInterstitial(
         }
     }
 
-    fun loadInterAd(interAdKey: InterAdKey, callback: (ItemInterstitialAd?) -> Unit) {
-        validateAndLoadAd(interAdKey, callback) { adId ->
-            repositoryInterstitialImpl.fetchInterAd(adKey = interAdKey.value, adId = adId, callback = callback)
-        }
-    }
-
-    private fun loadInterAd(interAdKey: InterAdKey) {
-        repositoryInterstitialImpl.loadInterAd(interAdKey)
-    }
-
-
-    private fun validateAndLoadAd(interAdKey: InterAdKey, callback: (ItemInterstitialAd?) -> Unit, loadAdAction: (adId: String) -> Unit) {
+    fun loadInterAd(interAdKey: InterAdKey): Flow<InterResponse> = callbackFlow {
         val isRemoteEnable = checkRemoteConfig(interAdKey)
         val adId = getAdId(interAdKey)
 
         when {
             sharedPreferenceUtils.isAppPurchased -> {
-                Log.e(TAG_ADS, "${interAdKey.value} -> loadInterAd: Premium user")
-                callback.invoke(null)
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Premium user"
+                Log.e(TAG_ADS, errorMessage)
+                trySend(InterResponse.FAILURE(errorMessage))
+                close()
             }
 
             isRemoteEnable.not() -> {
-                Log.e(TAG_ADS, "${interAdKey.value} -> loadInterAd: Remote config is off")
-                callback.invoke(null)
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Remote config is off"
+                Log.e(TAG_ADS, errorMessage)
+                trySend(InterResponse.FAILURE(errorMessage))
+                close()
+            }
+
+            interstitialAd != null -> {
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Ad already available"
+                Log.d(TAG_ADS, errorMessage)
+                trySend(InterResponse.SUCCESS)
+                close()
             }
 
             internetManager.isInternetConnected.not() -> {
-                Log.e(TAG_ADS, "${interAdKey.value} -> loadInterAd: Internet is not connected")
-                callback.invoke(null)
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Internet is not connected"
+                Log.e(TAG_ADS, errorMessage)
+                trySend(InterResponse.FAILURE(errorMessage))
+                close()
             }
 
             adId.isEmpty() -> {
-                Log.e(TAG_ADS, "${interAdKey.value} -> loadInterAd: Ad id is empty")
-                callback.invoke(null)
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Ad id is empty"
+                Log.e(TAG_ADS, errorMessage)
+                trySend(InterResponse.FAILURE(errorMessage))
+                close()
             }
 
             isAdLoading -> {
-                Log.e(TAG_ADS, "${interAdKey.value} -> loadInterAd: Ad is already loading")
-                callback.invoke(null)
+                val errorMessage = "${interAdKey.value} -> loadInterAd: Ad is already loading"
+                Log.d(TAG_ADS, errorMessage)
+                trySend(InterResponse.LOADING)
             }
 
             else -> {
-                loadAdAction(adId)
+                repositoryInterstitialImpl.fetchInterAd(interAdKey.value, adId)
+                    .collect {
+                        interstitialAd = it
+                        when (it == null) {
+                            true -> {
+                                val errorMessage = "${interAdKey.value} -> loadInterAd: Ad failed to load"
+                                trySend(InterResponse.FAILURE(errorMessage))
+                            }
+
+                            false -> {
+                                trySend(InterResponse.SUCCESS)
+                            }
+                        }
+                    }
+                close()
             }
+        }
+    }
+
+    private fun showInterAd() {
+        interstitialAd?.let {
+            repositoryInterstitialImpl.showInterAd(it)
         }
     }
 }

@@ -1,8 +1,9 @@
 package com.hypersoft.admobads.newPackage.ads.interstitial.data.repositories
 
+import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.hypersoft.admobads.newPackage.ads.interstitial.data.dataSources.remote.DataSourceRemoteInterstitial
-import com.hypersoft.admobads.newPackage.ads.interstitial.data.entities.ItemInterstitialAd
 import com.hypersoft.admobads.newPackage.ads.interstitial.domain.repositories.RepositoryInterstitial
+import kotlinx.coroutines.flow.Flow
 
 /**
  * Created by: Sohaib Ahmed
@@ -15,10 +16,9 @@ import com.hypersoft.admobads.newPackage.ads.interstitial.domain.repositories.Re
 
 class RepositoryInterstitialImpl(private val dataSourceRemoteInterstitial: DataSourceRemoteInterstitial) : RepositoryInterstitial {
 
-
-    fun fetchInterAd(adKey: String, adId: String, callback: (ItemInterstitialAd?) -> Unit) {
-        dataSourceRemoteInterstitial.fetchInterAd(adKey, adId, callback)
+    override fun fetchInterAd(adKey: String, adId: String): Flow<InterstitialAd?> {
+        return dataSourceRemoteInterstitial.fetchInterAd(adKey, adId)
     }
 
-
+    fun showInterAd(ad: InterstitialAd) {}
 }

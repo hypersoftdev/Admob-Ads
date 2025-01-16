@@ -31,8 +31,8 @@ abstract class ParentActivity<T : ViewBinding>(private val bindingFactory: (Layo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         onPreCreated()
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setPadding()
         onCreated()
