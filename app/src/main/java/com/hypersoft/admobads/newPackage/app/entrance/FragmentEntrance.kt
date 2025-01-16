@@ -10,10 +10,11 @@ import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.Vie
 import com.hypersoft.admobads.newPackage.utilities.base.fragments.BaseFragment
 import com.hypersoft.admobads.newPackage.utilities.extensions.navigateTo
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceBinding::inflate) {
 
-    private val viewModelNative by activityViewModel<ViewModelNative>()
+    private val viewModelNative by viewModel<ViewModelNative>()
     private var responseCounter = 0
 
     override fun onViewCreated() {

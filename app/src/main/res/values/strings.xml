@@ -6,6 +6,8 @@
     <string name="language_screen">Language Screen</string>
     <string name="on_boarding_screen">OnBoarding Screen</string>
     <string name="home_screen">Home Screen</string>
+    <string name="feature_screen">Feature Screen</string>
+    <string name="settings_screen">Settings Screen</string>
 
     <string name="loading_native">Loading Native…</string>
     <string name="loading_inter">Loading Inter…</string>

@@ -2,7 +2,7 @@ package com.hypersoft.admobads.newPackage.utilities.manager
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.hypersoft.admobads.oldPackage.helpers.firebase.FirebaseUtils.recordException
+import com.hypersoft.admobads.newPackage.utilities.firebase.FirebaseUtils.recordException
 
 /**
  * Created by: Sohaib Ahmed

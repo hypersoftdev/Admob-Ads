@@ -34,7 +34,7 @@ class UseCaseNative(
             NativeAdKey.ON_BOARDING -> sharedPreferenceUtils.rcNativeOnBoarding != 0
             NativeAdKey.HOME -> sharedPreferenceUtils.rcNativeHome != 0
             NativeAdKey.FEATURE -> sharedPreferenceUtils.rcNativeFeature != 0
-            NativeAdKey.EXIT -> sharedPreferenceUtils.rcNativeExit != 0
+            NativeAdKey.Settings -> sharedPreferenceUtils.rcNativeExit != 0
         }
     }
 
@@ -44,7 +44,7 @@ class UseCaseNative(
             NativeAdKey.ON_BOARDING -> context.getString(R.string.admob_native_on_boarding_id).trim()
             NativeAdKey.HOME -> context.getString(R.string.admob_native_home_id).trim()
             NativeAdKey.FEATURE -> context.getString(R.string.admob_native_full_screen_id).trim()
-            NativeAdKey.EXIT -> context.getString(R.string.admob_native_exit_id).trim()
+            NativeAdKey.Settings -> context.getString(R.string.admob_native_settings_id).trim()
         }
     }
 

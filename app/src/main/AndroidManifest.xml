@@ -24,12 +24,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".oldPackage.ui.activities.SplashActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".oldPackage.ui.activities.MainActivity2"
-            android:exported="false" />
-        <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@style/Theme.AdmobAds.AdTheme"

@@ -31,7 +31,7 @@ android {
             resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_exit_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_settings_id", "ca-app-pub-3940256099942544/2247696110"
 
 
             resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'
@@ -55,7 +55,7 @@ android {
             resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_exit_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_settings_id", "ca-app-pub-3940256099942544/2247696110"
 
 
             resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'

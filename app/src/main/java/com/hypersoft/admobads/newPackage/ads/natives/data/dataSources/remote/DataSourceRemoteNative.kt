@@ -22,18 +22,9 @@ import java.lang.ref.WeakReference
  */
 
 
-class DataSourceRemoteNative(context: Context?) {
-
-    private val weakReference = WeakReference<Context>(context)
+class DataSourceRemoteNative(private val context: Context) {
 
     fun fetchNativeAd(adKey: String, adId: String, callback: (ItemNativeAd?) -> Unit) {
-        val context = weakReference.get()
-        if (context == null) {
-            Log.e(TAG_ADS, "fetchNativeAd: context is null")
-            callback.invoke(null)
-            return
-        }
-
         val nativeBuilderOption = NativeAdOptions
             .Builder()
             .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)

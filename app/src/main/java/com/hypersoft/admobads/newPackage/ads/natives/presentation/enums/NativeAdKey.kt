@@ -14,5 +14,5 @@ enum class NativeAdKey(val value: String) {
     ON_BOARDING("onBoarding"),
     HOME("home"),
     FEATURE("feature"),
-    EXIT("exit")
+    Settings("settings")
 }
