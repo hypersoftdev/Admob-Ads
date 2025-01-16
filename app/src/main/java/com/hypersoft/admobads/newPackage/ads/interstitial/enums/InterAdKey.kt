@@ -1,8 +1,8 @@
-package com.hypersoft.admobads.newPackage.ads.interstitial.presentation.enums
+package com.hypersoft.admobads.newPackage.ads.interstitial.enums
 
 /**
  * Created by: Sohaib Ahmed
- * Date: 1/15/2025
+ * Date: 1/16/2025
  *
  * Links:
  * - LinkedIn: https://linkedin.com/in/epegasus

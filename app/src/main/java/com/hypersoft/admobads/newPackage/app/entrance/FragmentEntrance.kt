@@ -2,8 +2,9 @@ package com.hypersoft.admobads.newPackage.app.entrance
 
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.databinding.FragmentEntranceBinding
-import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.enums.InterAdKey
-import com.hypersoft.admobads.newPackage.ads.interstitial.presentation.viewModels.ViewModelInterstitial
+import com.hypersoft.admobads.newPackage.ads.interstitial.callbacks.InterstitialOnLoadCallBack
+import com.hypersoft.admobads.newPackage.ads.interstitial.callbacks.InterstitialOnShowCallBack
+import com.hypersoft.admobads.newPackage.ads.interstitial.enums.InterAdKey
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.newPackage.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.newPackage.utilities.base.fragments.BaseFragment
@@ -13,7 +14,6 @@ import org.koin.androidx.viewmodel.ext.android.activityViewModel
 class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceBinding::inflate) {
 
     private val viewModelNative by activityViewModel<ViewModelNative>()
-    private val viewModelInterstitial by activityViewModel<ViewModelInterstitial>()
     private var responseCounter = 0
 
     override fun onViewCreated() {
@@ -35,14 +35,14 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     }
 
     private fun loadInterstitial() {
-        viewModelInterstitial.loadInterAd(InterAdKey.SPLASH)
+        diComponent.interstitialAdsConfig.loadInterstitialAd(InterAdKey.SPLASH, object : InterstitialOnLoadCallBack {
+            override fun onResponse(successfullyLoaded: Boolean) = onInterResponse()
+        })
     }
 
     private fun initObservers() {
         viewModelNative.adViewLiveData.observe(viewLifecycleOwner) { onNativeResponse() }
         viewModelNative.loadFailedLiveData.observe(viewLifecycleOwner) { onNativeResponse() }
-        viewModelInterstitial.interResponseLiveData.observe(viewLifecycleOwner) { onInterResponse() }
-        viewModelInterstitial.loadFailedLiveData.observe(viewLifecycleOwner) { onInterResponse() }
     }
 
     private fun onNativeResponse() {
@@ -57,13 +57,23 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
 
     private fun showButton() {
         responseCounter++
-        if (responseCounter >= 2) {
+        if (responseCounter >= 2 && isAdded) {
             binding.mbNavigateEntrance.isEnabled = true
         }
     }
 
     private fun checkInterstitialAd() {
-        viewModelInterstitial.showInterstitialAd()
+        when (diComponent.interstitialAdsConfig.isInterstitialLoaded()) {
+            true -> showInterstitial()
+            false -> navigateScreen()
+        }
+    }
+
+    private fun showInterstitial() {
+        diComponent.interstitialAdsConfig.showInterstitialAd(activity, InterAdKey.SPLASH, object : InterstitialOnShowCallBack {
+            override fun onAdFailedToShow() = navigateScreen()
+            override fun onAdImpressionDelayed() = navigateScreen()
+        })
     }
 
     private fun navigateScreen() {

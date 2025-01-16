@@ -1,5 +1,6 @@
 package com.hypersoft.admobads.newPackage.di
 
+import com.hypersoft.admobads.newPackage.ads.interstitial.InterstitialAdsConfig
 import com.hypersoft.admobads.newPackage.utilities.firebase.RemoteConfiguration
 import com.hypersoft.admobads.newPackage.utilities.manager.InternetManager
 import com.hypersoft.admobads.newPackage.utilities.manager.SharedPreferencesUtils
@@ -25,4 +26,7 @@ class DIComponent : KoinComponent {
 
     // Remote Configuration
     val remoteConfiguration by inject<RemoteConfiguration>()
+
+    // Admob
+    val interstitialAdsConfig by inject<InterstitialAdsConfig>()
 }
