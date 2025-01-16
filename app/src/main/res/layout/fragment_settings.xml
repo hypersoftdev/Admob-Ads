@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".newPackage.app.settings.FragmentSettings">
+    tools:context=".app.settings.FragmentSettings">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/mbBackSettings"
@@ -30,11 +30,10 @@
         app:layout_constraintVertical_bias="0.2"
         app:layout_constraintWidth_percent="0.9" />
 
-    <com.hypersoft.admobads.newPackage.ads.natives.presentation.ui.AdNativeLargeView
+    <com.hypersoft.admobads.ads.natives.presentation.ui.AdNativeLargeView
         android:id="@+id/nativeAdSettings"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#DCDCDC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_min="@dimen/_100sdp"

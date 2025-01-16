@@ -16,7 +16,7 @@
         android:theme="@style/Theme.AdmobAds"
         tools:targetApi="31" >
         <activity
-            android:name=".newPackage.app.ActivityMain"
+            android:name="com.hypersoft.admobads.app.ActivityMain"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

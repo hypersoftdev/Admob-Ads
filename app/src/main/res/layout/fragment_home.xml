@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".newPackage.app.home.FragmentHome">
+    tools:context=".app.home.FragmentHome">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="0dp"
@@ -39,5 +39,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mbFeaturesHome" />
+
+    <com.hypersoft.admobads.ads.natives.presentation.ui.AdNativeSmallView
+        android:id="@+id/nativeAdViewHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

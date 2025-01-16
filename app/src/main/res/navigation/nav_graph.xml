@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragmentEntrance"
-        android:name="com.hypersoft.admobads.newPackage.app.entrance.FragmentEntrance"
+        android:name="com.hypersoft.admobads.app.entrance.FragmentEntrance"
         android:label="fragment_entrance"
         tools:layout="@layout/fragment_entrance">
         <action
@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/fragmentLanguage"
-        android:name="com.hypersoft.admobads.newPackage.app.language.FragmentLanguage"
+        android:name="com.hypersoft.admobads.app.language.FragmentLanguage"
         android:label="fragment_language"
         tools:layout="@layout/fragment_language">
         <action
@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/fragmentOnBoarding"
-        android:name="com.hypersoft.admobads.newPackage.app.onBoarding.FragmentOnBoarding"
+        android:name="com.hypersoft.admobads.app.onBoarding.FragmentOnBoarding"
         android:label="fragment_on_boarding"
         tools:layout="@layout/fragment_on_boarding">
         <action
@@ -39,7 +39,7 @@
 
     <fragment
         android:id="@+id/fragmentHome"
-        android:name="com.hypersoft.admobads.newPackage.app.home.FragmentHome"
+        android:name="com.hypersoft.admobads.app.home.FragmentHome"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -51,12 +51,12 @@
     </fragment>
     <fragment
         android:id="@+id/fragmentFeature"
-        android:name="com.hypersoft.admobads.newPackage.app.feature.FragmentFeature"
+        android:name="com.hypersoft.admobads.app.feature.FragmentFeature"
         android:label="fragment_feature"
         tools:layout="@layout/fragment_feature" />
     <fragment
         android:id="@+id/fragmentSettings"
-        android:name="com.hypersoft.admobads.newPackage.app.settings.FragmentSettings"
+        android:name="com.hypersoft.admobads.app.settings.FragmentSettings"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>
