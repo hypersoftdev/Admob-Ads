@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentEntrance">
+
+    <fragment
+        android:id="@+id/fragmentEntrance"
+        android:name="com.hypersoft.admobads.newPackage.app.entrance.FragmentEntrance"
+        android:label="fragment_entrance"
+        tools:layout="@layout/fragment_entrance">
+        <action
+            android:id="@+id/action_fragmentEntrance_to_fragmentLanguage"
+            app:destination="@id/fragmentLanguage"
+            app:popUpTo="@id/fragmentEntrance"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentLanguage"
+        android:name="com.hypersoft.admobads.newPackage.app.language.FragmentLanguage"
+        android:label="fragment_language"
+        tools:layout="@layout/fragment_language">
+        <action
+            android:id="@+id/action_fragmentLanguage_to_fragmentOnBoarding"
+            app:destination="@id/fragmentOnBoarding" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentOnBoarding"
+        android:name="com.hypersoft.admobads.newPackage.app.onBoarding.FragmentOnBoarding"
+        android:label="fragment_on_boarding"
+        tools:layout="@layout/fragment_on_boarding">
+        <action
+            android:id="@+id/action_fragmentOnBoarding_to_fragmentHome"
+            app:destination="@id/fragmentHome" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentHome"
+        android:name="com.hypersoft.admobads.newPackage.app.home.FragmentHome"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+</navigation>
