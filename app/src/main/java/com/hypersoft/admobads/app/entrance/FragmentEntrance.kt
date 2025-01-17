@@ -20,7 +20,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         initRemoteConfigs()
         initObservers()
 
-        binding.mbNavigateEntrance.setOnClickListener { checkInterstitialAd() }
+        binding.mbNavigateEntrance.setOnClickListener { checkAppOpenAd() }
     }
 
     private fun initRemoteConfigs() {
@@ -52,7 +52,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     }
 
     private fun onAppOpenResponse() {
-        binding.mtvInterTextEntrance.setText(R.string.inter_response)
+        binding.mtvAppOpenTextEntrance.setText(R.string.app_open_response)
         showButton()
     }
 
@@ -63,8 +63,8 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         }
     }
 
-    private fun checkInterstitialAd() {
-        when (diComponent.interstitialAdsConfig.isInterstitialLoaded()) {
+    private fun checkAppOpenAd() {
+        when (diComponent.appOpenAdsConfig.isAppOpenLoaded()) {
             true -> showAppOpen()
             false -> navigateScreen()
         }
