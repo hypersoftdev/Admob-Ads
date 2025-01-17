@@ -7,7 +7,7 @@ import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
 import com.hypersoft.admobads.ads.natives.data.repositories.RepositoryNativeImpl
 import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 /**
@@ -21,7 +21,7 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 class UseCaseNative(
     private val repositoryNativeImpl: RepositoryNativeImpl,
-    private val sharedPreferenceUtils: SharedPreferencesUtils,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val internetManager: InternetManager,
     private val context: Context
 ) {

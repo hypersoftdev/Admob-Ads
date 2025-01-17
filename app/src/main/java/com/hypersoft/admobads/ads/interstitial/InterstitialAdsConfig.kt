@@ -10,7 +10,7 @@ import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnShowCallB
 import com.hypersoft.admobads.ads.interstitial.enums.InterAdKey
 import com.hypersoft.admobads.ads.interstitial.manager.InterstitialManager
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 /**
@@ -22,9 +22,12 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
  * - GitHub: https://github.com/epegasus
  */
 
+/**
+ * @param context: Can be of application class
+ */
 class InterstitialAdsConfig(
-    private val context: Context,
-    private val sharedPreferencesUtils: SharedPreferencesUtils,
+    private val context: Context?,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val internetManager: InternetManager
 ) : InterstitialManager() {
 
@@ -37,12 +40,12 @@ class InterstitialAdsConfig(
         when (adType) {
             InterAdKey.ON_BOARDING -> {
                 interAdId = getResString(R.string.admob_inter_on_boarding_id)
-                isRemoteEnable = sharedPreferencesUtils.rcInterOnBoarding != 0
+                isRemoteEnable = sharedPreferenceUtils.rcInterOnBoarding != 0
             }
 
             InterAdKey.FEATURE -> {
                 interAdId = getResString(R.string.admob_inter_splash_id)
-                isRemoteEnable = sharedPreferencesUtils.rcInterFeature != 0
+                isRemoteEnable = sharedPreferenceUtils.rcInterFeature != 0
             }
         }
 
@@ -51,7 +54,7 @@ class InterstitialAdsConfig(
             adType = adType.value,
             interId = interAdId,
             adEnable = isRemoteEnable,
-            isAppPurchased = sharedPreferencesUtils.isAppPurchased,
+            isAppPurchased = sharedPreferenceUtils.isAppPurchased,
             isInternetConnected = internetManager.isInternetConnected,
             listener = listener
         )
@@ -61,7 +64,7 @@ class InterstitialAdsConfig(
         showInterstitial(
             activity = activity,
             adType = adType.value,
-            isAppPurchased = sharedPreferencesUtils.isAppPurchased,
+            isAppPurchased = sharedPreferenceUtils.isAppPurchased,
             listener
         )
     }
@@ -99,6 +102,6 @@ class InterstitialAdsConfig(
     }
 
     private fun getResString(@StringRes resId: Int): String {
-        return context.resources.getString(resId)
+        return context?.resources?.getString(resId) ?: ""
     }
 }

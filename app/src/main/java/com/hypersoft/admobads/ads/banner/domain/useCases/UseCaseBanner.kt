@@ -9,7 +9,7 @@ import com.hypersoft.admobads.ads.banner.data.repositories.RepositoryBannerImpl
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdKey
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 /**
@@ -23,7 +23,7 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 class UseCaseBanner(
     private val repositoryBannerImpl: RepositoryBannerImpl,
-    private val sharedPreferenceUtils: SharedPreferencesUtils,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val internetManager: InternetManager,
     private val context: Context
 ) {

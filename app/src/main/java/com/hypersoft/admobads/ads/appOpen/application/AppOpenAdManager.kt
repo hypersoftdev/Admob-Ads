@@ -17,7 +17,7 @@ import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 import java.util.Date
 
@@ -30,7 +30,7 @@ import java.util.Date
  * - GitHub: https://github.com/epegasus
  */
 
-class AppOpenAdManager(private val application: Application, private val internetManager: InternetManager, private val sharedPreferencesUtils: SharedPreferencesUtils) : Application.ActivityLifecycleCallbacks {
+class AppOpenAdManager(private val application: Application, private val internetManager: InternetManager, private val sharedPreferenceUtils: SharedPreferenceUtils) : Application.ActivityLifecycleCallbacks {
 
     private var currentActivity: Activity? = null
     private var appOpenAd: AppOpenAd? = null
@@ -82,7 +82,7 @@ class AppOpenAdManager(private val application: Application, private val interne
             return
         }
 
-        if (sharedPreferencesUtils.isAppPurchased) {
+        if (sharedPreferenceUtils.isAppPurchased) {
             Log.e(TAG_ADS, "AppOpen -> loadAppOpen: User has premium access")
             return
         }
@@ -97,7 +97,7 @@ class AppOpenAdManager(private val application: Application, private val interne
             return
         }
 
-        if (sharedPreferencesUtils.rcAppOpen == 0) {
+        if (sharedPreferenceUtils.rcAppOpen == 0) {
             Log.e(TAG_ADS, "AppOpen -> loadAppOpen: Remote Configuration: Ad is off")
             return
         }
@@ -138,7 +138,7 @@ class AppOpenAdManager(private val application: Application, private val interne
             return
         }
 
-        if (sharedPreferencesUtils.isAppPurchased) {
+        if (sharedPreferenceUtils.isAppPurchased) {
             Log.e(TAG_ADS, "AppOpen -> showAppOpen: Premium User")
             return
         }

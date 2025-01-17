@@ -8,7 +8,7 @@ import com.hypersoft.admobads.ads.appOpen.screen.callbacks.AppOpenOnShowCallBack
 import com.hypersoft.admobads.ads.appOpen.screen.enums.AppOpenAdKey
 import com.hypersoft.admobads.ads.appOpen.screen.manager.AppOpenManager
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 
 /**
  * Created by: Sohaib Ahmed
@@ -21,7 +21,7 @@ import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
 
 class AppOpenAdsConfig(
     private val context: Context,
-    private val sharedPreferencesUtils: SharedPreferencesUtils,
+    private val sharedPreferenceUtils: SharedPreferenceUtils,
     private val internetManager: InternetManager
 ) : AppOpenManager() {
 
@@ -32,7 +32,7 @@ class AppOpenAdsConfig(
         when (adType) {
             AppOpenAdKey.SPLASH -> {
                 interAdId = context.getString(R.string.admob_app_open_id)
-                isRemoteEnable = sharedPreferencesUtils.rcAppOpen != 0
+                isRemoteEnable = sharedPreferenceUtils.rcAppOpen != 0
             }
         }
 
@@ -41,7 +41,7 @@ class AppOpenAdsConfig(
             adType = adType.value,
             appOpenId = interAdId,
             adEnable = isRemoteEnable,
-            isAppPurchased = sharedPreferencesUtils.isAppPurchased,
+            isAppPurchased = sharedPreferenceUtils.isAppPurchased,
             isInternetConnected = internetManager.isInternetConnected,
             listener = listener
         )
@@ -51,7 +51,7 @@ class AppOpenAdsConfig(
         showAppOpen(
             activity = activity,
             adType = adType.value,
-            isAppPurchased = sharedPreferencesUtils.isAppPurchased,
+            isAppPurchased = sharedPreferenceUtils.isAppPurchased,
             listener
         )
     }

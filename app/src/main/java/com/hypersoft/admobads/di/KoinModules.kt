@@ -18,7 +18,7 @@ import com.hypersoft.admobads.ads.natives.domain.useCases.UseCaseNative
 import com.hypersoft.admobads.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.utilities.firebase.RemoteConfiguration
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -39,7 +39,7 @@ class KoinModules {
     }
 
     private val utilsModules = module {
-        single { SharedPreferencesUtils(androidContext().getSharedPreferences("app_preferences", Application.MODE_PRIVATE)) }
+        single { SharedPreferenceUtils(androidContext().getSharedPreferences("app_preferences", Application.MODE_PRIVATE)) }
     }
 
     private val firebaseModule = module {

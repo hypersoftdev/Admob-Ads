@@ -5,7 +5,7 @@ import com.hypersoft.admobads.ads.appOpen.screen.AppOpenAdsConfig
 import com.hypersoft.admobads.ads.interstitial.InterstitialAdsConfig
 import com.hypersoft.admobads.utilities.firebase.RemoteConfiguration
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -21,7 +21,7 @@ import org.koin.core.component.inject
 class DIComponent : KoinComponent {
 
     // Utils
-    val sharedPreferenceUtils by inject<SharedPreferencesUtils>()
+    val sharedPreferenceUtils by inject<SharedPreferenceUtils>()
 
     // Managers
     val internetManager by inject<InternetManager>()

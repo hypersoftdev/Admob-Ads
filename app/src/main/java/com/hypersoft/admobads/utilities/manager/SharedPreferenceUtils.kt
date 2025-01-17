@@ -11,7 +11,7 @@ import android.content.SharedPreferences
  * - GitHub: https://github.com/epegasus
  */
 
-class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
+class SharedPreferenceUtils(private val sharedPreferences: SharedPreferences) {
 
     private val billingRequireKey = "isAppPurchased"
     private val isShowFirstScreenKey = "showFirstScreen"
@@ -47,6 +47,9 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
 
     val interOnBoarding = "interOnBoarding"
     val interFeature = "interFeature"
+
+    val rewardedAiFeature = "rewardedAiFeature"
+    val rewardedInterAiFeature = "rewardedInterAiFeature"
 
     val nativeLanguage = "nativeLanguage"
     val nativeOnBoarding = "nativeOnBoarding"
@@ -101,6 +104,26 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
         set(value) {
             sharedPreferences.edit().apply {
                 putInt(interOnBoarding, value)
+                apply()
+            }
+        }
+
+    /* ----- Rewarded Ads ----- */
+
+    var rcRewardedAiFeature: Int
+        get() = sharedPreferences.getInt(rewardedAiFeature, 1)
+        set(value) {
+            sharedPreferences.edit().apply {
+                putInt(rewardedAiFeature, value)
+                apply()
+            }
+        }
+
+    var rcRewardedInterAiFeature: Int
+        get() = sharedPreferences.getInt(rewardedInterAiFeature, 0)
+        set(value) {
+            sharedPreferences.edit().apply {
+                putInt(rewardedInterAiFeature, value)
                 apply()
             }
         }

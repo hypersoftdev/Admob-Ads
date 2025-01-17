@@ -23,6 +23,34 @@ android {
     }
 
     buildTypes {
+        debug {
+            resValue "string", "admob_app_id", "ca-app-pub-3940256099942544~3347511713"
+
+            // App Open Ad
+            resValue "string", "admob_app_open_id", "ca-app-pub-3940256099942544/9257395921"
+
+            // Banner Ad
+            resValue "string", "admob_banner_home_id", "ca-app-pub-3940256099942544/2014213617"
+
+            // Inter Ad
+            resValue "string", "admob_inter_splash_id", "ca-app-pub-3940256099942544/1033173712"
+            resValue "string", "admob_inter_on_boarding_id", "ca-app-pub-3940256099942544/1033173712"
+
+            // Rewarded Ad
+            resValue "string", "admob_rewarded_ai_feature_id", "ca-app-pub-3940256099942544/5224354917"
+            resValue "string", "admob_rewarded_inter_ai_feature_id", "ca-app-pub-3940256099942544/5354046379"
+
+            // Native Ad
+            resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
+            resValue "string", "admob_native_settings_id", "ca-app-pub-3940256099942544/2247696110"
+
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             resValue "string", "admob_app_id", "ca-app-pub-3940256099942544~3347511713"
 
@@ -36,56 +64,19 @@ android {
             resValue "string", "admob_inter_splash_id", "ca-app-pub-3940256099942544/1033173712"
             resValue "string", "admob_inter_on_boarding_id", "ca-app-pub-3940256099942544/1033173712"
 
+            // Rewarded Ad
+            resValue "string", "admob_rewarded_ai_feature_id", "ca-app-pub-3940256099942544/5224354917"
+            resValue "string", "admob_rewarded_inter_ai_feature_id", "ca-app-pub-3940256099942544/5354046379"
+
             // Native Ad
             resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_settings_id", "ca-app-pub-3940256099942544/2247696110"
-
-
-            resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'
-            resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
-            resValue 'string', 'admob_rewarded_inter_ids', '"ca-app-pub-3940256099942544/5354046379"'
-            resValue 'string', 'admob_native_ids', '"ca-app-pub-3940256099942544/2247696110"'
-            resValue 'string', 'admob_banner_ids', '"ca-app-pub-3940256099942544/2014213617"'
-            resValue 'string', 'admob_app_open_ids', '"ca-app-pub-3940256099942544/9257395921"'
 
             minifyEnabled true
             shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-
-        debug {
-            resValue "string", "admob_app_id", "ca-app-pub-3940256099942544~3347511713"
-            
-            // App Open Ad
-            resValue "string", "admob_app_open_id", "ca-app-pub-3940256099942544/9257395921"
-
-            // Banner Ad
-            resValue "string", "admob_banner_home_id", "ca-app-pub-3940256099942544/2014213617"
-
-            // Inter Ad
-            resValue "string", "admob_inter_splash_id", "ca-app-pub-3940256099942544/1033173712"
-            resValue "string", "admob_inter_on_boarding_id", "ca-app-pub-3940256099942544/1033173712"
-
-            // Native Ad
-            resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_full_screen_id", "ca-app-pub-3940256099942544/2247696110"
-            resValue "string", "admob_native_settings_id", "ca-app-pub-3940256099942544/2247696110"
-
-
-            resValue 'string', 'admob_inter_ids', '"ca-app-pub-3940256099942544/1033173712"'
-            resValue 'string', 'admob_rewarded_ids', '"ca-app-pub-3940256099942544/5224354917"'
-            resValue 'string', 'admob_rewarded_inter_ids', '"ca-app-pub-3940256099942544/5354046379"'
-            resValue 'string', 'admob_native_ids', '"ca-app-pub-3940256099942544/2247696110"'
-            resValue 'string', 'admob_banner_ids', '"ca-app-pub-3940256099942544/2014213617"'
-            resValue 'string', 'admob_app_open_ids', '"ca-app-pub-3940256099942544/9257395921"'
-
-            minifyEnabled false
-            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

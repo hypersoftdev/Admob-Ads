@@ -11,7 +11,7 @@ import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
 import com.hypersoft.admobads.utilities.firebase.FirebaseUtils.recordException
 import com.hypersoft.admobads.utilities.manager.InternetManager
-import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
+import com.hypersoft.admobads.utilities.manager.SharedPreferenceUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_REMOTE
 
@@ -24,7 +24,7 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_REMOTE
  * - GitHub: https://github.com/epegasus
  */
 
-class RemoteConfiguration(private val internetManager: InternetManager, private val sharedPreferencesUtils: SharedPreferencesUtils) {
+class RemoteConfiguration(private val internetManager: InternetManager, private val sharedPreferenceUtils: SharedPreferenceUtils) {
 
     private val remoteConfig: FirebaseRemoteConfig by lazy { Firebase.remoteConfig }
 
@@ -76,7 +76,7 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
 
     private fun updateRemoteValues() {
         // Save this value anywhere
-        sharedPreferencesUtils.apply {
+        sharedPreferenceUtils.apply {
             try {
                 rcAppOpen = remoteConfig[appOpen].asLong().toInt()
                 rcAppOpenSplash = remoteConfig[appOpenSplash].asLong().toInt()
@@ -85,6 +85,9 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
 
                 rcInterOnBoarding = remoteConfig[interOnBoarding].asLong().toInt()
                 rcInterFeature = remoteConfig[interFeature].asLong().toInt()
+
+                rcRewardedAiFeature = remoteConfig[rewardedAiFeature].asLong().toInt()
+                rcRewardedInterAiFeature = remoteConfig[rewardedInterAiFeature].asLong().toInt()
 
                 rcNativeLanguage = remoteConfig[nativeLanguage].asLong().toInt()
                 rcNativeOnBoarding = remoteConfig[nativeOnBoarding].asLong().toInt()
@@ -99,6 +102,9 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterOnBoarding -> ${remoteConfig[interOnBoarding].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterFeature -> ${remoteConfig[interFeature].asLong().toInt()}")
+
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcRewardedAiFeature -> ${remoteConfig[rewardedAiFeature].asLong().toInt()}")
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcRewardedInterAiFeature -> ${remoteConfig[rewardedInterAiFeature].asLong().toInt()}")
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeLanguage -> ${remoteConfig[nativeLanguage].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeOnBoarding -> ${remoteConfig[nativeOnBoarding].asLong().toInt()}")
