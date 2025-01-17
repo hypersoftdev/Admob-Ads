@@ -35,7 +35,7 @@ class RepositoryNativeImpl(private val dataSourceLocalNative: DataSourceLocalNat
         }
     }
 
-    fun destroyNative(adKey: String): Boolean {
+    override fun destroyNative(adKey: String): Boolean {
         return dataSourceLocalNative.destroyNative(adKey)
     }
 }

@@ -43,6 +43,8 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
     val appOpen = "appOpen"
     val appOpenSplash = "appOpenSplash"
 
+    val bannerHome = "bannerHome"
+
     val interOnBoarding = "interOnBoarding"
     val interFeature = "interFeature"
 
@@ -68,6 +70,17 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
         set(value) {
             sharedPreferences.edit().apply {
                 putInt(appOpenSplash, value)
+                apply()
+            }
+        }
+
+    /* ----- Banner Ads ----- */
+
+    var rcBannerHome: Int
+        get() = sharedPreferences.getInt(bannerHome, 0)
+        set(value) {
+            sharedPreferences.edit().apply {
+                putInt(bannerHome, value)
                 apply()
             }
         }

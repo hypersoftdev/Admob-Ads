@@ -24,11 +24,19 @@ android {
 
     buildTypes {
         release {
+            resValue "string", "admob_app_id", "ca-app-pub-3940256099942544~3347511713"
+
+            // App Open Ad
             resValue "string", "admob_app_open_id", "ca-app-pub-3940256099942544/9257395921"
 
+            // Banner Ad
+            resValue "string", "admob_banner_home_id", "ca-app-pub-3940256099942544/2014213617"
+
+            // Inter Ad
             resValue "string", "admob_inter_splash_id", "ca-app-pub-3940256099942544/1033173712"
             resValue "string", "admob_inter_on_boarding_id", "ca-app-pub-3940256099942544/1033173712"
 
+            // Native Ad
             resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"
@@ -42,7 +50,6 @@ android {
             resValue 'string', 'admob_native_ids', '"ca-app-pub-3940256099942544/2247696110"'
             resValue 'string', 'admob_banner_ids', '"ca-app-pub-3940256099942544/2014213617"'
             resValue 'string', 'admob_app_open_ids', '"ca-app-pub-3940256099942544/9257395921"'
-            resValue 'string', 'admob_app_id', '"ca-app-pub-3940256099942544~3347511713"'
 
             minifyEnabled true
             shrinkResources true
@@ -50,11 +57,19 @@ android {
         }
 
         debug {
+            resValue "string", "admob_app_id", "ca-app-pub-3940256099942544~3347511713"
+            
+            // App Open Ad
             resValue "string", "admob_app_open_id", "ca-app-pub-3940256099942544/9257395921"
 
+            // Banner Ad
+            resValue "string", "admob_banner_home_id", "ca-app-pub-3940256099942544/2014213617"
+
+            // Inter Ad
             resValue "string", "admob_inter_splash_id", "ca-app-pub-3940256099942544/1033173712"
             resValue "string", "admob_inter_on_boarding_id", "ca-app-pub-3940256099942544/1033173712"
 
+            // Native Ad
             resValue "string", "admob_native_language_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_on_boarding_id", "ca-app-pub-3940256099942544/2247696110"
             resValue "string", "admob_native_home_id", "ca-app-pub-3940256099942544/2247696110"

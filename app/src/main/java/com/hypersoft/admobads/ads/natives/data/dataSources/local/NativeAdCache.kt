@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  * - GitHub: https://github.com/epegasus
  */
 
-class AdCache {
+class NativeAdCache {
 
     private val adCache = ConcurrentHashMap<String, ItemNativeAd>()
 

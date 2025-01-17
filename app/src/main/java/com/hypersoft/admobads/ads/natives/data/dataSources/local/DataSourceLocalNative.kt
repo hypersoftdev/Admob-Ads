@@ -13,7 +13,7 @@ import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
 
 class DataSourceLocalNative {
 
-    private val adCache by lazy { AdCache() }
+    private val nativeAdCache by lazy { NativeAdCache() }
 
     /**
      * Fetch a cached native ad for the given key.
@@ -21,17 +21,17 @@ class DataSourceLocalNative {
      * If no such ad exists, it tries to find a free ad (unused ad without impressions).
      */
     fun getCachedNativeAd(adKey: String): ItemNativeAd? {
-        adCache.getImpressionFreeAd(adKey)?.let {
+        nativeAdCache.getImpressionFreeAd(adKey)?.let {
             return it
         }
-        return adCache.getFreeAd() ?: adCache.getAd(adKey)
+        return nativeAdCache.getFreeAd() ?: nativeAdCache.getAd(adKey)
     }
 
     /**
      * Cache the given native ad using the specified key.
      */
     fun putCachedNativeAd(adKey: String, itemNativeAd: ItemNativeAd) {
-        adCache.putAd(adKey, itemNativeAd)
+        nativeAdCache.putAd(adKey, itemNativeAd)
     }
 
     /**
@@ -39,6 +39,6 @@ class DataSourceLocalNative {
      * This ensures only used ads are removed from the cache.
      */
     fun destroyNative(adKey: String): Boolean {
-        return adCache.deleteAd(adKey)
+        return nativeAdCache.deleteAd(adKey)
     }
 }
