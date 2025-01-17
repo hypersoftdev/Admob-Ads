@@ -95,7 +95,10 @@ class UseCaseNative(
         }
     }
 
-    fun destroyNative(nativeAdKey: NativeAdKey) {
-        repositoryNativeImpl.destroyNative(nativeAdKey.value)
+    fun destroyNative(nativeAdKey: NativeAdKey): Boolean {
+        val isDestroyed = repositoryNativeImpl.destroyNative(nativeAdKey.value)
+        if (isDestroyed)
+            Log.e(TAG_ADS, "${nativeAdKey.value} -> destroyNative: destroyed")
+        return isDestroyed
     }
 }

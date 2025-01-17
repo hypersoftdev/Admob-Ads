@@ -54,4 +54,10 @@ class AdNativeLargeView @JvmOverloads constructor(context: Context, attrs: Attri
         visibility = VISIBLE
         binding.nativeAdView.setNativeAd(nativeAd)
     }
+
+    fun clearView() {
+        binding.mtvLoadingAds.visibility = VISIBLE
+        binding.adAttribute.visibility = GONE
+        binding.adCallToAction.visibility = GONE
+    }
 }

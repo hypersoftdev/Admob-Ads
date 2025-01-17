@@ -47,12 +47,14 @@ class AdCache {
     /**
      *  Only delete if impression is received else if ignore
      */
-    fun deleteAd(adKey: String) {
+    fun deleteAd(adKey: String): Boolean {
         adCache[adKey]?.let {
             if (it.impressionReceived) {
                 it.nativeAd.destroy()
                 adCache.remove(adKey)
+                return true
             }
         }
+        return false
     }
 }

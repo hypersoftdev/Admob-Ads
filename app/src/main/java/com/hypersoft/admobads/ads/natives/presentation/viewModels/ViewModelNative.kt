@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.ads.nativead.NativeAd
 import com.hypersoft.admobads.ads.natives.domain.useCases.UseCaseNative
 import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -26,6 +27,9 @@ class ViewModelNative(private val useCaseNative: UseCaseNative) : ViewModel() {
     private val _loadFailedLiveData = MutableLiveData<Unit>()
     val loadFailedLiveData: LiveData<Unit> get() = _loadFailedLiveData
 
+    private val _clearViewLiveData = MutableLiveData<Unit>()
+    val clearViewLiveData: LiveData<Unit> get() = _clearViewLiveData
+
     fun loadNativeAd(nativeAdKey: NativeAdKey) = viewModelScope.launch {
         useCaseNative.loadNativeAd(nativeAdKey) { itemNativeAd ->
             itemNativeAd?.let {
@@ -36,7 +40,9 @@ class ViewModelNative(private val useCaseNative: UseCaseNative) : ViewModel() {
         }
     }
 
-    fun destroyNative(nativeAdKey: NativeAdKey) {
-        useCaseNative.destroyNative(nativeAdKey)
+    fun destroyNative(nativeAdKey: NativeAdKey) = viewModelScope.launch(Dispatchers.Default) {
+        if (useCaseNative.destroyNative(nativeAdKey)) {
+            _clearViewLiveData.postValue(Unit)
+        }
     }
 }

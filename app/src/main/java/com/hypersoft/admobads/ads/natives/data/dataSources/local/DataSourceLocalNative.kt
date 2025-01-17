@@ -38,7 +38,7 @@ class DataSourceLocalNative {
      * Remove the cached native ad for the given key if it has been used (impression received).
      * This ensures only used ads are removed from the cache.
      */
-    fun destroyNative(adKey: String) {
-        adCache.deleteAd(adKey)
+    fun destroyNative(adKey: String): Boolean {
+        return adCache.deleteAd(adKey)
     }
 }
