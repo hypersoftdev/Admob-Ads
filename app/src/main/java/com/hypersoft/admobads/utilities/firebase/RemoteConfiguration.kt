@@ -81,6 +81,8 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
                 rcAppOpen = remoteConfig[appOpen].asLong().toInt()
                 rcAppOpenSplash = remoteConfig[appOpenSplash].asLong().toInt()
 
+                rcBannerHome = remoteConfig[bannerHome].asLong().toInt()
+
                 rcInterOnBoarding = remoteConfig[interOnBoarding].asLong().toInt()
                 rcInterFeature = remoteConfig[interFeature].asLong().toInt()
 
@@ -92,6 +94,8 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcAppOpen -> ${remoteConfig[appOpen].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcAppOpenSplash -> ${remoteConfig[appOpenSplash].asLong().toInt()}")
+
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcBannerHome -> ${remoteConfig[bannerHome].asLong().toInt()}")
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterOnBoarding -> ${remoteConfig[interOnBoarding].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterFeature -> ${remoteConfig[interFeature].asLong().toInt()}")

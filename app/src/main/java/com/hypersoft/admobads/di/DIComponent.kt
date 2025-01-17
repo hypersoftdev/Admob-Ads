@@ -30,9 +30,8 @@ class DIComponent : KoinComponent {
     val remoteConfiguration by inject<RemoteConfiguration>()
 
     // Admob
-    val interstitialAdsConfig by inject<InterstitialAdsConfig>()
-
-    // Admob
     val appOpenAdManager by inject<AppOpenAdManager>()
     val appOpenAdsConfig by inject<AppOpenAdsConfig>()
+
+    val interstitialAdsConfig by inject<InterstitialAdsConfig>()
 }

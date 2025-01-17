@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.ads.banner.domain.repositories
 
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
+import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
 
 /**
  * Created by: Sohaib Ahmed
@@ -12,6 +13,6 @@ import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
  */
 
 interface RepositoryBanner {
-    fun fetchBannerAd(adKey: String, adId: String, callback: (ItemBannerAd?) -> Unit)
+    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit)
     fun destroyBanner(adKey: String): Boolean
 }

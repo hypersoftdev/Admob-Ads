@@ -30,8 +30,8 @@ class ViewModelBanner(private val useCaseBanner: UseCaseBanner) : ViewModel() {
     private val _clearViewLiveData = MutableLiveData<Unit>()
     val clearViewLiveData: LiveData<Unit> get() = _clearViewLiveData
 
-    fun loadBannerAd(nativeAdKey: BannerAdKey) = viewModelScope.launch {
-        useCaseBanner.loadBannerAd(nativeAdKey) { itemBannerAd ->
+    fun loadBannerAd(bannerAdKey: BannerAdKey) = viewModelScope.launch {
+        useCaseBanner.loadBannerAd(bannerAdKey) { itemBannerAd ->
             itemBannerAd?.let {
                 _adViewLiveData.value = it.adView
             } ?: kotlin.run {
@@ -40,8 +40,8 @@ class ViewModelBanner(private val useCaseBanner: UseCaseBanner) : ViewModel() {
         }
     }
 
-    fun destroyBanner(nativeAdKey: BannerAdKey) = viewModelScope.launch(Dispatchers.Default) {
-        if (useCaseBanner.destroyBanner(nativeAdKey)) {
+    fun destroyBanner(bannerAdKey: BannerAdKey) = viewModelScope.launch(Dispatchers.Default) {
+        if (useCaseBanner.destroyBanner(bannerAdKey)) {
             _clearViewLiveData.postValue(Unit)
         }
     }

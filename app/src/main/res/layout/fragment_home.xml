@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".app.home.FragmentHome">
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mbPremiumHome"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:icon="@drawable/ic_svg_premium"
+        app:iconSize="32dp"
+        app:iconTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -40,12 +52,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mbFeaturesHome" />
 
-    <com.hypersoft.admobads.ads.natives.presentation.ui.AdNativeSmallView
-        android:id="@+id/nativeAdViewHome"
+    <FrameLayout
+        android:id="@+id/bannerAdViewHome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="#DCDCDC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_min="50dp"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

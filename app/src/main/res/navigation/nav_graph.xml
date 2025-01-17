@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_fragmentHome_to_fragmentSettings"
             app:destination="@id/fragmentSettings" />
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentPremium"
+            app:destination="@id/fragmentPremium" />
     </fragment>
     <fragment
         android:id="@+id/fragmentFeature"
@@ -59,4 +62,9 @@
         android:name="com.hypersoft.admobads.app.settings.FragmentSettings"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/fragmentPremium"
+        android:name="com.hypersoft.admobads.app.premium.FragmentPremium"
+        android:label="fragment_premium"
+        tools:layout="@layout/fragment_premium" />
 </navigation>

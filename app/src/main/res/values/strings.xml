@@ -8,7 +8,9 @@
     <string name="home_screen">Home Screen</string>
     <string name="feature_screen">Feature Screen</string>
     <string name="settings_screen">Settings Screen</string>
+    <string name="premium_screen">Premium Screen</string>
 
+    <string name="fetching_remote_config">Fetching Remote Config</string>
     <string name="loading_native">Loading Native…</string>
     <string name="loading_app_open">Loading App Open…</string>
     <string name="native_response">Native Responded</string>

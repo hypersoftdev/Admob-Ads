@@ -6,6 +6,7 @@ import com.hypersoft.admobads.R
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
 import com.hypersoft.admobads.ads.banner.data.repositories.RepositoryBannerImpl
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdKey
+import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
 import com.hypersoft.admobads.utilities.manager.InternetManager
 import com.hypersoft.admobads.utilities.manager.SharedPreferencesUtils
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
@@ -41,10 +42,17 @@ class UseCaseBanner(
         }
     }
 
+    private fun getAdType(bannerAdKey: BannerAdKey): BannerAdType {
+        return when (bannerAdKey) {
+            BannerAdKey.HOME -> BannerAdType.COLLAPSIBLE_BOTTOM
+        }
+    }
+
     fun loadBannerAd(bannerAdKey: BannerAdKey, callback: (ItemBannerAd?) -> Unit) {
+        val bannerAdType = getAdType(bannerAdKey)
         validateAndLoadAd(bannerAdKey, callback) { adId ->
             isAdLoading = true
-            repositoryBannerImpl.fetchBannerAd(adKey = bannerAdKey.value, adId = adId) {
+            repositoryBannerImpl.fetchBannerAd(adKey = bannerAdKey.value, adId = adId, bannerAdType) {
                 isAdLoading = false
                 callback.invoke(it)
             }

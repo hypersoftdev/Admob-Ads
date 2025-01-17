@@ -1,14 +1,23 @@
 package com.hypersoft.admobads.ads.banner.data.dataSources.remote
 
+import android.app.Activity
 import android.content.Context
+import android.hardware.display.DisplayManager
+import android.os.Build
+import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Display
+import android.view.WindowManager
+import androidx.core.content.getSystemService
+import com.google.ads.mediation.admob.AdMobAdapter
 import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.nativead.NativeAd
-import com.google.android.gms.ads.nativead.NativeAdOptions
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
+import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
 import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 /**
@@ -20,44 +29,90 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
  * - GitHub: https://github.com/epegasus
  */
 
-class DataSourceRemoteBanner (private val context: Context) {
+class DataSourceRemoteBanner(private val context: Context) {
 
-    fun fetchBannerAd(adKey: String, adId: String, callback: (ItemBannerAd?) -> Unit) {
-        /*val nativeBuilderOption = NativeAdOptions.Builder()
-            .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
-            .build()
-
-        var nativeAd: NativeAd? = null
-
-        val adLoader = AdLoader.Builder(context, adId)
-            .forNativeAd { unifiedNativeAd ->
-                nativeAd = unifiedNativeAd
-                callback.invoke(ItemBannerAd(adId, unifiedNativeAd))
+    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit) {
+        val adRequest = when (bannerAdType) {
+            BannerAdType.ADAPTIVE -> {
+                AdRequest.Builder().build()
             }
-            .withAdListener(object : AdListener() {
-                override fun onAdImpression() {
-                    super.onAdImpression()
-                    Log.v(TAG_ADS, "$adKey -> loadNative: onAdImpression")
-                    nativeAd?.let {
-                        callback.invoke(ItemBannerAd(adId, it, true))
-                    }
-                }
 
-                override fun onAdFailedToLoad(loadAdError: LoadAdError) {
-                    super.onAdFailedToLoad(loadAdError)
-                    Log.e(TAG_ADS, "$adKey -> loadNative: onAdFailedToLoad: ${loadAdError.message}")
-                    callback.invoke(null)
-                }
+            BannerAdType.COLLAPSIBLE_TOP -> {
+                AdRequest
+                    .Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
+                        putString("collapsible", "top")
+                    })
+                    .build()
+            }
 
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    Log.i(TAG_ADS, "$adKey -> loadNative: onAdLoaded")
-                }
-            })
-            .withNativeAdOptions(nativeBuilderOption)
-            .build()
+            BannerAdType.COLLAPSIBLE_BOTTOM -> {
+                AdRequest
+                    .Builder()
+                    .addNetworkExtrasBundle(AdMobAdapter::class.java, Bundle().apply {
+                        putString("collapsible", "bottom")
+                    })
+                    .build()
+            }
+        }
 
-        adLoader.loadAd(AdRequest.Builder().build())
-        Log.d(TAG_ADS, "$adKey -> loadNative: Requesting admob server for ad...")*/
+        val adSize = getAdSize(context as Activity) ?: AdSize.BANNER
+        val adView = AdView(context).apply {
+            adUnitId = adId
+            setAdSize(adSize)
+        }
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                Log.i(TAG_ADS, "$adKey -> loadBanner: onAdLoaded")
+                callback.invoke(ItemBannerAd(adId = adId, adView = adView))
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                super.onAdFailedToLoad(adError)
+                Log.e(TAG_ADS, "$adKey -> loadBanner: onAdFailedToLoad: ${adError.message}")
+                callback.invoke(null)
+            }
+
+            override fun onAdImpression() {
+                super.onAdImpression()
+                Log.v(TAG_ADS, "$adKey -> loadBanner: onAdImpression")
+                callback.invoke(ItemBannerAd(adId = adId, adView = adView, impressionReceived = true))
+            }
+
+            override fun onAdOpened() {
+                super.onAdOpened()
+                Log.d(TAG_ADS, "$adKey -> loadBanner: onAdOpened")
+            }
+
+            override fun onAdClosed() {
+                super.onAdClosed()
+                Log.d(TAG_ADS, "$adKey -> loadBanner: onAdClosed")
+            }
+        }
+        adView.loadAd(adRequest)
+        Log.d(TAG_ADS, "$adKey -> loadBanner: Requesting admob server for ad...")
+    }
+
+
+    @Suppress("DEPRECATION")
+    private fun getAdSize(activity: Activity): AdSize? {
+        val density = activity.resources.displayMetrics.density
+
+        val adWidthPixels = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowManager = activity.getSystemService<WindowManager>()
+            val bounds = windowManager?.currentWindowMetrics?.bounds
+            bounds?.width()?.toFloat()
+        } else {
+            val display: Display? = activity.getSystemService<DisplayManager>()?.getDisplay(Display.DEFAULT_DISPLAY)
+            val outMetrics = DisplayMetrics()
+            display?.getMetrics(outMetrics)
+            outMetrics.widthPixels.toFloat()
+        }
+        if (adWidthPixels == null) {
+            return null
+        }
+        val adWidth = (adWidthPixels / density).toInt()
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
     }
 }

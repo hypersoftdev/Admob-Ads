@@ -1,5 +1,6 @@
 package com.hypersoft.admobads.app.entrance
 
+import android.view.View
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.ads.appOpen.screen.callbacks.AppOpenOnLoadCallBack
 import com.hypersoft.admobads.ads.appOpen.screen.callbacks.AppOpenOnShowCallBack
@@ -25,6 +26,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
 
     private fun initRemoteConfigs() {
         diComponent.remoteConfiguration.checkRemoteConfig {
+            binding.mtvRemoteConfigTextEntrance.visibility = View.GONE
             loadNative()
             loadAppOpen()
             diComponent.appOpenAdManager.loadAppOpen()
@@ -32,10 +34,12 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     }
 
     private fun loadNative() {
+        binding.mtvNativeTextEntrance.visibility = View.VISIBLE
         viewModelNative.loadNativeAd(NativeAdKey.LANGUAGE)
     }
 
     private fun loadAppOpen() {
+        binding.mtvAppOpenTextEntrance.visibility = View.VISIBLE
         diComponent.appOpenAdsConfig.loadAppOpenAd(AppOpenAdKey.SPLASH, object : AppOpenOnLoadCallBack {
             override fun onResponse(successfullyLoaded: Boolean, errorMessage: String?) = onAppOpenResponse()
         })

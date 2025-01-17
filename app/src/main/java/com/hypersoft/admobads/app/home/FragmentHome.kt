@@ -1,19 +1,54 @@
 package com.hypersoft.admobads.app.home
 
+import android.view.View
 import com.hypersoft.admobads.R
+import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdKey
+import com.hypersoft.admobads.ads.banner.presentation.viewModels.ViewModelBanner
 import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnShowCallBack
 import com.hypersoft.admobads.ads.interstitial.enums.InterAdKey
 import com.hypersoft.admobads.databinding.FragmentHomeBinding
 import com.hypersoft.admobads.utilities.base.fragments.BaseFragment
+import com.hypersoft.admobads.utilities.extensions.addCleanView
 import com.hypersoft.admobads.utilities.extensions.navigateTo
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FragmentHome : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::inflate) {
 
-    override fun onViewCreated() {
-        loadInterstitial()
+    private val viewModelBanner by viewModel<ViewModelBanner>()
 
+    override fun onViewCreated() {
+        loadBanner()
+        loadInterstitial()
+        initObservers()
+
+        binding.mbPremiumHome.setOnClickListener { onPremiumClick() }
         binding.mbFeaturesHome.setOnClickListener { checkInterstitial(0) }
         binding.mbSettingsHome.setOnClickListener { checkInterstitial(1) }
+    }
+
+    private fun loadBanner() {
+        viewModelBanner.loadBannerAd(BannerAdKey.HOME)
+    }
+
+    private fun loadInterstitial() {
+        diComponent.interstitialAdsConfig.loadInterstitialAd(InterAdKey.FEATURE)
+    }
+
+    private fun initObservers() {
+        viewModelBanner.adViewLiveData.observe(viewLifecycleOwner) {
+            binding.bannerAdViewHome.addCleanView(it)
+        }
+        viewModelBanner.loadFailedLiveData.observe(viewLifecycleOwner) {
+            binding.bannerAdViewHome.visibility = View.GONE
+        }
+        viewModelBanner.clearViewLiveData.observe(viewLifecycleOwner) {
+            binding.bannerAdViewHome.removeAllViews()
+        }
+    }
+
+    private fun onPremiumClick() {
+        viewModelBanner.destroyBanner(BannerAdKey.HOME)
+        navigateTo(R.id.fragmentHome, R.id.action_fragmentHome_to_fragmentFeature)
     }
 
     private fun checkInterstitial(caseType: Int) {
@@ -21,10 +56,6 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             true -> showInterstitial(caseType)
             false -> navigateScreen(caseType)
         }
-    }
-
-    private fun loadInterstitial() {
-        diComponent.interstitialAdsConfig.loadInterstitialAd(InterAdKey.FEATURE)
     }
 
     private fun showInterstitial(caseType: Int) {
