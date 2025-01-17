@@ -6,29 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="2dp"
-    tools:background="#DCDCDC">
+    android:background="#DCDCDC">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#DCDCDC">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.utils.widget.ImageFilterView
-            android:id="@+id/ad_app_icon"
+            android:id="@+id/adAppIcon"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:adjustViewBounds="true"
-            app:layout_constraintBottom_toBottomOf="@+id/ad_body"
+            app:layout_constraintBottom_toBottomOf="@+id/adBody"
             app:layout_constraintDimensionRatio="h,1:1"
             app:layout_constraintHeight_min="40dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ad_headline"
+            app:layout_constraintTop_toTopOf="@+id/adHeadline"
             app:round="6dp"
             tools:srcCompat="@tools:sample/avatars" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/ad_attribute"
+            android:id="@+id/adAttribute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -42,13 +41,13 @@
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintStart_toEndOf="@+id/ad_app_icon"
+            app:layout_constraintStart_toEndOf="@+id/adAppIcon"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText,SmallSp"
             tools:visibility="visible" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/ad_headline"
+            android:id="@+id/adHeadline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -57,14 +56,14 @@
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Material3.BodySmall"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/ad_attribute"
+            app:layout_constraintBottom_toBottomOf="@+id/adAttribute"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ad_attribute"
-            app:layout_constraintTop_toTopOf="@+id/ad_attribute"
+            app:layout_constraintStart_toEndOf="@+id/adAttribute"
+            app:layout_constraintTop_toTopOf="@+id/adAttribute"
             tools:text="Test Ad: Google Ads" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/ad_body"
+            android:id="@+id/adBody"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -73,14 +72,14 @@
             android:maxLines="2"
             android:textSize="9sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/ad_app_icon"
-            app:layout_constraintTop_toBottomOf="@+id/ad_headline"
+            app:layout_constraintStart_toEndOf="@+id/adAppIcon"
+            app:layout_constraintTop_toBottomOf="@+id/adHeadline"
             app:lineHeight="12dp"
             tools:ignore="SmallSp"
             tools:text="@tools:sample/lorem/random" />
 
         <com.google.android.gms.ads.nativead.MediaView
-            android:id="@+id/ad_media_view"
+            android:id="@+id/adMediaView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
@@ -88,11 +87,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_min="120dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ad_body"
+            app:layout_constraintTop_toBottomOf="@+id/adBody"
             tools:background="@color/black" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ad_call_to_action"
+            android:id="@+id/adCallToAction"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
@@ -108,7 +107,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ad_media_view"
+            app:layout_constraintTop_toBottomOf="@+id/adMediaView"
             tools:text="Visit Site"
             tools:visibility="visible" />
 

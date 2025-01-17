@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimaryContainer"
-    tools:context=".newPackage.app.entrance.FragmentEntrance">
+    tools:context=".app.entrance.FragmentEntrance">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="0dp"
@@ -22,10 +22,10 @@
         app:layout_constraintWidth_percent="0.9" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/mtvNativeTextEntrance"
+        android:id="@+id/mtvRemoteConfigTextEntrance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/loading_native"
+        android:text="@string/fetching_remote_config"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,12 +33,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/mtvInterTextEntrance"
+        android:id="@+id/mtvNativeTextEntrance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading_native"
+        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mtvAppOpenTextEntrance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="@string/loading_inter"
+        android:text="@string/loading_app_open"
         android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mtvNativeTextEntrance" />

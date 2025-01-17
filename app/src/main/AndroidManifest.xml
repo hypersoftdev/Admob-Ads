@@ -16,19 +16,13 @@
         android:theme="@style/Theme.AdmobAds"
         tools:targetApi="31" >
         <activity
-            android:name=".newPackage.app.ActivityMain"
+            android:name="com.hypersoft.admobads.app.ActivityMain"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".oldPackage.ui.activities.SplashActivity"
-            android:exported="false"/>
-        <activity
-            android:name=".oldPackage.ui.activities.MainActivity2"
-            android:exported="false" />
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"

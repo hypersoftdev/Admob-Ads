@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".newPackage.app.onBoarding.FragmentOnBoarding">
+    tools:context=".app.onBoarding.FragmentOnBoarding">
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="0dp"
@@ -30,11 +30,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.hypersoft.admobads.newPackage.ads.natives.presentation.ui.AdNativeLargeView
+    <com.hypersoft.admobads.ads.natives.presentation.ui.AdNativeLargeView
         android:id="@+id/nativeAdOnBoarding"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#DCDCDC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_min="@dimen/_100sdp"

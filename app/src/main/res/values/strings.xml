@@ -6,11 +6,15 @@
     <string name="language_screen">Language Screen</string>
     <string name="on_boarding_screen">OnBoarding Screen</string>
     <string name="home_screen">Home Screen</string>
+    <string name="feature_screen">Feature Screen</string>
+    <string name="settings_screen">Settings Screen</string>
+    <string name="premium_screen">Premium Screen</string>
 
+    <string name="fetching_remote_config">Fetching Remote Config</string>
     <string name="loading_native">Loading Native…</string>
-    <string name="loading_inter">Loading Inter…</string>
+    <string name="loading_app_open">Loading App Open…</string>
     <string name="native_response">Native Responded</string>
-    <string name="inter_response">Inter Responded</string>
+    <string name="app_open_response">App Open Responded</string>
 
     <string name="_continue">Continue</string>
     <string name="navigate">Navigate</string>
