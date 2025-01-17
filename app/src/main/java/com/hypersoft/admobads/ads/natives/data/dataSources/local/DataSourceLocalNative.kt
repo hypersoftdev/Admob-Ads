@@ -1,7 +1,6 @@
 package com.hypersoft.admobads.ads.natives.data.dataSources.local
 
 import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
-import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 
 /**
  * Created by: Sohaib Ahmed
@@ -17,21 +16,28 @@ class DataSourceLocalNative {
     private val adCache by lazy { AdCache() }
 
     /**
-     * Cache mechanism for native ad
+     * Fetch a cached native ad for the given key.
+     * Returns the cached ad if available and not yet used (impression not received).
+     * If no such ad exists, it tries to find a free ad (unused ad without impressions).
      */
     fun getCachedNativeAd(adKey: String): ItemNativeAd? {
-        val item = adCache.get(adKey)
-        return if (item?.impressionReceived == false) {
-            item
-        } else {
-            adCache.getFreeAd() ?: item
+        adCache.getImpressionFreeAd(adKey)?.let {
+            return it
         }
+        return adCache.getFreeAd() ?: adCache.getAd(adKey)
     }
 
+    /**
+     * Cache the given native ad using the specified key.
+     */
     fun putCachedNativeAd(adKey: String, itemNativeAd: ItemNativeAd) {
-        adCache.put(adKey, itemNativeAd)
+        adCache.putAd(adKey, itemNativeAd)
     }
 
+    /**
+     * Remove the cached native ad for the given key if it has been used (impression received).
+     * This ensures only used ads are removed from the cache.
+     */
     fun destroyNative(adKey: String) {
         adCache.deleteAd(adKey)
     }

@@ -26,7 +26,8 @@ class UseCaseNative(
     private val context: Context
 ) {
 
-    private val isAdLoading = false
+    @Volatile
+    private var isAdLoading = false
 
     private fun checkRemoteConfig(nativeAdKey: NativeAdKey): Boolean {
         return when (nativeAdKey) {
@@ -50,7 +51,11 @@ class UseCaseNative(
 
     fun loadNativeAd(nativeAdKey: NativeAdKey, callback: (ItemNativeAd?) -> Unit) {
         validateAndLoadAd(nativeAdKey, callback) { adId ->
-            repositoryNativeImpl.fetchNativeAd(adKey = nativeAdKey.value, adId = adId, callback = callback)
+            isAdLoading = true
+            repositoryNativeImpl.fetchNativeAd(adKey = nativeAdKey.value, adId = adId) {
+                isAdLoading = false
+                callback.invoke(it)
+            }
         }
     }
 

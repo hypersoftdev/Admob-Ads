@@ -19,20 +19,19 @@ import com.hypersoft.admobads.utilities.utils.Constants
 class RepositoryNativeImpl(private val dataSourceLocalNative: DataSourceLocalNative, private val dataSourceRemoteNative: DataSourceRemoteNative) : RepositoryNative {
 
     override fun fetchNativeAd(adKey: String, adId: String, callback: (ItemNativeAd?) -> Unit) {
-        val cachedAd = dataSourceLocalNative.getCachedNativeAd(adKey)
-        if (cachedAd != null) {
+
+        // Check cache resource
+        dataSourceLocalNative.getCachedNativeAd(adKey)?.let { cachedAd ->
             Log.d(Constants.TAG_ADS, "$adKey -> fetchNativeAd: Reshowing Ad")
             callback.invoke(cachedAd)
             return
         }
 
-        dataSourceRemoteNative.fetchNativeAd(adKey = adKey, adId = adId) {
-            if (it == null) {
-                callback.invoke(null)
-            } else {
+        dataSourceRemoteNative.fetchNativeAd(adKey = adKey, adId = adId) { remoteAd ->
+            remoteAd?.let {
                 dataSourceLocalNative.putCachedNativeAd(adKey, it)
-                callback.invoke(it)
             }
+            callback.invoke(remoteAd)
         }
     }
 

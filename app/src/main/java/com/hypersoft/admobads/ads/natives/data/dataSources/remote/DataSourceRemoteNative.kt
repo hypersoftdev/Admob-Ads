@@ -20,19 +20,16 @@ import com.hypersoft.admobads.ads.natives.data.entities.ItemNativeAd
  * - GitHub: https://github.com/epegasus
  */
 
-
 class DataSourceRemoteNative(private val context: Context) {
 
     fun fetchNativeAd(adKey: String, adId: String, callback: (ItemNativeAd?) -> Unit) {
-        val nativeBuilderOption = NativeAdOptions
-            .Builder()
+        val nativeBuilderOption = NativeAdOptions.Builder()
             .setAdChoicesPlacement(NativeAdOptions.ADCHOICES_TOP_RIGHT)
             .build()
 
         var nativeAd: NativeAd? = null
 
-        val adLoader = AdLoader
-            .Builder(context, adId)
+        val adLoader = AdLoader.Builder(context, adId)
             .forNativeAd { unifiedNativeAd ->
                 nativeAd = unifiedNativeAd
                 callback.invoke(ItemNativeAd(adId, unifiedNativeAd))
