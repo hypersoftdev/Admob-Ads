@@ -49,7 +49,7 @@ class UseCaseBanner(
         }
     }
 
-    fun loadBannerAd(bannerAdKey: BannerAdKey, adView: AdView, callback: (ItemBannerAd?) -> Unit) {
+    fun loadBannerAd(adView: AdView, bannerAdKey: BannerAdKey, callback: (ItemBannerAd?) -> Unit) {
         val bannerAdType = getAdType(bannerAdKey)
         validateAndLoadAd(bannerAdKey, callback) { adId ->
             isAdLoading = true

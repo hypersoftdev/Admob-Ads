@@ -1,6 +1,5 @@
 package com.hypersoft.admobads.ads.banner.data.dataSources.remote
 
-import android.app.Activity
 import android.content.Context
 import android.hardware.display.DisplayManager
 import android.os.Build
@@ -31,7 +30,7 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 class DataSourceRemoteBanner(private val context: Context) {
 
-    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, adView: AdView, callback: (ItemBannerAd?) -> Unit) {
+    fun fetchBannerAd(adView: AdView, adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit) {
         val adRequest = when (bannerAdType) {
             BannerAdType.ADAPTIVE -> {
                 AdRequest.Builder().build()

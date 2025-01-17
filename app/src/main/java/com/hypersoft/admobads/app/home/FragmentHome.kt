@@ -30,7 +30,7 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     private fun loadBanner() {
         context?.let {
             val adView = AdView(it)
-            viewModelBanner.loadBannerAd(BannerAdKey.HOME, adView)
+            viewModelBanner.loadBannerAd(adView, BannerAdKey.HOME)
         }
     }
 

@@ -14,6 +14,6 @@ import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
  */
 
 interface RepositoryBanner {
-    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, adView: AdView, callback: (ItemBannerAd?) -> Unit)
+    fun fetchBannerAd(adView: AdView, adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit)
     fun destroyBanner(adKey: String): Boolean
 }

@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.ads.AdView
 import com.hypersoft.admobads.ads.banner.domain.useCases.UseCaseBanner
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdKey
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
@@ -30,8 +29,8 @@ class ViewModelBanner(private val useCaseBanner: UseCaseBanner) : ViewModel() {
     private val _clearViewLiveData = MutableLiveData<Unit>()
     val clearViewLiveData: LiveData<Unit> get() = _clearViewLiveData
 
-    fun loadBannerAd(bannerAdKey: BannerAdKey, adView: AdView) = viewModelScope.launch {
-        useCaseBanner.loadBannerAd(bannerAdKey, adView) { itemBannerAd ->
+    fun loadBannerAd(adView: AdView, bannerAdKey: BannerAdKey) = viewModelScope.launch {
+        useCaseBanner.loadBannerAd(adView, bannerAdKey) { itemBannerAd ->
             itemBannerAd?.let {
                 _adViewLiveData.value = it.adView
             } ?: kotlin.run {
