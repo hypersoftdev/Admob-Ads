@@ -2,6 +2,7 @@ package com.hypersoft.admobads.ads.banner.domain.useCases
 
 import android.content.Context
 import android.util.Log
+import com.google.android.gms.ads.AdView
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
 import com.hypersoft.admobads.ads.banner.data.repositories.RepositoryBannerImpl
@@ -48,11 +49,11 @@ class UseCaseBanner(
         }
     }
 
-    fun loadBannerAd(bannerAdKey: BannerAdKey, callback: (ItemBannerAd?) -> Unit) {
+    fun loadBannerAd(bannerAdKey: BannerAdKey, adView: AdView, callback: (ItemBannerAd?) -> Unit) {
         val bannerAdType = getAdType(bannerAdKey)
         validateAndLoadAd(bannerAdKey, callback) { adId ->
             isAdLoading = true
-            repositoryBannerImpl.fetchBannerAd(adKey = bannerAdKey.value, adId = adId, bannerAdType) {
+            repositoryBannerImpl.fetchBannerAd(adKey = bannerAdKey.value, adId = adId, bannerAdType = bannerAdType, adView = adView) {
                 isAdLoading = false
                 callback.invoke(it)
             }

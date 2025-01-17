@@ -31,7 +31,7 @@ import com.hypersoft.admobads.utilities.utils.Constants.TAG_ADS
 
 class DataSourceRemoteBanner(private val context: Context) {
 
-    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit) {
+    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, adView: AdView, callback: (ItemBannerAd?) -> Unit) {
         val adRequest = when (bannerAdType) {
             BannerAdType.ADAPTIVE -> {
                 AdRequest.Builder().build()
@@ -56,8 +56,8 @@ class DataSourceRemoteBanner(private val context: Context) {
             }
         }
 
-        val adSize = getAdSize(context as Activity) ?: AdSize.BANNER
-        val adView = AdView(context).apply {
+        val adSize = getAdSize() ?: AdSize.BANNER
+        adView.apply {
             adUnitId = adId
             setAdSize(adSize)
         }
@@ -96,15 +96,15 @@ class DataSourceRemoteBanner(private val context: Context) {
 
 
     @Suppress("DEPRECATION")
-    private fun getAdSize(activity: Activity): AdSize? {
-        val density = activity.resources.displayMetrics.density
+    private fun getAdSize(): AdSize? {
+        val density = context.resources.displayMetrics.density
 
         val adWidthPixels = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val windowManager = activity.getSystemService<WindowManager>()
+            val windowManager = context.getSystemService<WindowManager>()
             val bounds = windowManager?.currentWindowMetrics?.bounds
             bounds?.width()?.toFloat()
         } else {
-            val display: Display? = activity.getSystemService<DisplayManager>()?.getDisplay(Display.DEFAULT_DISPLAY)
+            val display: Display? = context.getSystemService<DisplayManager>()?.getDisplay(Display.DEFAULT_DISPLAY)
             val outMetrics = DisplayMetrics()
             display?.getMetrics(outMetrics)
             outMetrics.widthPixels.toFloat()
@@ -113,6 +113,6 @@ class DataSourceRemoteBanner(private val context: Context) {
             return null
         }
         val adWidth = (adWidthPixels / density).toInt()
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, adWidth)
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
     }
 }

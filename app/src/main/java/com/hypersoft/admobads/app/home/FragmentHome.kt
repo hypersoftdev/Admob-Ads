@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.app.home
 
 import android.view.View
+import com.google.android.gms.ads.AdView
 import com.hypersoft.admobads.R
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdKey
 import com.hypersoft.admobads.ads.banner.presentation.viewModels.ViewModelBanner
@@ -27,7 +28,10 @@ class FragmentHome : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     }
 
     private fun loadBanner() {
-        viewModelBanner.loadBannerAd(BannerAdKey.HOME)
+        context?.let {
+            val adView = AdView(it)
+            viewModelBanner.loadBannerAd(BannerAdKey.HOME, adView)
+        }
     }
 
     private fun loadInterstitial() {

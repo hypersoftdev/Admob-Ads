@@ -1,5 +1,6 @@
 package com.hypersoft.admobads.ads.banner.domain.repositories
 
+import com.google.android.gms.ads.AdView
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
 import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
 
@@ -13,6 +14,6 @@ import com.hypersoft.admobads.ads.banner.presentation.enums.BannerAdType
  */
 
 interface RepositoryBanner {
-    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit)
+    fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, adView: AdView, callback: (ItemBannerAd?) -> Unit)
     fun destroyBanner(adKey: String): Boolean
 }

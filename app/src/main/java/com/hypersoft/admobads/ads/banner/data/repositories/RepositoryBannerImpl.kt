@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.ads.banner.data.repositories
 
 import android.util.Log
+import com.google.android.gms.ads.AdView
 import com.hypersoft.admobads.ads.banner.data.dataSources.local.DataSourceLocalBanner
 import com.hypersoft.admobads.ads.banner.data.dataSources.remote.DataSourceRemoteBanner
 import com.hypersoft.admobads.ads.banner.data.entities.ItemBannerAd
@@ -19,7 +20,7 @@ import com.hypersoft.admobads.utilities.utils.Constants
 
 class RepositoryBannerImpl(private val dataSourceLocalBanner: DataSourceLocalBanner, private val dataSourceRemoteBanner: DataSourceRemoteBanner) : RepositoryBanner {
 
-    override fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, callback: (ItemBannerAd?) -> Unit) {
+    override fun fetchBannerAd(adKey: String, adId: String, bannerAdType: BannerAdType, adView: AdView, callback: (ItemBannerAd?) -> Unit) {
 
         // Check cache resource
         dataSourceLocalBanner.getCachedBannerAd(adKey)?.let { cachedAd ->
@@ -28,7 +29,7 @@ class RepositoryBannerImpl(private val dataSourceLocalBanner: DataSourceLocalBan
             return
         }
 
-        dataSourceRemoteBanner.fetchBannerAd(adKey = adKey, adId = adId, bannerAdType = bannerAdType) { remoteAd ->
+        dataSourceRemoteBanner.fetchBannerAd(adKey = adKey, adId = adId, adView = adView, bannerAdType = bannerAdType) { remoteAd ->
             remoteAd?.let {
                 dataSourceLocalBanner.putCachedBannerAd(adKey, it)
             }
