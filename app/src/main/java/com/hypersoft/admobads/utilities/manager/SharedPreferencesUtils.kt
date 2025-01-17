@@ -41,10 +41,10 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
     /* ---------------------------------------- Ads ---------------------------------------- */
 
     val appOpen = "appOpen"
+    val appOpenSplash = "appOpenSplash"
 
-    val interSplash = "interSplash"
     val interOnBoarding = "interOnBoarding"
-
+    val interFeature = "interFeature"
 
     val nativeLanguage = "nativeLanguage"
     val nativeOnBoarding = "nativeOnBoarding"
@@ -63,13 +63,22 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
             }
         }
 
-    /* ----- Interstitial Ads ----- */
-
-    var rcInterSplash: Int
-        get() = sharedPreferences.getInt(interSplash, 1)
+    var rcAppOpenSplash: Int
+        get() = sharedPreferences.getInt(appOpenSplash, 1)
         set(value) {
             sharedPreferences.edit().apply {
-                putInt(interSplash, value)
+                putInt(appOpenSplash, value)
+                apply()
+            }
+        }
+
+    /* ----- Interstitial Ads ----- */
+
+    var rcInterFeature: Int
+        get() = sharedPreferences.getInt(interFeature, 1)
+        set(value) {
+            sharedPreferences.edit().apply {
+                putInt(interFeature, value)
                 apply()
             }
         }

@@ -35,14 +35,14 @@ class InterstitialAdsConfig(
         var isRemoteEnable = false
 
         when (adType) {
-            InterAdKey.SPLASH -> {
-                interAdId = getResString(R.string.admob_inter_splash_id)
-                isRemoteEnable = sharedPreferencesUtils.rcInterSplash != 0
-            }
-
             InterAdKey.ON_BOARDING -> {
                 interAdId = getResString(R.string.admob_inter_on_boarding_id)
                 isRemoteEnable = sharedPreferencesUtils.rcInterOnBoarding != 0
+            }
+
+            InterAdKey.FEATURE -> {
+                interAdId = getResString(R.string.admob_inter_splash_id)
+                isRemoteEnable = sharedPreferencesUtils.rcInterFeature != 0
             }
         }
 

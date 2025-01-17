@@ -1,4 +1,4 @@
-package com.hypersoft.admobads.ads.interstitial.enums
+package com.hypersoft.admobads.ads.appOpen.screen.enums
 
 /**
  * Created by: Sohaib Ahmed
@@ -9,7 +9,6 @@ package com.hypersoft.admobads.ads.interstitial.enums
  * - GitHub: https://github.com/epegasus
  */
 
-enum class InterAdKey(val value: String) {
-    ON_BOARDING("onBoarding"),
-    FEATURE("feature"),
+enum class AppOpenAdKey(val value: String) {
+    SPLASH("splash"),
 }

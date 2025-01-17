@@ -79,9 +79,10 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
         sharedPreferencesUtils.apply {
             try {
                 rcAppOpen = remoteConfig[appOpen].asLong().toInt()
+                rcAppOpenSplash = remoteConfig[appOpenSplash].asLong().toInt()
 
-                rcInterSplash = remoteConfig[interSplash].asLong().toInt()
                 rcInterOnBoarding = remoteConfig[interOnBoarding].asLong().toInt()
+                rcInterFeature = remoteConfig[interFeature].asLong().toInt()
 
                 rcNativeLanguage = remoteConfig[nativeLanguage].asLong().toInt()
                 rcNativeOnBoarding = remoteConfig[nativeOnBoarding].asLong().toInt()
@@ -90,9 +91,10 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
                 rcNativeExit = remoteConfig[nativeExit].asLong().toInt()
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcAppOpen -> ${remoteConfig[appOpen].asLong().toInt()}")
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcAppOpenSplash -> ${remoteConfig[appOpenSplash].asLong().toInt()}")
 
-                Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterSplash -> ${remoteConfig[interSplash].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterOnBoarding -> ${remoteConfig[interOnBoarding].asLong().toInt()}")
+                Log.i(TAG_REMOTE, "RemoteConfiguration: rcInterFeature -> ${remoteConfig[interFeature].asLong().toInt()}")
 
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeLanguage -> ${remoteConfig[nativeLanguage].asLong().toInt()}")
                 Log.i(TAG_REMOTE, "RemoteConfiguration: rcNativeOnBoarding -> ${remoteConfig[nativeOnBoarding].asLong().toInt()}")

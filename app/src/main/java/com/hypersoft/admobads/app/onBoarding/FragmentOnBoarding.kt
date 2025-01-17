@@ -61,13 +61,8 @@ class FragmentOnBoarding : BaseFragment<FragmentOnBoardingBinding>(FragmentOnBoa
         navigateTo(R.id.fragmentOnBoarding, R.id.action_fragmentOnBoarding_to_fragmentHome)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModelNative.destroyNative(NativeAdKey.ON_BOARDING)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        //viewModelNative.destroyNative(NativeAdKey.ON_BOARDING)
+        viewModelNative.destroyNative(NativeAdKey.ON_BOARDING)
     }
 }

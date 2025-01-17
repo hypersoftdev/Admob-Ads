@@ -1,6 +1,7 @@
 package com.hypersoft.admobads.di
 
 import com.hypersoft.admobads.ads.appOpen.application.AppOpenAdManager
+import com.hypersoft.admobads.ads.appOpen.screen.AppOpenAdsConfig
 import com.hypersoft.admobads.ads.interstitial.InterstitialAdsConfig
 import com.hypersoft.admobads.utilities.firebase.RemoteConfiguration
 import com.hypersoft.admobads.utilities.manager.InternetManager
@@ -33,4 +34,5 @@ class DIComponent : KoinComponent {
 
     // Admob
     val appOpenAdManager by inject<AppOpenAdManager>()
+    val appOpenAdsConfig by inject<AppOpenAdsConfig>()
 }

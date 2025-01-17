@@ -1,9 +1,9 @@
 package com.hypersoft.admobads.app.entrance
 
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnLoadCallBack
-import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnShowCallBack
-import com.hypersoft.admobads.ads.interstitial.enums.InterAdKey
+import com.hypersoft.admobads.ads.appOpen.screen.callbacks.AppOpenOnLoadCallBack
+import com.hypersoft.admobads.ads.appOpen.screen.callbacks.AppOpenOnShowCallBack
+import com.hypersoft.admobads.ads.appOpen.screen.enums.AppOpenAdKey
 import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.ads.natives.presentation.viewModels.ViewModelNative
 import com.hypersoft.admobads.databinding.FragmentEntranceBinding
@@ -26,7 +26,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
     private fun initRemoteConfigs() {
         diComponent.remoteConfiguration.checkRemoteConfig {
             loadNative()
-            loadInterstitial()
+            loadAppOpen()
             diComponent.appOpenAdManager.loadAppOpen()
         }
     }
@@ -35,9 +35,9 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         viewModelNative.loadNativeAd(NativeAdKey.LANGUAGE)
     }
 
-    private fun loadInterstitial() {
-        diComponent.interstitialAdsConfig.loadInterstitialAd(InterAdKey.SPLASH, object : InterstitialOnLoadCallBack {
-            override fun onResponse(successfullyLoaded: Boolean) = onInterResponse()
+    private fun loadAppOpen() {
+        diComponent.appOpenAdsConfig.loadAppOpenAd(AppOpenAdKey.SPLASH, object : AppOpenOnLoadCallBack {
+            override fun onResponse(successfullyLoaded: Boolean, errorMessage: String?) = onAppOpenResponse()
         })
     }
 
@@ -51,7 +51,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         showButton()
     }
 
-    private fun onInterResponse() {
+    private fun onAppOpenResponse() {
         binding.mtvInterTextEntrance.setText(R.string.inter_response)
         showButton()
     }
@@ -65,13 +65,13 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
 
     private fun checkInterstitialAd() {
         when (diComponent.interstitialAdsConfig.isInterstitialLoaded()) {
-            true -> showInterstitial()
+            true -> showAppOpen()
             false -> navigateScreen()
         }
     }
 
-    private fun showInterstitial() {
-        diComponent.interstitialAdsConfig.showInterstitialAd(activity, InterAdKey.SPLASH, object : InterstitialOnShowCallBack {
+    private fun showAppOpen() {
+        diComponent.appOpenAdsConfig.showAppOpenAd(activity, AppOpenAdKey.SPLASH, object : AppOpenOnShowCallBack {
             override fun onAdFailedToShow() = navigateScreen()
             override fun onAdImpressionDelayed() = navigateScreen()
         })

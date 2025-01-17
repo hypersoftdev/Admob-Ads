@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import com.hypersoft.admobads.ads.appOpen.application.AppOpenAdManager
+import com.hypersoft.admobads.ads.appOpen.screen.AppOpenAdsConfig
 import com.hypersoft.admobads.ads.interstitial.InterstitialAdsConfig
 import com.hypersoft.admobads.ads.natives.data.dataSources.local.DataSourceLocalNative
 import com.hypersoft.admobads.ads.natives.data.dataSources.remote.DataSourceRemoteNative
@@ -56,6 +57,7 @@ class KoinModules {
 
     private val appOpenAdModule = module {
         single { AppOpenAdManager(get(), get(), get()) }
+        single { AppOpenAdsConfig(get(), get(), get()) }
     }
 
     val modulesList = listOf(utilsModules, managerModules, firebaseModule, nativeAdModule, interAdModule, appOpenAdModule)
