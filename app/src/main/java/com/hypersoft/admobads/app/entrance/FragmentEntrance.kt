@@ -1,12 +1,12 @@
 package com.hypersoft.admobads.app.entrance
 
 import com.hypersoft.admobads.R
-import com.hypersoft.admobads.databinding.FragmentEntranceBinding
 import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnLoadCallBack
 import com.hypersoft.admobads.ads.interstitial.callbacks.InterstitialOnShowCallBack
 import com.hypersoft.admobads.ads.interstitial.enums.InterAdKey
 import com.hypersoft.admobads.ads.natives.presentation.enums.NativeAdKey
 import com.hypersoft.admobads.ads.natives.presentation.viewModels.ViewModelNative
+import com.hypersoft.admobads.databinding.FragmentEntranceBinding
 import com.hypersoft.admobads.utilities.base.fragments.BaseFragment
 import com.hypersoft.admobads.utilities.extensions.navigateTo
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,6 +27,7 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         diComponent.remoteConfiguration.checkRemoteConfig {
             loadNative()
             loadInterstitial()
+            diComponent.appOpenAdManager.loadAppOpen()
         }
     }
 
@@ -78,5 +79,10 @@ class FragmentEntrance : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
 
     private fun navigateScreen() {
         navigateTo(R.id.fragmentEntrance, R.id.action_fragmentEntrance_to_fragmentLanguage)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        diComponent.appOpenAdManager.isSplash = false
     }
 }

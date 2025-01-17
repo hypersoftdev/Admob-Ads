@@ -40,6 +40,8 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
 
     /* ---------------------------------------- Ads ---------------------------------------- */
 
+    val appOpen = "appOpen"
+
     val interSplash = "interSplash"
     val interOnBoarding = "interOnBoarding"
 
@@ -49,6 +51,17 @@ class SharedPreferencesUtils(private val sharedPreferences: SharedPreferences) {
     val nativeFeature = "nativeFeature"
     val nativeHome = "nativeHome"
     val nativeExit = "nativeExit"
+
+    /* ----- AppOpen Ads ----- */
+
+    var rcAppOpen: Int
+        get() = sharedPreferences.getInt(appOpen, 0)
+        set(value) {
+            sharedPreferences.edit().apply {
+                putInt(appOpen, value)
+                apply()
+            }
+        }
 
     /* ----- Interstitial Ads ----- */
 
