@@ -1,6 +1,6 @@
 # Admob-Ads
 
-Admob Ads configurations with Firebase
+Admob Ads configurations with Firebase & Admob Consent form
 1. Adaptive & Collapsible Banner
 2. Native
 3. Interstitial
@@ -10,7 +10,7 @@ Admob Ads configurations with Firebase
 
 # LICENSE
 
-Copyright 2023 Hypersoft Inc
+Copyright 2025 Hypersoft Inc
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
