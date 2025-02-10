@@ -74,7 +74,7 @@ class InterstitialAdsConfig(
      * @param remoteCounter   Pass remote counter value, if the value is n, it will load on "n-1". In case of <= 2, it will load everytime
      * @param loadOnStart  Determine whether ad should be load on the very first time or not?
      *
-     *  e.g. remoteCounter = 4, ad will  load on "n-1" = 3
+     *  e.g. remoteCounter = 3, ad will  load on "n-1" = 2
      *      if (loadOnStart) {
      *          // 1, 0, 0, 1, 0, 0, 1, 0, 0 ... so on
      *      } else {
