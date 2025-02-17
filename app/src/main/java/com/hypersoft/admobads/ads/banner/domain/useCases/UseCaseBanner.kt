@@ -87,7 +87,7 @@ class UseCaseBanner(
 
             isAdLoading -> {
                 Log.e(TAG_ADS, "${bannerAdKey.value} -> loadBanner: Ad is already loading")
-                callback.invoke(null)
+                //callback.invoke(null)
             }
 
             else -> {

@@ -86,7 +86,7 @@ class UseCaseNative(
 
             isAdLoading -> {
                 Log.e(TAG_ADS, "${nativeAdKey.value} -> loadNative: Ad is already loading")
-                callback.invoke(null)
+                //callback.invoke(null)
             }
 
             else -> {
