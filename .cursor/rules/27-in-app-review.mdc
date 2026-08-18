@@ -1,0 +1,20 @@
+---
+description: Google Play In-App Review placement and wiring
+globs: ["**/inAppReview/**/*.kt", "**/InAppReview*.kt"]
+alwaysApply: false
+---
+
+## Placement
+
+- `InAppReviewManager` lives in `:core-ui` (`core/ui/inAppReview/`)
+- Host Fragment in `:presentation` — ViewModel emits Effect; Fragment runs Play UI APIs only
+- Call `destroy()` in `onDestroyView` or after a one-shot `launchReview` finishes
+- Logs: `Constants.TAG` + `ClassName: functionName: State: details`
+
+## Policy
+
+- Clean API only: `initManager` → `launchReview` → `destroy`
+- Do not put rating dialogs, prefs throttles, or Feedback screens inside the manager
+- Task success ≠ user reviewed (Play may skip UI)
+
+Use skill `.cursor/skills/platform/implement-in-app-review` to scaffold (see also this rule for placement/policy).

@@ -1,0 +1,21 @@
+---
+description: Google Play In-App Updates placement and wiring
+globs: ["**/inAppUpdate/**/*.kt", "**/InAppUpdate*.kt"]
+alwaysApply: false
+---
+
+## Placement
+
+- `InAppUpdateManager` lives in `:core-ui` (`core/ui/inAppUpdate/`)
+- Host Fragment in `:presentation` — construct manager as a **property** (Activity Result before STARTED)
+- Call `destroy()` in `onDestroyView`
+- Snackbar copy from `:core-ui` strings — never hardcoded
+- Logs: `Constants.TAG` + `ClassName: functionName: State: details`
+
+## Policy
+
+- Default Immediate; Flexible when product/RC says so
+- Optional RC → SharedPref cache (`0` off / `1` flexible / `2` immediate)
+- ViewModel emits Effect; Fragment runs Play UI APIs only
+
+Use skill `.cursor/skills/platform/implement-in-app-update` to scaffold (see also this rule for placement/policy).

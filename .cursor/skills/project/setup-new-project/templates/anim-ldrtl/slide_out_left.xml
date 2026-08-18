@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false">
+    <!-- In RTL, "exit to end" means to the right -->
+    <translate
+        android:duration="500"
+        android:fromXDelta="0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toXDelta="100%p" />
+</set>

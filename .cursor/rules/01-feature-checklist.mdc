@@ -1,0 +1,27 @@
+---
+description: New feature / screen scaffolding checklist — use when adding a feature, create-mvi, create-clean-architecture, or verifying a feature is complete
+alwaysApply: false
+---
+
+## New feature checklist
+
+- [ ] Feature package: `{di,intent,state,effect,viewModel,ui}` (+ adapter/mapper as needed)
+- [ ] Extend `Parent*` / `Base*` UI bases; layouts work in **portrait and landscape**
+- [ ] Fragment member order per `19-base-ui`: `onViewCreated` (inline clicks, no `setupClicks`) → helpers → `initObservers` → `renderState` → `handleEffect` → teardown (if any)
+- [ ] Icon actions use `ButtonStyle.IconButton` (`mb` + `app:icon`) — not clickable `siv`
+- [ ] Domain UseCase(s) + repository **interface** in `:domain` (never under `:data`)
+- [ ] Data repository impl + DataSource if needed (heavy work / DTO mapping off Main)
+- [ ] Mapping: Repo/UseCase for heavy work; `toUi()` in ViewModel if needed — not in UI classes
+- [ ] DI: **`lazyModule` / `lazyModules` only** with `//// Section` headers; theme after `startKoin` (never `GlobalContext` probes); UseCases in domain `useCaseModule`
+- [ ] Strings in the **single** shared strings file (+ translations)
+- [ ] Logs use `Constants.TAG*` format; prefer Repository; ViewModel sparse (`handleError` for failures)
+- [ ] Permissions via Intent → Effect → base permission helper when needed
+- [ ] Analytics event via shared EventsProvider when screen should be tracked
+- [ ] ProGuard packages covered if new `state`/`intent`/`effect`/`model` types
+- [ ] Unit tests for UseCase / ViewModel
+- [ ] Verify no `:presentation` → `:data` dependency
+- [ ] Large-list path: `ListAdapter` + DiffUtil / background mapping considered; `layoutManager` / orientation / spanCount in XML unless dynamic
+- [ ] Images: `ShapeableImageView` + Glide `loadImage` for programmatic binds (not `setImageResource` in adapters)
+- [ ] If ads/premium: gate on entitlement + RC; use existing ads managers / ad ViewModels — not raw SDK in Fragments. **Do not** wrap ads in MVI unless the user explicitly asks (`21-ads-billing`)
+- [ ] Obey `.cursor/project-settings.json` (tests / orientation / theme modes)
+- [ ] Presentation-only scaffold via `create-mvi` (feature screens only — not ads); new domain/data via `create-clean-architecture`

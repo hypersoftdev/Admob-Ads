@@ -1,0 +1,31 @@
+---
+description: Retrofit, Room, and SharedPreferences Clean Architecture patterns — see reference/ for full examples
+globs: ["**/data/**/*.kt", "**/repository/**/*.kt", "**/dataSource/**/*.kt", "**/*Api*.kt", "**/Room*.kt", "**/SharedPref*.kt"]
+alwaysApply: false
+---
+
+# Data persistence & networking
+
+Full step-by-step patterns (preserved from former data skills):
+
+- [reference/retrofit.md](reference/retrofit.md)
+- [reference/room.md](reference/room.md)
+- [reference/shared-preferences.md](reference/shared-preferences.md)
+
+## Shared invariants
+
+- **Add Retrofit / OkHttp / Moshi / Room only with human approval** — version catalog first (`08-gradle`, `13-libraries-stack`)
+- Prefer existing `InternetManager` (`:core-platform`) for connectivity before network calls
+- Repository interfaces + UseCases in **`:domain` only** — never under `:data`
+- DataSources stay thin — **no** `CoroutineDispatcher` on DataSource / `SharedPrefManager`
+- Inject `ioDispatcher` in **Repository** — wrap DataSource/DAO/network with `withContext(ioDispatcher)`
+- Map HTTP/IO/DB errors at data boundary to typed `DataError` / `Outcome` (`18-errors-result`)
+- Never leak status codes, raw JSON, Room types, or Retrofit types into UI State / domain
+- Log with `Constants.TAG*` — `ClassName: functionName: Failed: ${e.message}` — no tokens/PII
+- DI: `lazyModule` only; `dataModule` ordered `//// DataSources` then `//// Repositories`
+- Room `@Entity` / `@Dao` / `RoomDatabase` stay in `:data`; domain entities are pure Kotlin
+- SharedPreferences: sync `SharedPrefManager` in data; suspend API on domain `SharedPrefRepository`
+- Features read Remote Config **cache via prefs** — not live RC SDK in Fragments (`22-platform-firebase`)
+- Do not invent a second networking stack if the project already has OkHttp/Retrofit — extend it
+- Schema changes need a migration strategy; ProGuard keep rules for Room entities when minify breaks them
+- Large cached lists: `ListAdapter` + DiffUtil — not `notifyDataSetChanged`

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- In RTL, "enter from end" means from right -->
+    <translate
+        android:duration="500"
+        android:fromXDelta="100%p"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toXDelta="-2%p" />
+    <set>
+        <translate
+            android:duration="400"
+            android:fromXDelta="-2%p"
+            android:interpolator="@android:anim/accelerate_interpolator"
+            android:startOffset="500"
+            android:toXDelta="2%p" />
+    </set>
+</set>

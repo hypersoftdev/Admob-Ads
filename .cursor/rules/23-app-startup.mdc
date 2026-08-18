@@ -1,0 +1,77 @@
+---
+description: Application class, SplashScreen, and AndroidX Startup
+globs: ["**/App.kt", "**/AndroidManifest.xml", "**/themes.xml", "**/splash.xml", "**/MainActivity.kt"]
+alwaysApply: false
+---
+
+## Application class
+
+- Single `Application` in `:app` — **DI bootstrap only** (e.g. Koin `startKoin` + `lazyModules`)
+- Use **`lazyModule` / `lazyModules` only** — convert any leftover `module` / `modules` (see `07-dependency-injection`)
+- Call `startKoin` **once** here — never from Activity; never guard with `GlobalContext.getOrNull()`
+- Do not stuff analytics, ads, billing, or heavy init into `onCreate` unless project already does and must stay consistent
+- Prefer lazy / on-demand init for non-critical SDKs
+
+```kotlin
+override fun onCreate() {
+    super.onCreate()
+    startKoin {
+        androidContext(this@App)
+        lazyModules(KoinModules().getKoinModules())
+    }
+    // Any app-level theme / DynamicColors that needs DI — after startKoin
+    applyAppTheme()
+}
+```
+
+## Theme vs Koin
+
+- Sequence: **Koin first**, then theme apply in `Application.onCreate`
+- **Forbidden:** `GlobalContext.getOrNull()` (or other GlobalContext probes) as a theme/DI gate
+- Activity `enableMaterialDynamicTheme()` may apply DynamicColors directly — no GlobalContext check
+- Never call `startKoin` from Activity — theme toggles recreate the Activity and will crash with `KoinAppAlreadyStartedException`
+
+## Splash
+
+- Use AndroidX SplashScreen API (`androidx.core:core-splashscreen`)
+- Define splash theme in **`:core-ui` `res/values/splash.xml`** (dedicated file — not only inside `themes.xml`)
+- Style name: `Theme.App.Starting` parent `Theme.SplashScreen`
+- Set `windowSplashScreenAnimatedIcon` (and optional background) + `postSplashScreenTheme` → main Material3 DayNight app theme
+- Apply `@style/Theme.App.Starting` on Application and/or launcher Activity in `:app` manifest
+- Install splash in Activity base before `setContentView`: `installSplashScreen()` / project `installSplashTheme()` helper
+
+```xml
+<!-- :core-ui/src/main/res/values/splash.xml -->
+<resources>
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.YourApp</item>
+    </style>
+</resources>
+```
+
+```xml
+<!-- :app AndroidManifest — application and/or launcher activity -->
+android:theme="@style/Theme.App.Starting"
+```
+
+## AndroidX Startup / WorkManager
+
+- If WorkManager is **not** used: remove default `WorkManagerInitializer` via Startup provider `tools:node="remove"` to avoid startup DB crashes (pattern used when WM is unused)
+- Do not re-enable WorkManager initializer without fixing the crash root cause
+- If WorkManager **is** required later: add it deliberately with correct dependencies and keep rules
+
+## Manifest related
+
+- `allowBackup` explicit + backup/extraction XML
+- `supportsRtl="true"`
+- App Locales / language persistence metadata when multi-language is supported
+
+## Forbidden
+
+- Fat Application classes that initialize every SDK eagerly
+- Hardcoding API keys in Application or themes
+- Leaving Startup initializers that crash cold start
+- Defining splash theme only ad hoc in Kotlin — use `splash.xml`
+- `startKoin` in Activity; leftover `module { }` / `modules(...)` after lazyModule migration
+- `GlobalContext.getOrNull()` (or any GlobalContext probe) to gate theme / DI

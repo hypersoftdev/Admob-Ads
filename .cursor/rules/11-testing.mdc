@@ -1,0 +1,88 @@
+---
+description: Unit, integration, and E2E testing conventions
+globs: ["**/test/**/*.kt", "**/androidTest/**/*.kt"]
+alwaysApply: false
+---
+
+## What to test
+
+| Layer | Priority |
+|-------|----------|
+| UseCases | High — pure JVM, fake repositories |
+| ViewModels | High — drive via Intents, assert State + Effects (**feature** ViewModels). Ads / `:gmaAds` ViewModels are not MVI — do not require Intent/State/Effect tests unless the user asked to convert ads |
+| Mappers | Medium |
+| Flow (with fakes) | Medium — emission order / failures under `test-unit` |
+| Repositories (real layers) | Medium — Room in-memory / MockWebServer under `test-integration` |
+| E2E (Espresso) | Critical user-visible flows only |
+
+## Approach
+
+- Mirror production package structure under `src/test/java` (and `src/androidTest/java` for E2E)
+- Prefer fakes (`FakeUserRepository`) over heavy mocking for unit tests
+- Inject fakes into UseCases and ViewModels under test
+- Add new testing libraries via version catalog only — with approval
+
+## ViewModel testing
+
+- **Feature** ViewModels: send Intents → assert StateFlow emissions and SharedFlow effects
+- Ads / `:gmaAds` ViewModels: keep the project’s existing ads test style — do not convert to Intent/State/Effect tests unless the user **explicitly** asks
+- Use `runTest` for coroutine tests
+- No real Android framework in unit tests
+
+## Naming convention
+
+```
+<Unit>_when_<condition>_then_<result>
+```
+
+Examples:
+- `GetUserUseCase_whenRepositoryReturnsNull_thenReturnsNull`
+- `LoginViewModel_whenCredentialsInvalid_thenEmitsShowError`
+
+## When adding features
+
+- Add at minimum: UseCase unit test + ViewModel unit test
+- Do not add trivial tests that only assert constants or getters
+- Honor `.cursor/project-settings.json`: if `writeTestsWithFeatures` is `false`, skip generating tests unless the user asks
+
+## Skills (playbooks)
+
+| Skill | Use for |
+|-------|---------|
+| `test/test-unit` | Write missing JVM unit/Flow tests → run → report (no device) |
+| `test/test-integration` | Write missing multi-layer tests → run → report (device if `androidTest`) |
+| `test/test-e2e` | Write missing E2E → run on device → report (device required) |
+| `test/test-complete` | Full suite run + walkthrough (device required) |
+
+### Write → run → consent → fix → retest
+
+Authoring skills (`test-unit`, `test-integration`, `test-e2e`) and `test-complete` must: write/discover as applicable → execute → show Pass/Fail → **ask user consent** before changing production code on failures → fix → retest. Do not silently weaken assertions. If the user declines, leave failures listed.
+
+### Start banner
+
+When any `test-*` skill runs, the agent’s **first** user-visible sentence must be the skill’s one-line `We are going to …` banner. If a device is needed, that line must say an **emulator or physical device** is required, or that work continues with a device **already attached**.
+
+## Unit / Flow (fakes)
+
+- Prefer `runTest` + test dispatchers (`StandardTestDispatcher` / `UnconfinedTestDispatcher`)
+- Assert Flow emissions with Turbine **only if** already in catalog + approved
+- Never real network/DB in unit tests → use `test-integration`
+
+## Integration
+
+- Repository + Room in-memory and/or Retrofit + MockWebServer (catalog/approved only)
+- Prefer JVM `src/test`; `androidTest` only when Android runtime is required
+- No Espresso here
+
+## E2E / instrumentation
+
+- Cover critical user-visible flows only (login, paywall, primary feature path)
+- No new Espresso / UI-test libraries without approval — use project’s existing stack
+- Keep tests independent — no shared mutable state between tests
+- Emulator or physical device required
+
+## Emulator walkthrough (`test-complete`)
+
+- Run unit + integration + E2E suites that already exist
+- Structured manual/agent checklist through main nav paths on an emulator
+- Document device API / orientation from `project-settings.json`

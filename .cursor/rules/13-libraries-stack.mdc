@@ -1,0 +1,63 @@
+---
+description: Approved, optional, and forbidden libraries
+globs: ["**/*.gradle.kts", "**/libs.versions.toml"]
+alwaysApply: false
+---
+
+## Core stack (add via version catalog when setting up projects)
+
+| Category | Libraries |
+|----------|-----------|
+| AndroidX | core-ktx, appcompat, activity, fragment-ktx |
+| UI | Material 3, ConstraintLayout, View Binding |
+| Navigation | navigation-fragment/ui + Safe Args |
+| Lifecycle | viewmodel-ktx, runtime-ktx |
+| DI | Koin (default) |
+| Coroutines | kotlinx-coroutines-core, play-services integration |
+| Firebase (new projects) | BOM + analytics/crashlytics/`firebase-messaging` on `:core-platform`; `firebase-config` + `kotlinx-coroutines-play-services` on `:data` — via `setup-new-project` (FCM: dependency only, no service) |
+| Images | Glide — **always** load via `ImageView.loadImage(...)` (`ImageViewExtensions`; works on `ShapeableImageView`) |
+| Splash | core-splashscreen |
+| Desugaring | desugar_jdk_libs (for java.time on older APIs) |
+
+## Optional (add when feature requires — with approval)
+
+Lottie, CameraX, Play Services Location/Maps, other Firebase libs (Analytics, RC, Crashlytics, …), Play Billing / Hypersoft BillingManager, Google Mobile Ads + mediation (`:gmaAds`), Shimmer, App Update KTX.
+
+## Forbidden (unless project already uses or explicitly approved)
+
+- Jetpack Compose (UI is XML-only)
+- Data Binding (View Binding only)
+- Hilt / Dagger (when Koin is project standard)
+- RxJava (use coroutines/Flow)
+- Alternative navigation libs replacing Navigation Component
+- Alternative image loaders when Glide is established
+- Random new networking stacks without approval
+
+## Replacements
+
+| Do not use | Use instead |
+|------------|-------------|
+| Compose UI | XML + View Binding + Material3 |
+| Data Binding / findViewById | View Binding |
+| Plain `TextView` / `Button` (when Material exists) | `MaterialTextView` / `MaterialButton` |
+| `ImageView` / `AppCompatImageView` | `ShapeableImageView` (`siv`) for display-only images |
+| Clickable `ShapeableImageView` / icon ImageView | `MaterialButton` + `ButtonStyle.IconButton` (`mb`, `app:icon`) |
+| `setImageResource` / `setImageDrawable` / raw `Glide.with` in adapters | `siv.loadImage(source)` (`ImageViewExtensions`) |
+| Picasso / Coil when Glide is standard | Glide + `loadImage` |
+| Fixed `MaterialButton` height + `insetTop`/`insetBottom` `0dp` | `android:layout_height="wrap_content"` (no inset hacks) |
+| `bg_shape_*` oval/rect for button solid + stroke | `app:backgroundTint` + `app:strokeColor`/`strokeWidth` + `app:cornerRadius` on `MaterialButton` |
+| `android:background` + `backgroundTint="@null"` on `MaterialButton` | Same — Material surface attrs only |
+| `MaterialTextView` + `bg_shape_*` / `drawableEnd` for language chips | `MaterialButton` + Material style + `app:icon` / `iconGravity="end"` (no custom chip bg) |
+| `LinearLayout` + `mtv` + `siv` for tappable selectors | Same — `MaterialButton` with end icon |
+| `dimens.xml` | Inline `dp`/`sp` in multiples of 4 |
+| LiveData (new MVI screens) | StateFlow + SharedFlow |
+| Hardcoded versions | `libs.versions.toml` |
+| God Utils classes | Focused extensions / use cases / repositories |
+
+## Adding any library
+
+1. Resolve the **latest stable** version (do not reuse outdated versions from other projects)
+2. Add version to `[versions]` in catalog (correct section header)
+3. Add library alias to `[libraries]` (kebab-case, matching section)
+4. Use `implementation(libs.alias)` in the matching module `dependencies` section
+5. Get human approval before merging (new libraries still need approval — version must still be latest stable)
