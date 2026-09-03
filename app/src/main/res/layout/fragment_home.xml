@@ -1,65 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.home.FragmentHome">
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mbPremiumHome"
-        style="@style/Widget.Material3.Button.IconButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:icon="@drawable/ic_svg_premium"
-        app:iconSize="32dp"
-        app:iconTint="@null"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent">
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="0dp"
+        android:id="@+id/mtvTitleHome"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/home_screen"
-        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="80dp"
+        android:text="@string/nav_home"
+        android:textAppearance="?attr/textAppearanceHeadlineMedium"
+        app:layout_constraintBottom_toTopOf="@id/btnFeatureOneHome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2"
-        app:layout_constraintWidth_percent="0.9" />
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/mbFeaturesHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/feature_screen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mbSettingsHome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/settings_screen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mbFeaturesHome" />
-
-    <FrameLayout
-        android:id="@+id/bannerAdViewHome"
+        android:id="@+id/btnFeatureOneHome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#DCDCDC"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="80dp"
+        android:text="@string/action_feature_one"
+        app:layout_constraintBottom_toTopOf="@id/btnFeatureTwoHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mtvTitleHome" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnFeatureTwoHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/action_feature_two"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFeatureOneHome" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRewardedHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/action_rewarded"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFeatureTwoHome" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRewardedInterstitialHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="40dp"
+        android:text="@string/action_rewarded_interstitial"
+        app:layout_constraintBottom_toTopOf="@+id/nativeAdViewHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRewardedHome" />
+
+    <com.hypersoft.ads.practice.gmaAds.nativeAd.view.NativeSmallView
+        android:id="@+id/nativeAdViewHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_min="50dp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRewardedInterstitialHome" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.hypersoft.admobads.testing" />
-                  <option name="mobileSdkAppId" value="1:139790355625:android:1a87f7ee35e7fdad4d6db8" />
-                  <option name="projectId" value="base-project-62f1f" />
-                  <option name="projectNumber" value="139790355625" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

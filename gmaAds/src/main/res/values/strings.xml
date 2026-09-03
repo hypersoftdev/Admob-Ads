@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="native_ad_label">Ad</string>
+    <string name="native_ad_loading">Loading Advertisement…</string>
+    <string name="banner_ad_loading">Loading Advertisement…</string>
+    <string name="app_open_welcome_back_title">Welcome back</string>
+    <string name="app_open_welcome_back_body">Getting things ready…</string>
+</resources>

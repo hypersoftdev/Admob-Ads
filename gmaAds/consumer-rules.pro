@@ -1,0 +1,10 @@
+# Public :gmaAds API used from :app (Koin + fragments).
+-keep class com.hypersoft.ads.practice.gmaAds.AdsManager { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.interstitial.InterstitialAds { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.interstitial.InterstitialAdKey { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.interstitial.InterstitialAdConfig { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.interstitial.model.** { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.common.** { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.consent.** { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.banner.** { *; }
+-keep class com.hypersoft.ads.practice.gmaAds.nativeAd.** { *; }

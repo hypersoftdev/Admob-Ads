@@ -1,6 +1,12 @@
 pluginManagement {
     repositories {
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
     }
@@ -16,5 +22,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Admob Ads"
+rootProject.name = "Admob-Ads"
 include(":app")
+include(":gmaAds")
+include(":data")
+include(":core")

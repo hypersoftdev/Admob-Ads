@@ -1,21 +1,33 @@
 <resources>
-    <string name="app_name">Admob Ads</string>
-    <string name="visit_site">Visit Site</string>
 
-    <string name="entrance_screen">Entrance Screen</string>
-    <string name="language_screen">Language Screen</string>
-    <string name="on_boarding_screen">OnBoarding Screen</string>
-    <string name="home_screen">Home Screen</string>
-    <string name="feature_screen">Feature Screen</string>
-    <string name="settings_screen">Settings Screen</string>
-    <string name="premium_screen">Premium Screen</string>
+    <!-- App -->
+    <string name="app_name">Admob-Ads</string>
 
-    <string name="fetching_remote_config">Fetching Remote Config</string>
-    <string name="loading_native">Loading Native…</string>
-    <string name="loading_app_open">Loading App Open…</string>
-    <string name="native_response">Native Responded</string>
-    <string name="app_open_response">App Open Responded</string>
+    <!-- Screen Titles -->
+    <string name="entrance_title">Entrance</string>
+    <string name="language_title">Language</string>
+    <string name="onboarding_title">Onboarding</string>
+    <string name="menu_title">Menu</string>
+    <string name="dashboard_title">Dashboard</string>
+    <string name="feature_one_title">Feature One</string>
+    <string name="feature_two_title">Feature Two</string>
+    <string name="exit_title">Exit</string>
 
-    <string name="_continue">Continue</string>
-    <string name="navigate">Navigate</string>
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_trending">Trending</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Actions -->
+    <string name="action_continue">Continue</string>
+    <string name="action_open_dashboard">Open Dashboard</string>
+    <string name="action_feature_one">Feature One</string>
+    <string name="action_feature_two">Feature Two</string>
+    <string name="action_exit_app">Exit</string>
+    <string name="action_cancel">Cancel</string>
+
+    <!-- Ads -->
+    <string name="action_rewarded">Rewarded Ad</string>
+    <string name="action_rewarded_interstitial">Rewarded Interstitial Ad</string>
+
 </resources>
