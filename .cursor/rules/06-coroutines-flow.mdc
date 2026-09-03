@@ -1,0 +1,79 @@
+---
+description: Coroutines, Flow, dispatchers, ANR prevention, large datasets
+globs: ["**/viewModel/**/*.kt", "**/repository/**/*.kt", "**/data/**/*.kt", "**/domain/**/*.kt", "**/dataSource/**/*.kt", "**/presentation/**/*.kt"]
+alwaysApply: false
+---
+
+## Scopes
+
+| Scope | Use |
+|-------|-----|
+| `viewModelScope` | All ViewModel coroutine work |
+| `lifecycleScope` + `repeatOnLifecycle` | UI Flow collection |
+| `GlobalScope` | **Forbidden** for feature work |
+
+## Dispatchers (mandatory — prevent ANR)
+
+Assume every list/file/query may contain **thousands** of items. Never do heavy work on Main.
+
+| Work | Dispatcher |
+|------|------------|
+| Disk / DB / SharedPreferences / files | `Dispatchers.IO` in **Repository** (`withContext`) |
+| Network | `Dispatchers.IO` |
+| Parsing, mapping, filtering, sorting large lists | `Dispatchers.Default` |
+| UI collect / state render only | Main (default) |
+
+Rules:
+- Inject dispatchers via DI in **Repository** (and ViewModel for heavy `toUi`) — not in DataSource
+- DataSource: sync SharedPreferences / thin SDK — no `withContext` on DataSource
+- Wrap repository disk/prefs work: `withContext(ioDispatcher) { dataSource.xxx }`
+- Wrap heavy mapping: `withContext(defaultDispatcher) { … }` / `flowOn(defaultDispatcher)`
+- Heavy mapping belongs in Repository / UseCase; `toUi()` in ViewModel only when needed — never in Fragment/Activity/Adapter
+- Mapping domain → UI for large lists must run off Main (`withContext(defaultDispatcher)`)
+- DiffUtil / list prep for adapters: off Main before `submitList`
+- Never block Main with `runBlocking`, synchronous disk/network, or heavy loops
+
+## Large datasets (design from day one)
+
+- Prefer `ListAdapter` + `DiffUtil` (or AsyncListDiffer) — never `notifyDataSetChanged` for big lists
+- DiffCallback: simple `areItemsTheSame` / `areContentsTheSame` as **one-liners** (`Boolean = oldItem.id == newItem.id`) — see `04-mvi-presentation`
+- Do not put full thousand-item payloads in State when only a page/window is shown — prefer pagination / paging / windowed loads when the feature needs it
+- Avoid copying large collections on Main (`toList()`, deep `map` chains) without a background dispatcher
+- Prefer streaming (`Flow`) over loading entire datasets into memory when sources support it
+- RecyclerView: `ListAdapter` + DiffUtil; declare `app:layoutManager` / orientation / `spanCount` in XML unless dynamic; avoid nested RecyclerViews that rebind huge children
+- Image/list binding: cancel/reuse (e.g. Glide) — no unbounded bitmap work on Main
+
+## Flow
+
+- Cold `Flow` from repositories for continuous observation
+- Use operators (`map`, `catch`, `flowOn`) — put `flowOn` before collection so upstream work leaves Main
+- Use `stateIn`/`shareIn` only when shared hot streams are needed
+- Play Services Tasks: `await()` via coroutines-play-services
+
+## StateFlow
+
+```kotlin
+private val _state = MutableStateFlow(FeatureState())
+val state: StateFlow<FeatureState> = _state.asStateFlow()
+_state.update { it.copy(isLoading = true) }
+```
+
+- Private mutable, public immutable — never expose `MutableStateFlow`
+- Always provide initial value
+- Keep State lean — store display-ready subsets, not raw megabyte dumps
+
+## SharedFlow (effects)
+
+- One-shot events only — not continuous UI state
+- Navigation, errors, permission requests
+
+## Exception handling
+
+```kotlin
+private val handler = CoroutineExceptionHandler { _, t ->
+    viewModelScope.launch { /* map to Effect or state error */ }
+}
+```
+
+- Never swallow exceptions silently
+- Convert failures to Effect or state error flags

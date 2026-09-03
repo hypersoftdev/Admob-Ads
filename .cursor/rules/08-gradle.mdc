@@ -1,0 +1,27 @@
+---
+description: Gradle, build config, catalog sections/naming, and dependency management
+globs: ["**/*.gradle.kts", "**/libs.versions.toml", "**/gradle.properties"]
+alwaysApply: false
+---
+
+# Gradle (invariants)
+
+**Full detail (android section order, signingConfigs, bundle, `base`, catalog, ProGuard):** [reference/gradle.md](reference/gradle.md)
+
+## Must follow
+
+- Root `build.gradle.kts`: plugins `apply false` only
+- Module order: `plugins` → `android` → (`base` on `:app` only) → `dependencies`
+- `:app` `android` order: `namespace` → `compileSdk` → `defaultConfig` → **`signingConfigs`** → `buildTypes` → `buildFeatures` → `compileOptions` → `kotlin`/`jvm` (only if already used) → **`bundle`**
+- Library modules: same order; **omit** `signingConfigs`, `bundle`, `base`, and app-only `defaultConfig` fields
+- Always add `:app` `signingConfigs` if missing — find `*.jks` in root then `app/`; empty strings if none
+- Always add `:app` `bundle { language { enableSplit = false } }`
+- `:app` `base { archivesName = "AppName-Account-v{versionCode}({versionName})" }`
+- Dependencies: project modules first, then section headers (Android Core, Lifecycle, Firebase, Koin, Testing, …)
+- Version catalog: `[versions]` / `[plugins]` / `[libraries]`; camelCase version keys; kebab-case aliases; **never** hardcode `g:a:v` in modules
+- **`gradle-update` must** bump catalog **and** any hardcoded deps; migrate hardcodes into `libs.versions.toml` (create file if missing); place under `gradle-organize` section headers (e.g. Glide → `// Glide`, not under Testing)
+- Latest stable on add/update; Java 17; minSdk 24; compileSdk/targetSdk **37**; View Binding on — never Data Binding; app release minify on
+- Signing secrets: empty placeholders or `local.properties` / CI — never commit real keystore passwords into docs/skills
+- ProGuard keeps: domain entities + presentation state/intent/effect/model (+ ads when present)
+
+Read [reference/gradle.md](reference/gradle.md) when editing Gradle or the catalog.

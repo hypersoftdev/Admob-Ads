@@ -1,0 +1,116 @@
+---
+description: Clean Architecture layer rules
+globs: ["**/domain/**/*.kt", "**/data/**/*.kt", "**/presentation/**/*.kt", "**/core*/**/*.kt", "**/app/**/*.kt"]
+alwaysApply: false
+---
+
+## Layer responsibilities
+
+```
+Presentation  →  Domain  →  Data
+(UI logic)       (business)   (I/O + mapping)
+```
+
+Dependencies always point inward.
+
+### Presentation
+- UI logic and state rendering only
+- ViewModels manage state — no direct DB/API calls
+- Navigate via Effects, not direct Fragment transactions from ViewModel
+- Fragments / Activities / Adapters bind and render only — no heavy mapping
+
+### Domain
+- Business logic and use cases
+- Repository **interfaces** only — never implementations
+- UseCase classes live **only** here (`domain.usecase.*`) — never under `:data`
+- No Android framework / UI dependencies
+- Heavy domain transforms / aggregation / filtering belong in UseCases when relevant
+
+### Data
+- Repository **implementations** (`*RepositoryImpl`) only — never repository interfaces, never UseCases
+- Local/remote DataSources — **sync or thin SDK wrappers; no dispatcher injection**
+- DTO ↔ entity mapping (heavy parsing / list shaping belongs here when data-bound)
+- **IO dispatcher (`withContext`) on Repository impl** — not on DataSource
+- DI: `dataModule = lazyModule { //// DataSources … //// Repositories … }` (see `07-dependency-injection`)
+
+## Mapping ownership
+
+| Mapping | Where |
+|---------|--------|
+| DTO / JSON / DB entity → domain | Repository (data) |
+| Domain transforms, filter, sort, aggregate | UseCase and/or Repository |
+| Domain → UI model (`toUi()`) | ViewModel (or dedicated mapper called from ViewModel) |
+| Never | Fragment, Activity, Adapter, XML |
+
+- If `toUi()` / list mapping may be heavy (large lists), run it with an appropriate dispatcher (`Default` / `IO`) inside the ViewModel (or lower layer before emitting)
+- Adapters receive already-mapped UI models — bind views only
+
+## ViewModel
+
+- This MVI ViewModel contract applies to **feature screens** in `:presentation` only
+- Ads (`:gmaAds` / AdMob) keep existing managers / ad ViewModels — **not** Intent / State / Effect — unless the user **explicitly** asks (`21-ads-billing`)
+- Extend `androidx.lifecycle.ViewModel`
+- Expose `StateFlow<*State>` and `SharedFlow<*Effect>`
+- Single entry: `fun handleIntent(intent: *Intent) = viewModelScope.launch(exceptionHandler) { … }`
+- Intent handlers are `private suspend fun onX()` — not nested launches
+- `handleError(throwable)` at end of class; `CoroutineExceptionHandler` delegates to it
+- Use `viewModelScope` + `CoroutineExceptionHandler` (see `04-mvi-presentation`)
+- No View/Fragment/Context references
+- No layout inflation or View Binding inside ViewModel
+- Logging: prefer Repo; ViewModel logs sparingly (failures in `handleError`) — see `16-logging`
+
+## UseCase
+
+- One class = one business action area
+- Naming: `Get*`, `Save*`, `Check*`, `Schedule*` + `UseCase`
+- Depend only on repository **interfaces**
+- **Source + DI live in `:domain`** — never create UseCases under `:data`
+- Register with `factory { }` inside domain `useCaseModule = lazyModule { }`
+- Prefer putting reusable heavy business mapping here rather than in UI
+
+## Repository
+
+- **Interface in `:domain`:** `LocationRepository` — never define the interface in `:data`
+- **Implementation in `:data`:** `LocationRepositoryImpl`
+- UI never accesses DataSources — only repositories via use cases
+- Repository decides local vs remote strategy
+- Do heavy data mapping (DTO → domain, large list prep) here when it is data-layer concern
+- Inject `CoroutineDispatcher` in **Repository impl**; wrap disk/prefs/network access with `withContext(ioDispatcher)`
+
+## DataSource
+
+- Thin layer: SharedPreferences properties, Room DAO calls, Retrofit service, Firebase SDK
+- **No dispatcher** on DataSource classes (e.g. `SharedPrefManager` takes `Context` only)
+- Sync prefs: get/set properties; Repository exposes `suspend` + `withContext`
+
+## SOLID (how this project applies them)
+
+Moved from former `ANDROID_PROJECT_RULES.md` — keep here so nothing is lost.
+
+### Single Responsibility (S)
+
+- UseCase = one business capability area.
+- ViewModel = state reduction + intent handling for one **feature** screen (ads ViewModels are not this pattern — see `21-ads-billing`).
+- Repository = one data concern (location, billing, language, …).
+- Modules split UI / domain / data / ads / features.
+
+### Open / Closed (O)
+
+- New screens add a new feature package + Koin module — existing modules stay closed.
+- Sealed Intent/Effect hierarchies extend by adding subtypes.
+- Ad keys/enums extend without rewriting managers.
+
+### Liskov Substitution (L)
+
+- Any `*RepositoryImpl` must honor the domain interface contract (nullability, suspend semantics).
+- Fragments substituting `BaseFragment` must preserve ViewBinding lifecycle rules.
+
+### Interface Segregation (I)
+
+- Narrow repository interfaces per area (`LanguageRepository`, `LocationRepository`) instead of a god repository.
+- Feature Intents expose only that screen’s events.
+
+### Dependency Inversion (D)
+
+- Presentation/domain depend on abstractions (`LocationRepository`), not `LocationRepositoryImpl`.
+- Koin composition root in `:app` binds interfaces → implementations.

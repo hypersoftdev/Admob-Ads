@@ -1,0 +1,90 @@
+---
+description: Global Android project standards — always apply
+alwaysApply: true
+---
+
+You are working on a production Android application.
+
+## Stack (defaults — adapt to existing project if already established)
+
+- Kotlin only
+- XML UI + View Binding only (no Jetpack Compose, no Data Binding)
+- Clean Architecture (Presentation → Domain → Data)
+- MVVM + MVI (Intent / State / Effect) for **feature screens** — **not** ads (`:gmaAds`); ads keep the project’s existing managers / ad ViewModels unless the user explicitly asks (`21-ads-billing`)
+- Repository pattern
+- Multi-module architecture
+- DI via the project's existing framework (default: Koin) — **`lazyModule` only**
+- Gradle Kotlin DSL + Version Catalog (`libs.versions.toml`)
+
+## Before writing code
+
+- Analyze existing project structure and conventions first
+- Reuse existing base classes, modules, and patterns
+- Do not introduce new libraries without explicit approval
+- Do not change architecture or module boundaries without approval
+- Maintain backward compatibility
+- When `.cursor/project-settings.json` exists, **obey it** (`writeTestsWithFeatures`, `orientation`, `themeModes`, `applicationId`, `appName`) — see `.cursor/README.md`
+
+## Code quality
+
+- Production-ready code only — no placeholders or TODOs left behind
+- Single responsibility per class
+- Avoid duplicate logic — extract shared code to core modules
+- Prefer readable code over clever code
+- Minimize scope — change only what the task requires
+- Design for large datasets from day one — never assume small lists
+- UI must support portrait and landscape (unless `project-settings.json` sets `orientation` to `portrait` or `landscape` only)
+- Heavy mapping in Repository / UseCase; UI layers render only
+- Networking / Room / SharedPreferences patterns: `26-data-persistence.mdc` + `rules/reference/`
+
+## Golden dependency rule
+
+```
+app (Composition Root)
+ |
+ ↓
+presentation → domain ← data
+ |
+ ↓
+core modules (shared utilities)
+```
+
+- Create as many `:core-*` modules as needed (`core-common`, `core-ui`, `core-platform`, …)
+- UI never imports data implementations. Domain never imports UI.
+
+## Always
+
+1. Follow Clean Architecture + MVVM/MVI (Intent / State / Effect / ViewModel / UseCase / Repository) for **feature screens** — ads are exempt (`21-ads-billing`) — same as Stack above
+2. XML + View Binding only — never Compose, never Data Binding, never `findViewById` — same as Stack above
+3. Use the project's DI framework — **`lazyModule` everywhere**; register in composition root — same as Stack above
+4. Use Version Catalog — no hardcoded dependency versions
+5. Respect module boundaries — presentation must not depend on `:data`; UseCases + repo **interfaces** only in `:domain` (never in `:data`) — same as Golden dependency rule above
+6. Put **all** user-facing strings in the single shared strings file (e.g. `:core-ui`) — no hardcoded UI strings
+7. Match existing naming conventions (resources, packages, classes)
+8. Add unit tests for new UseCases and ViewModels when adding features — **unless** `.cursor/project-settings.json` has `writeTestsWithFeatures: false`
+9. Use proper dispatchers (`IO` / `Default`) — assume lists/files may have thousands of items; never block Main
+10. Log with `Constants.TAG*` and format `ClassName: functionName: State: details`
+11. Support **portrait and landscape** for all UI screens — **unless** `project-settings.json` `orientation` is `portrait` or `landscape` only — same as Code quality above
+12. Do heavy mapping in Repository / UseCase; `toUi()` in ViewModel only when needed (with dispatcher if heavy) — same as Code quality above
+13. Read and obey `.cursor/project-settings.json` when present (`orientation`, `themeModes`, `writeTestsWithFeatures`) — same as Before writing code above
+14. Data layer patterns (Retrofit / Room / SharedPreferences): follow `26-data-persistence.mdc` and `rules/reference/` — not ad-hoc skills — same as Code quality above
+
+## Never
+
+1. Never add libraries without explicit human approval — same as Before writing code above
+2. Never add Hilt/Dagger/Compose/RxJava unless project already uses them
+3. Never put business logic or heavy mapping in Fragments/Activities/Adapters beyond render + intent dispatch
+4. Never access DataSources directly from presentation
+5. Never skip `android:exported` on manifest components with intent-filters
+6. Never use `GlobalScope` for feature work
+7. Never modify unrelated files when implementing a feature — same as Code quality “Minimize scope” above
+8. Never do heavy mapping/sorting/IO on the Main thread — same as Always #9 above
+9. Never invent ad-hoc log tags — use `Constants.TAG*` — same as Always #10 above
+10. Never lock the app to one orientation unless product explicitly requires it — same as Always #11 above
+11. Never set static `RecyclerView` `layoutManager` / list `orientation` / `spanCount` in Kotlin — declare them in XML unless dynamic
+12. Never put UseCases or repository **interfaces** in `:data` — domain only; never use `module { }` — always `lazyModule { }` — same as Always #3 and #5 above
+13. Never invent a parallel architecture (e.g. Redux, Orbit) for one screen — stay on project MVI
+14. Never hardcode AdMob production IDs in debug or commit secrets into git / docs — see `14-security-secrets.mdc`
+15. Never convert ads (`:gmaAds`, AdMob managers, ad ViewModels) to MVI (Intent / State / Effect) unless the user **explicitly** asks — keep the project’s existing ads architecture. See `21-ads-billing`
+
+When scaffolding a new feature or screen, also follow `01-feature-checklist.mdc`.

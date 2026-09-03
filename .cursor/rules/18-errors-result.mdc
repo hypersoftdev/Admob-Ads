@@ -1,0 +1,47 @@
+---
+description: Domain error models and mapping failures to UI State/Effect
+globs: ["**/domain/**/*.kt", "**/data/**/*.kt", "**/presentation/**/*.kt", "**/repository/**/*.kt", "**/dataSource/**/*.kt"]
+alwaysApply: false
+---
+
+## Domain / data errors
+
+- Prefer one project-wide sealed failure model (e.g. `Outcome` / `Result`) — do not throw for expected business failures
+- Map exceptions at the data boundary; expose typed errors to domain/presentation
+- Do not mix kotlin `Result` and a custom `Outcome` in the same project unless already established
+
+```kotlin
+sealed interface DataError {
+    data object Network : DataError
+    data object NotFound : DataError
+    data class Unknown(val message: String? = null) : DataError
+}
+
+sealed interface Outcome<out T> {
+    data class Success<T>(val value: T) : Outcome<T>
+    data class Failure(val error: DataError) : Outcome<Nothing>
+}
+```
+
+- Use the project’s existing error types when present — do not invent a second parallel hierarchy
+
+## ViewModel mapping
+
+| Failure kind | UI handling |
+|--------------|-------------|
+| Recoverable / inline | State flags or error message field |
+| One-shot (toast/snackbar/dialog) | `Effect` with `@StringRes` when possible |
+| Hard stop / logout | Effect → navigation |
+| Uncaught in intent coroutine | `handleError(throwable)` via `CoroutineExceptionHandler` (`04-mvi-presentation`) |
+
+- Centralize unexpected failures in **`handleError`** at end of ViewModel — log + Crashlytics + clear loading / emit Effect
+- Never show raw exception messages or stack traces to users
+- Never put `Throwable` / raw HTTP bodies in UI State — map to typed error + `@StringRes` / flags
+- Log failures with `Constants.TAG*` (see `16-logging`); omit PII/tokens
+- Cancellation is not a user error — rethrow / ignore `CancellationException`
+
+## Forbidden
+
+- Swallowing errors in empty `catch`
+- Leaking HTTP codes / DTO error bodies straight into State without mapping
+- Business `try/catch` in Fragments

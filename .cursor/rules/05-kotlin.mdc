@@ -1,0 +1,47 @@
+---
+description: Kotlin coding standards
+globs: ["**/domain/**/*.kt", "**/data/**/*.kt", "**/presentation/**/*.kt", "**/core*/**/*.kt", "**/app/**/*.kt"]
+alwaysApply: false
+---
+
+## Prefer
+
+- `val` over `var` — immutable by default
+- Data classes for state, entities, UI models
+- Sealed classes/interfaces for Intent, Effect, closed hierarchies
+- Extension functions for reusable behavior (in core modules)
+- Coroutines over callbacks — heavy work on `IO` / `Default`, never Main
+- Explicit null handling over `!!`
+- Logging via `Constants.TAG*` with `ClassName: functionName: State: details`
+
+## Avoid
+
+- Global mutable objects
+- Large god classes
+- Deep nesting and nested scope-function chains
+- Business logic in Activities/Fragments
+- Stringly-typed constants where enums/sealed types fit
+- Blocking Main with large list map/filter/sort or disk/network I/O
+
+## Naming
+
+| Element | Convention | Example |
+|---------|------------|---------|
+| Classes | PascalCase + role suffix | `HomeViewModel`, `UserRepositoryImpl` |
+| Functions | camelCase, verb-first | `handleIntent`, `getLastLocation` |
+| Booleans | `is`/`has`/`should`/`show` prefix | `isLoading`, `showError` |
+| Constants | UPPER_SNAKE in object/companion | `TAG`, `MAX_RETRY` |
+| Files | Match primary public type | `HomeViewModel.kt` |
+| Extensions | `<Receiver>Extensions.kt` | `FragmentExtensions.kt`, `ImageViewExtensions.kt` |
+
+## File rules
+
+- One primary public type per file
+- DI modules: `<Feature>Module.kt` or `<Area>Module.kt`
+- Stateless mappers: `object FeatureUiMapper`
+
+## Scope functions
+
+- `apply`/`also` for configuration
+- `let` for null-safe transforms
+- Prefer `_state.update { }` over nested `apply` for state changes

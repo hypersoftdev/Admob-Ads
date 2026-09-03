@@ -1,0 +1,42 @@
+---
+description: Runtime permissions via MVI Effects and base helpers
+globs: ["**/presentation/**/*.kt", "**/AndroidManifest.xml"]
+alwaysApply: false
+---
+
+## Flow
+
+```
+User action / need
+  → Intent
+  → ViewModel emits Effect (RequestLocationPermission, …)
+  → BasePermissionFragment / helper runs system prompt
+  → Result Intent back to ViewModel
+```
+
+Never scatter `ActivityResultLauncher` + business branching across random Fragments when a base helper exists.
+
+## Rules
+
+- Declare permissions in the module that needs them; app merges manifests
+- Dangerous permissions: request at runtime only when required
+- Explain why before the system dialog (in-app UX / Effect)
+- Handle: granted, denied, permanently denied → settings, GPS-off
+- `POST_NOTIFICATIONS` on API 33+
+- Optional hardware: `uses-feature ... required="false"`
+
+## Effects examples
+
+```kotlin
+sealed class FeatureEffect {
+    object RequestLocationPermission : FeatureEffect()
+    object OpenAppSettings : FeatureEffect()
+    object RequestEnableGps : FeatureEffect()
+}
+```
+
+## Forbidden
+
+- Assuming permission is granted
+- Requesting unrelated permission bundles "just in case"
+- Putting permission business decisions only in the Fragment with no ViewModel Intent/Effect

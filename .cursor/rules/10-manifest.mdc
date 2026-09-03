@@ -1,0 +1,73 @@
+---
+description: AndroidManifest.xml conventions
+globs: ["**/AndroidManifest.xml"]
+alwaysApply: false
+---
+
+## Module roles
+
+| Module | Manifest content |
+|--------|-----------------|
+| `:app` | Full merged manifest — Application, Activities, Services, Receivers, Providers |
+| Other modules | Permissions only, or component stubs as needed |
+
+## Application class
+
+- Single Application in `:app` — DI init only, keep minimal
+- Declare with `android:name=".App"`
+- `allowBackup` configured explicitly with backup/extraction XML rules
+- `supportsRtl="true"`
+
+## Activities
+
+- Prefer single-Activity architecture with Navigation Component
+- Launcher Activity: `exported="true"` + MAIN/LAUNCHER intent-filter
+- All other Activities: `exported="false"`
+- **Never leave `exported` unspecified** when intent-filters exist
+- Support **portrait and landscape** — do not set `android:screenOrientation="portrait"` (or landscape-only) unless product explicitly requires it
+
+## Fragments
+
+- Not declared in manifest — hosted via Navigation graphs
+
+## Services and receivers
+
+- Default: `exported="false"`
+- System receivers (BOOT_COMPLETED, etc.): `exported="true"` only when required
+- Foreground services: set `foregroundServiceType` + matching permissions
+- Custom actions: namespace with `applicationId`
+
+## Permissions
+
+- Declare in the module that needs them — app merges all
+- Dangerous permissions: request at runtime, never assume granted
+- Optional hardware: `uses-feature ... required="false"`
+
+## Secrets and placeholders
+
+- API keys via manifest placeholders sourced from `local.properties` or CI
+
+## Themes
+
+- Splash: create `:core-ui` `res/values/splash.xml` with `Theme.App.Starting` (`Theme.SplashScreen`)
+- Apply `@style/Theme.App.Starting` on Application / launcher Activity
+- `postSplashScreenTheme` → main Material3 DayNight theme (defined in `themes.xml`)
+- See `23-app-startup` for full splash wiring
+
+## Startup providers
+
+- If WorkManager is unused, remove `WorkManagerInitializer` via AndroidX Startup `tools:node="remove"` (see `23-app-startup`)
+- Do not leave crashy default initializers enabled
+
+## Deep Links
+
+Moved from former `ANDROID_PROJECT_RULES.md` — keep here so nothing is lost.
+
+- New apps from this template start with **no app deep links** unless product requires them.
+- If adding deep links: declare on the host Activity with explicit `intent-filter`, `autoVerify` only when App Links are configured, and handle navigation via Nav Component.
+
+## Intent filters (extra)
+
+- Launcher: `MAIN` + `LAUNCHER` only on MainActivity.
+- Receivers: whitelist only needed system actions.
+- Custom actions must be namespaced with applicationId / package.

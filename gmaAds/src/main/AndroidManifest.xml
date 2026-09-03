@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
+            android:value="false" />
+
+        <activity
+            android:name=".appOpen.AppOpenLoadingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.GmaAds.AppOpenLoading" />
+
+    </application>
+</manifest>

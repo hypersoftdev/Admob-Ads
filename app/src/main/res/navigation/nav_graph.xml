@@ -3,68 +3,134 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentEntrance">
+    app:startDestination="@id/entranceFragment">
 
     <fragment
-        android:id="@+id/fragmentEntrance"
-        android:name="com.hypersoft.admobads.app.entrance.FragmentEntrance"
+        android:id="@+id/entranceFragment"
+        android:name="com.hypersoft.ads.practice.entrance.ui.EntranceFragment"
         android:label="fragment_entrance"
         tools:layout="@layout/fragment_entrance">
         <action
-            android:id="@+id/action_fragmentEntrance_to_fragmentLanguage"
-            app:destination="@id/fragmentLanguage"
-            app:popUpTo="@id/fragmentEntrance"
+            android:id="@+id/action_entranceFragment_to_languageFragment"
+            app:destination="@id/languageFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/entranceFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_entranceFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/entranceFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_entranceFragment_to_menuFragment"
+            app:destination="@id/menuFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/entranceFragment"
             app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/fragmentLanguage"
-        android:name="com.hypersoft.admobads.app.language.FragmentLanguage"
+        android:id="@+id/languageFragment"
+        android:name="com.hypersoft.ads.practice.language.LanguageFragment"
         android:label="fragment_language"
         tools:layout="@layout/fragment_language">
         <action
-            android:id="@+id/action_fragmentLanguage_to_fragmentOnBoarding"
-            app:destination="@id/fragmentOnBoarding" />
+            android:id="@+id/action_languageFragment_to_onboardingFragment"
+            app:destination="@id/onboardingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/languageFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/fragmentOnBoarding"
-        android:name="com.hypersoft.admobads.app.onBoarding.FragmentOnBoarding"
-        android:label="fragment_on_boarding"
-        tools:layout="@layout/fragment_on_boarding">
+        android:id="@+id/onboardingFragment"
+        android:name="com.hypersoft.ads.practice.onboarding.OnboardingFragment"
+        android:label="fragment_onboarding"
+        tools:layout="@layout/fragment_onboarding">
         <action
-            android:id="@+id/action_fragmentOnBoarding_to_fragmentHome"
-            app:destination="@id/fragmentHome" />
+            android:id="@+id/action_onboardingFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/onboardingFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/fragmentHome"
-        android:name="com.hypersoft.admobads.app.home.FragmentHome"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/menuFragment"
+        android:name="com.hypersoft.ads.practice.menu.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu">
         <action
-            android:id="@+id/action_fragmentHome_to_fragmentFeature"
-            app:destination="@id/fragmentFeature" />
-        <action
-            android:id="@+id/action_fragmentHome_to_fragmentSettings"
-            app:destination="@id/fragmentSettings" />
-        <action
-            android:id="@+id/action_fragmentHome_to_fragmentPremium"
-            app:destination="@id/fragmentPremium" />
+            android:id="@+id/action_menuFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
-        android:id="@+id/fragmentFeature"
-        android:name="com.hypersoft.admobads.app.feature.FragmentFeature"
-        android:label="fragment_feature"
-        tools:layout="@layout/fragment_feature" />
+        android:id="@+id/dashboardFragment"
+        android:name="com.hypersoft.ads.practice.dashboard.DashboardFragment"
+        android:label="fragment_dashboard"
+        tools:layout="@layout/fragment_dashboard">
+        <action
+            android:id="@+id/action_dashboardFragment_to_featureOneFragment"
+            app:destination="@id/featureOneFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_featureTwoFragment"
+            app:destination="@id/featureTwoFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_exitFragment"
+            app:destination="@id/exitFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
     <fragment
-        android:id="@+id/fragmentSettings"
-        android:name="com.hypersoft.admobads.app.settings.FragmentSettings"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/featureOneFragment"
+        android:name="com.hypersoft.ads.practice.featureOne.FeatureOneFragment"
+        android:label="fragment_feature_one"
+        tools:layout="@layout/fragment_feature_one" />
+
     <fragment
-        android:id="@+id/fragmentPremium"
-        android:name="com.hypersoft.admobads.app.premium.FragmentPremium"
-        android:label="fragment_premium"
-        tools:layout="@layout/fragment_premium" />
+        android:id="@+id/featureTwoFragment"
+        android:name="com.hypersoft.ads.practice.featureTwo.FeatureTwoFragment"
+        android:label="fragment_feature_two"
+        tools:layout="@layout/fragment_feature_two" />
+
+    <fragment
+        android:id="@+id/exitFragment"
+        android:name="com.hypersoft.ads.practice.exit.ExitFragment"
+        android:label="fragment_exit"
+        tools:layout="@layout/fragment_exit" />
+
 </navigation>

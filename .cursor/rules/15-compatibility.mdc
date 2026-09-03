@@ -1,0 +1,41 @@
+---
+description: Android API levels, permissions, and backward compatibility
+globs: ["**/AndroidManifest.xml", "**/*.gradle.kts", "**/libs.versions.toml", "**/permission*/**/*.kt", "**/compat*/**/*.kt", "**/BuildConfig*", "**/App.kt"]
+alwaysApply: false
+---
+
+## SDK targets (defaults)
+
+- minSdk = 24
+- targetSdk / compileSdk = **37** (Android 17 — current latest; bump when a newer platform ships)
+- Do not call APIs above minSdk without guards, desugaring, or AndroidX compat
+
+## Permission strategy
+
+- Declare in manifest; request dangerous permissions at runtime
+- Route permission UX: Intent → Effect → `BasePermissionFragment` helpers (see `20-permissions-runtime`)
+- Handle denied / permanently denied / settings-required cases via Effects
+- `POST_NOTIFICATIONS` required for API 33+
+
+## Deprecated API replacements
+
+| Prefer | Over |
+|--------|------|
+| AndroidX libraries | Legacy support libraries |
+| SplashScreen API | Legacy splash-only themes |
+| View Binding | findViewById / Kotlin synthetics / Data Binding |
+| Navigation Component | Manual FragmentTransactions for primary flow |
+| FusedLocationProvider + coroutines | Blocking location loops |
+
+## Backward compatibility
+
+- Enable core library desugaring when using `java.time`
+- Optional hardware: `required="false"` in manifest
+- RTL: `supportsRtl="true"`; use `ldrtl` animation variants where needed
+- Use `tools:ignore` sparingly and with justification
+
+## Build compatibility
+
+- Match Java version across all modules
+- Keep AGP, Kotlin, and catalog versions aligned
+- Test on minSdk emulator/device when adding platform-specific code

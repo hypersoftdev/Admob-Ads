@@ -1,0 +1,70 @@
+---
+description: App-wide logging format and TAG conventions
+alwaysApply: true
+---
+
+## TAG constants (mandatory)
+
+Define shared tags in a single `Constants` object (typically in `:core-common`):
+
+```kotlin
+object Constants {
+    const val TAG = "TAG_MyTag"
+    const val TAG_ADS = "TAG_ADS"
+    const val TAG_FIREBASE = "TAG_FIREBASE"
+    const val TAG_REMOTE_CONFIG = "TAG_REMOTE_CONFIG"
+}
+```
+
+| Tag | Use for |
+|-----|---------|
+| `TAG` | Default / general app logs |
+| `TAG_ADS` | Ads managers, ad load/show/fail |
+| `TAG_FIREBASE` | Firebase helpers / Analytics / Crashlytics wiring |
+| `TAG_REMOTE_CONFIG` | Remote Config fetch / activate / value reads |
+
+Add new `TAG_*` constants the same way for new subsystems — never invent ad-hoc string tags in call sites.
+
+## Log message format (mandatory)
+
+```
+ClassName: functionName: StateOrStep: details
+```
+
+Examples:
+
+```kotlin
+Log.d(TAG, "HomeRepositoryImpl: fetchCategories: Success: ${list.size}")
+Log.e(TAG, "HomeRepositoryImpl: fetchCategories: Failed: ${e.message}")
+Log.d(TAG_ADS, "BannerAdManager: loadAd: Requested")
+Log.d(TAG_REMOTE_CONFIG, "RemoteConfigDataSource: fetchAndActivate: Success: activated=$activated")
+Log.d(TAG_FIREBASE, "FirebaseUtils: logEvent: event=$name")
+```
+
+Rules:
+- Always start with **class name** + **function name**
+- Include outcome: `Success`, `Failed`, `Started`, `Empty`, `Cached`, etc.
+- Include useful result context (size, id, error message) — never tokens, passwords, or PII
+- Use the matching subsystem TAG (`TAG_ADS`, `TAG_FIREBASE`, …)
+- Prefer `Log.d` for flow/success, `Log.e`/`Log.w` for failures — stay consistent within a module
+
+## Where to log
+
+| Layer | Guidance |
+|-------|----------|
+| Repository / DataSource | Primary place for flow logs (`Started` / `Success` / `Failed` / sizes) |
+| UseCase | Only when useful for multi-repo orchestration |
+| ViewModel | **Sparse** — do not log every intent / `onX` start+success; prefer repo logs |
+| ViewModel errors | Always via `handleError` (`Log.e` + Crashlytics) |
+| ViewModel guards | Optional `Log.w` (e.g. empty selection) |
+| UI-only ViewModel work | Short log OK when no repo/domain call exists |
+
+Forbidden ViewModel noise:
+- `onScreenStarted: Started` + `Success` plus every click `Started`/`Success` when the repository already logs the same flow
+- Duplicate success logs in ViewModel and Repository for the same operation
+
+## Forbidden
+
+- Random tags like `"Home"`, `"DEBUG"`, `"xxx"`
+- Logs with no class/function context
+- Logging secrets or full user personal data
