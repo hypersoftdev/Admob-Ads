@@ -11,7 +11,7 @@ import com.hypersoft.ads.practice.gmaAds.banner.model.anchoredBannerFormat
 /**
  * Placement ids used by the app (`adsManager.banner.load(DASHBOARD)`).
  * Add a new constant here, then a matching row in [BannerAdConfig],
- * plus a string in `ad_ids.xml`. See `gmaAds/README.md`.
+ * plus a resValue in `gmaAds/build.gradle.kts` (debug and release). See `gmaAds/README.md`.
  */
 enum class BannerAdKey(val value: String) {
     LANGUAGE("language"),
@@ -24,11 +24,11 @@ enum class BannerAdKey(val value: String) {
 /* ------------------------------------------- Catalog ------------------------------------------- */
 
 /**
- * Single catalog for banner placements. Edit this file (and `ad_ids.xml`)
+ * Single catalog for banner placements. Edit this file (and `gmaAds/build.gradle.kts`)
  * to add, remove, or change ads. See `gmaAds/README.md`.
  *
  * [BannerPlacement] fields:
- * - **adUnitResId** — AdMob unit from `ad_ids.xml`.
+ * - **adUnitResId** — AdMob unit from `gmaAds/build.gradle.kts`.
  * - **slot** — fallback family ([BannerSlot.TOP] / [BannerSlot.BOTTOM] /
  *   [BannerSlot.INLINE] / [BannerSlot.MREC]). Fallback never crosses slots.
  * - **format** — resolved from Remote Config (anchored: `0` off, `1` adaptive,

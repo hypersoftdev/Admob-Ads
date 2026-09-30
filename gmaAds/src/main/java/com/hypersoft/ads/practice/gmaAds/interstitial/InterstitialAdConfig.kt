@@ -9,7 +9,7 @@ import com.hypersoft.ads.practice.gmaAds.interstitial.model.InterstitialPlacemen
 /**
  * Placement ids used by the app (`adsManager.interstitial.load(HOME)`).
  * Add a new constant here, then a matching row in [InterstitialAdConfig],
- * plus a string in `ad_ids.xml`. See `gmaAds/README.md`.
+ * plus a resValue in `gmaAds/build.gradle.kts` (debug and release). See `gmaAds/README.md`.
  */
 enum class InterstitialAdKey(val value: String) {
     ENTRANCE("entrance"),
@@ -23,11 +23,11 @@ enum class InterstitialAdKey(val value: String) {
 /* ------------------------------------------- Catalog ------------------------------------------- */
 
 /**
- * Single catalog for interstitial placements. Edit this file (and `ad_ids.xml`)
+ * Single catalog for interstitial placements. Edit this file (and `gmaAds/build.gradle.kts`)
  * to add, remove, or change ads. See `gmaAds/README.md`.
  *
  * [InterstitialPlacement] fields:
- * - **adUnitResId** — AdMob unit from `ad_ids.xml`.
+ * - **adUnitResId** — AdMob unit from `gmaAds/build.gradle.kts`.
  * - **canBeUsedAsFallback** — other placements may show this ad if theirs is missing.
  * - **canUseAvailableFallback** — this placement may show another fallback ad.
  * - **navigateOn** — [InterstitialNavigateOn.IMPRESSION] or [InterstitialNavigateOn.DISMISS]
