@@ -204,6 +204,7 @@ koin.get<BillingDataSource>().start(applicationScope)
 - Pref key `is_app_purchased` (boolean, default `false`)
 - Sync from `purchasesState` + set on `PurchaseOutcome.Success` / `AlreadyOwned`
 - Gate ads managers on `isAppPurchased` — do not convert ads to MVI as part of billing work unless the user **explicitly** asks
+- After `isAppPurchased = true` (Success, AlreadyOwned, or mid-session `purchasesState`), call `adsManager.destroyCachedAds()` from `:app`. Do not call it from `:data` / `BillingDataSource`. See `gmaAds/README.md` Paid user
 - Non-consumable in-app → same flag; consumable → separate balance unless product says otherwise
 
 ---
@@ -271,7 +272,7 @@ When `writeTestsWithFeatures: true` (`test-unit`):
 - [ ] Singleton `BillingManager` + Application connect
 - [ ] Prefer-trial mapper; `offerId` in `purchaseSubs`
 - [ ] In-app in correct `setNonConsumables` / `setConsumables`
-- [ ] `isAppPurchased` synced; ads gated
+- [ ] `isAppPurchased` synced; ads gated; `adsManager.destroyCachedAds()` called from `:app` after the flag becomes true
 - [ ] Fake purchase debug only
 - [ ] Paywall strings in `:core-ui`; portrait + landscape
 

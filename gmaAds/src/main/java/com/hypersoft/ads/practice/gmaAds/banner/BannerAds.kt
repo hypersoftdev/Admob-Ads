@@ -19,8 +19,6 @@ import com.hypersoft.ads.practice.gmaAds.common.AdsSdk
 import com.hypersoft.ads.practice.gmaAds.common.BannerShowResult
 import com.hypersoft.ads.practice.gmaAds.common.extensions.hostActivity
 import com.hypersoft.ads.practice.gmaAds.common.extensions.isSafeForAd
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -40,18 +38,6 @@ class BannerAds internal constructor(
 ) {
 
     fun load(activity: Activity, key: BannerAdKey, adWidthDp: Int): Flow<AdLoadResult> = flow {
-        try {
-            adsSdk.initialize()
-        } catch (e: TimeoutCancellationException) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout")))
-            return@flow
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed")))
-            return@flow
-        }
-
         val placement = BannerAdConfig[key]
         val request = BannerLoadRequest(
             key = key,
@@ -67,18 +53,24 @@ class BannerAds internal constructor(
             isActivitySafe = activity.isSafeForAd(),
         )
         when (val validation = validator.validateLoad(request)) {
-            is BannerLoadValidation.Valid -> emitAll(
-                controller.load(
-                    key = key,
-                    activity = validation.activity,
-                    adUnitId = validation.adUnitId,
-                    adWidthDp = validation.adWidthDp,
-                    format = validation.format,
-                    maxHeightDp = validation.maxHeightDp,
-                ),
-            )
-
             is BannerLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
+            is BannerLoadValidation.Valid -> {
+                val sdkFailure = adsSdk.initializeForLoad()
+                if (sdkFailure != null) {
+                    emit(sdkFailure)
+                    return@flow
+                }
+                emitAll(
+                    controller.load(
+                        key = key,
+                        activity = validation.activity,
+                        adUnitId = validation.adUnitId,
+                        adWidthDp = validation.adWidthDp,
+                        format = validation.format,
+                        maxHeightDp = validation.maxHeightDp,
+                    ),
+                )
+            }
         }
     }
 

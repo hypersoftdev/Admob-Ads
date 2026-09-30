@@ -3,7 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
+    <application android:theme="@style/Theme.Admob.Ads">
 
         <meta-data
             android:name="com.google.android.gms.ads.flag.NATIVE_AD_DEBUGGER_ENABLED"
@@ -11,8 +11,7 @@
 
         <activity
             android:name=".appOpen.AppOpenLoadingActivity"
-            android:exported="false"
-            android:theme="@style/Theme.GmaAds.AppOpenLoading" />
+            android:exported="false" />
 
     </application>
 </manifest>

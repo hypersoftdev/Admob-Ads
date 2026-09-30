@@ -1,4 +1,5 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Admob.Ads" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->

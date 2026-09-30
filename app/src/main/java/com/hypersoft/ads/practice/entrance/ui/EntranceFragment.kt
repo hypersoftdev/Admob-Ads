@@ -50,9 +50,10 @@ class EntranceFragment : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         when (effect) {
             EntranceEffect.InitializeConsent -> initializeConsent()
             EntranceEffect.LoadAds -> loadAds()
-            EntranceEffect.NavigateToLanguage -> showEntranceAd { findNavController().navigate(R.id.action_entranceFragment_to_languageFragment) }
-            EntranceEffect.NavigateToOnboarding -> showEntranceAd { findNavController().navigate(R.id.action_entranceFragment_to_onboardingFragment) }
-            EntranceEffect.NavigateToMenu -> showEntranceAd { findNavController().navigate(R.id.action_entranceFragment_to_menuFragment) }
+            EntranceEffect.NavigateToLanguage -> leaveEntrance { findNavController().navigate(R.id.action_entranceFragment_to_languageFragment) }
+            EntranceEffect.NavigateToOnboarding -> leaveEntrance { findNavController().navigate(R.id.action_entranceFragment_to_onboardingFragment) }
+            EntranceEffect.NavigateToMenu -> leaveEntrance { findNavController().navigate(R.id.action_entranceFragment_to_menuFragment) }
+            EntranceEffect.NavigateToDashboard -> findNavController().navigate(R.id.action_entranceFragment_to_dashboardFragment)
         }
     }
 
@@ -87,8 +88,12 @@ class EntranceFragment : BaseFragment<FragmentEntranceBinding>(FragmentEntranceB
         preloadFunnelAds()
     }
 
-    private fun showEntranceAd(onDone: () -> Unit) {
-        showAppOpenOrInterstitialAd(AppOpenAdKey.ENTRANCE, InterstitialAdKey.ENTRANCE, onDone)
+    private fun leaveEntrance(onDone: () -> Unit) {
+        if (viewModel.state.value.skipAds) {
+            onDone()
+        } else {
+            showAppOpenOrInterstitialAd(AppOpenAdKey.ENTRANCE, InterstitialAdKey.ENTRANCE, onDone)
+        }
     }
 
     private fun preloadFunnelAds() {

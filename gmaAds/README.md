@@ -12,7 +12,20 @@ Each format is a pipeline: **config → validation → (interstitial counter) �
 - **`AdsManager`** is the facade: `adsManager.appOpen` / `banner` / `interstitial` / `native` / `rewarded` / `rewardedInterstitial`.
 - **Extensions** (`FragmentExtenions.kt`, `ActivityExtenions.kt`) are what `:app` calls.
 
-Consent runs on Entrance (`ConsentManager`). SDK init is inside each `load`. Fullscreen formats share `FullscreenAdGate` so two overlays do not show at once.
+Consent runs on Entrance (`ConsentManager`). Each `load` validates premium, remote config, and internet before `MobileAds.initialize()`, so a paid or offline user fails immediately and ad placeholders can hide without waiting on the SDK. Fullscreen formats share `FullscreenAdGate` so two overlays do not show at once.
+
+## Paid user
+
+Validators already reject `load` / `show` when `SharedPrefManager.isAppPurchased` is true. `AppOpenLifecycle` also skips `AppOpenLoadingActivity` when the user is paid or offline.
+
+That does **not** release ads already sitting in memory. After a purchase is saved, `:app` must call `adsManager.destroyCachedAds()`. That drops app open, banner, interstitial, native, rewarded, and rewarded interstitial caches (banner/native include ads that never got an impression).
+
+```kotlin
+sharedPrefRepository.setAppPurchased(true)
+adsManager.destroyCachedAds()
+```
+
+Call it on `PurchaseOutcome.Success` and `AlreadyOwned`, and when a mid-session `purchasesState` sync sets the flag true. Do **not** call it from `:data` or `BillingDataSource` — `:data` must not depend on `:gmaAds`. A failed or cancelled purchase must leave the cache alone. Restore at cold start can call it; caches are empty, so it is a no-op.
 
 You do **not** edit controller/validator to add a placement. You add a key, a config row, a `resValue` in both `debug` and `release` in `gmaAds/build.gradle.kts`, a Remote Config flag in `:data`, then `load` / `show` on the screen.
 

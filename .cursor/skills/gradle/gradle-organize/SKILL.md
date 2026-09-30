@@ -161,18 +161,18 @@ Derive `AppName` / `Account` from existing `archivesName`, folder name, or `proj
 
 Keep the same **relative** order. **Do not add** what does not belong:
 
-| Section                    | Include?                                                  |
-|----------------------------|-----------------------------------------------------------|
-| `plugins`                  | Yes (`android.library` + extras the module already needs) |
-| `namespace` / `compileSdk` | Yes                                                       |
-| `defaultConfig`            | `minSdk` only — no `applicationId` / versions             |
-| `signingConfigs`           | **No**                                                    |
-| `buildTypes`               | Yes — minify **off** for debug + release                  |
-| `buildFeatures`            | Only if UI / needed (`viewBinding`, `buildConfig`)        |
-| `compileOptions`           | Yes                                                       |
-| `kotlin` / `jvm`           | Only if already present                                   |
-| `bundle`                   | **No**                                                    |
-| `base`                     | **No**                                                    |
+| Section                    | Include?                                                                                                                                     |
+|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `plugins`                  | Yes (`android.library` + extras the module already needs)                                                                                    |
+| `namespace` / `compileSdk` | Yes                                                                                                                                          |
+| `defaultConfig`            | `minSdk` only — no `applicationId` / versions                                                                                                |
+| `signingConfigs`           | **No**                                                                                                                                       |
+| `buildTypes`               | Only when the module needs them. Optimization off. No ProGuard or `consumerProguardFiles` — consumer rules go in `src/main/keepRules/*.keep` |
+| `buildFeatures`            | Only if UI / needed (`viewBinding`, `buildConfig`)                                                                                           |
+| `compileOptions`           | Yes                                                                                                                                          |
+| `kotlin` / `jvm`           | Only if already present                                                                                                                      |
+| `bundle`                   | **No**                                                                                                                                       |
+| `base`                     | **No**                                                                                                                                       |
 
 `:domain` / `:core-common` often omit `buildFeatures`. Preserve lean modules — do not add View Binding where unused. Use the library template in [reference/gradle.md](../../../rules/reference/gradle.md).
 

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import com.hypersoft.ads.practice.core.platform.InternetManager
 import com.hypersoft.ads.practice.data.sharedPreferences.dataSource.SharedPrefManager
-import com.hypersoft.ads.practice.gmaAds.common.AdFailureReason
 import com.hypersoft.ads.practice.gmaAds.common.AdLoadResult
 import com.hypersoft.ads.practice.gmaAds.common.AdsSdk
 import com.hypersoft.ads.practice.gmaAds.common.RewardedShowResult
@@ -14,8 +13,6 @@ import com.hypersoft.ads.practice.gmaAds.rewarded.request.RewardedShowRequest
 import com.hypersoft.ads.practice.gmaAds.rewarded.validation.RewardedAdValidator
 import com.hypersoft.ads.practice.gmaAds.rewarded.validation.RewardedLoadValidation
 import com.hypersoft.ads.practice.gmaAds.rewarded.validation.RewardedShowValidation
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -40,23 +37,11 @@ class RewardedAds internal constructor(
     /**
      * Request an ad for [key].
      *
-     * Order: init GMA SDK → read [RewardedAdConfig] → validate
-     * (premium / RC / internet / ad unit) → controller load.
+     * Order: read [RewardedAdConfig] → validate
+     * (premium / RC / internet / ad unit) → init GMA SDK → controller load.
      * Controller may skip when a fallback is already loaded or still in flight.
      */
     fun load(key: RewardedAdKey): Flow<AdLoadResult> = flow {
-        try {
-            adsSdk.initialize()
-        } catch (e: TimeoutCancellationException) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout")))
-            return@flow
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed")))
-            return@flow
-        }
-
         val placement = RewardedAdConfig[key]
         val request = RewardedLoadRequest(
             key = key,
@@ -67,11 +52,15 @@ class RewardedAds internal constructor(
             isAppPurchased = sharedPrefManager.isAppPurchased,
         )
         when (val validation = validator.validateLoad(request)) {
-            is RewardedLoadValidation.Valid -> emitAll(
-                controller.load(key, validation.context, validation.adUnitId),
-            )
-
             is RewardedLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
+            is RewardedLoadValidation.Valid -> {
+                val sdkFailure = adsSdk.initializeForLoad()
+                if (sdkFailure != null) {
+                    emit(sdkFailure)
+                    return@flow
+                }
+                emitAll(controller.load(key, validation.context, validation.adUnitId))
+            }
         }
     }
 

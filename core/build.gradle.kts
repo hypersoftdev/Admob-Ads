@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {
@@ -27,6 +26,7 @@ android {
 dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.material)
 
     implementation(libs.koin.android)
     implementation(libs.koin.core.coroutines)

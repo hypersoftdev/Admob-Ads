@@ -48,14 +48,15 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = ".testing"
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            optimization {
+                enable = false
+            }
         }
         release {
             signingConfig = signingConfigs.getByName("release")
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            optimization {
+                enable = true // Code shrinking, obfuscation, and optimized resource shrinking.
+            }
         }
     }
 
@@ -94,7 +95,7 @@ Same section order as `:app`, but **do not add** app-only pieces:
 | `compileSdk`            | Yes                                                                |
 | `defaultConfig`         | `minSdk` only (no `applicationId` / `versionCode` / `versionName`) |
 | `signingConfigs`        | **Never**                                                          |
-| `buildTypes`            | Yes — `isMinifyEnabled = false` for debug + release                |
+| `buildTypes`            | Only when the module needs them. Do not enable optimization. No `proguardFiles` / `consumerProguardFiles` |
 | `buildFeatures`         | Only when needed (View Binding / `buildConfig` on UI modules)      |
 | `compileOptions`        | Yes (Java 17)                                                      |
 | `kotlin` / `jvm`        | Only if already present in that project                            |
@@ -112,17 +113,6 @@ android {
 
     defaultConfig {
         minSdk = 24
-    }
-
-    buildTypes {
-        debug {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
     }
 
     buildFeatures {
@@ -329,26 +319,29 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 - Keep modules independent â€” no circular deps
 - Feature modules must not depend on each other directly
 - Enable View Binding on UI modules â€” never enable Data Binding
-- App release: minify + shrink; library modules: minify off
+- App release: `optimization { enable = true }` (R8 code + resource optimization); library modules: optimization off
 
 ## Build types
 
-- Debug (`:app`): `applicationIdSuffix = ".testing"`, no minify
-- Release (`:app`): `signingConfig = signingConfigs.getByName("release")`, minify + shrink + ProGuard/R8
-- Library modules: minify off for both debug and release
+- Debug (`:app`): `applicationIdSuffix = ".testing"`, `optimization { enable = false }`
+- Release (`:app`): `signingConfig = signingConfigs.getByName("release")`, `optimization { enable = true }` (default Android keep rules included)
+- Library modules: do not enable optimization
 - Prefer no product flavors unless product requires them
 - Signing: always declare `signingConfigs` on `:app` (see above); passwords empty unless already present in the project — prefer CI / `local.properties` over committing secrets
 
-## ProGuard
+## Keep rules (AGP 9.3+)
 
-- Keep rules in **app** module only unless module-specific needs arise
+Do not use `proguardFiles`, `getDefaultProguardFile`, `proguard-rules.pro`, or `consumerProguardFiles` / `consumer-rules.pro`.
+
+- App custom rules: `app/src/<sourceSet>/keepRules/*.keep` (suffix must be `.keep`). Picked up when `optimization.enable` is true. Default Android rules (the old `proguard-android-optimize.txt`) are included unless `optimization.keepRules.includeDefault = false`
+- Library consumer rules: `<module>/src/main/keepRules/*.keep`. AGP packages them into the AAR. No Gradle DSL line
 - Preserve (adjust package to app id):
     - `domain.entity.**`
     - `presentation.**.state.**` / `intent.**` / `effect.**` / `model.**`
     - ads entity packages when ads module exists
 - Keep Parcelable/Serializable names; keep SourceFile/LineNumberTable for Crashlytics
-- `android.enableR8.fullMode=true` when project uses it
-- Library modules: `isMinifyEnabled = false` typically
+- R8 full mode is the AGP default — do not set `android.enableR8.fullMode=false`
+- Library modules: leave optimization off
 
 ## Other
 
