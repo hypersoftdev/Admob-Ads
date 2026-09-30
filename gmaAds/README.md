@@ -14,20 +14,20 @@ Each format is a pipeline: **config → validation → (interstitial counter) �
 
 Consent runs on Entrance (`ConsentManager`). SDK init is inside each `load`. Fullscreen formats share `FullscreenAdGate` so two overlays do not show at once.
 
-You do **not** edit controller/validator to add a placement. You add a key, a config row, an `ad_ids.xml` string, a Remote Config flag in `:data`, then `load` / `show` on the screen.
+You do **not** edit controller/validator to add a placement. You add a key, a config row, a `resValue` in both `debug` and `release` in `gmaAds/build.gradle.kts`, a Remote Config flag in `:data`, then `load` / `show` on the screen.
 
-Catalog files, extensions, `ad_ids.xml`, and Koin are grouped in this order: **App Open → Banner → Interstitial → Native → Rewarded → Rewarded Interstitial**.
+Catalog files, extensions, `gmaAds/build.gradle.kts` ad ids, and Koin are grouped in this order: **App Open → Banner → Interstitial → Native → Rewarded → Rewarded Interstitial**.
 
 ## Call shapes
 
-| Format | Load | Show | Destroy / lifecycle |
-|---|---|---|---|
-| App Open | `loadAppOpenAd(key)` | `showAppOpenAd(key)` or `showAppOpenOrInterstitialAd(ao, inter)` | `blockAppOpen` / `unblockAppOpen` |
-| Banner | `loadBannerAd(key, container)` only (load+show) | — | `pause` / `resume`; `container.clearView()` in `onDestroyView`; `destroyBannerAd` in `onDestroy` when leaving for good |
-| Interstitial | `loadInterstitialAd(key)` | `showInterstitialAd(key) { continue }` | none |
-| Native | `loadNativeAd(key)` preload **or** `loadNativeAd(key, container)` same screen | `showNativeAd(key, container)` after preload | `destroyNativeAd` when the screen is gone and `cache = false` |
-| Rewarded | `loadRewardedAd(key)` | `showRewardedAd(key) { granted -> }` | none |
-| Rewarded interstitial | `loadRewardedInterstitialAd(key)` | `showRewardedInterstitialAd(key) { granted -> }` | none |
+| Format                | Load                                                                          | Show                                                             | Destroy / lifecycle                                                                                                    |
+|-----------------------|-------------------------------------------------------------------------------|------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|
+| App Open              | `loadAppOpenAd(key)`                                                          | `showAppOpenAd(key)` or `showAppOpenOrInterstitialAd(ao, inter)` | `blockAppOpen` / `unblockAppOpen`                                                                                      |
+| Banner                | `loadBannerAd(key, container)` only (load+show)                               | —                                                                | `pause` / `resume`; `container.clearView()` in `onDestroyView`; `destroyBannerAd` in `onDestroy` when leaving for good |
+| Interstitial          | `loadInterstitialAd(key)`                                                     | `showInterstitialAd(key) { continue }`                           | none                                                                                                                   |
+| Native                | `loadNativeAd(key)` preload **or** `loadNativeAd(key, container)` same screen | `showNativeAd(key, container)` after preload                     | `destroyNativeAd` when the screen is gone and `cache = false`                                                          |
+| Rewarded              | `loadRewardedAd(key)`                                                         | `showRewardedAd(key) { granted -> }`                             | none                                                                                                                   |
+| Rewarded interstitial | `loadRewardedInterstitialAd(key)`                                             | `showRewardedInterstitialAd(key) { granted -> }`                 | none                                                                                                                   |
 
 Do not inject `AdsManager` in fragments.
 
@@ -41,12 +41,12 @@ Same five steps for every format. Extra UI steps only for banner and native.
 
 1. Enum value on `*AdKey` (string id is log-only).
 2. Matching row in that format’s `*AdConfig` `placements` map.
-3. AdMob unit in `src/main/res/values/ad_ids.xml`.
+3. AdMob unit as `resValue` in both `debug` and `release` in `gmaAds/build.gradle.kts`.
 4. Remote Config in `:data`:
-   - Key constant + `rc*` property on `SharedPrefManager`
-   - Default in `RemoteConfigDataSource.DEFAULTS`
-   - Copy into prefs in `RemoteConfigRepositoryImpl`
-   - Same key in Firebase Remote Config
+    - Key constant + `rc*` property on `SharedPrefManager`
+    - Default in `RemoteConfigDataSource.DEFAULTS`
+    - Copy into prefs in `RemoteConfigRepositoryImpl`
+    - Same key in Firebase Remote Config
 5. `isEnabled = { it.rcYourFlag != 0 }` on the placement (banner TOP/BOTTOM also uses the same RC int for format: `1` adaptive, `2` collapsible).
 6. `load` / `show` on the screen (see format below).
 
@@ -54,7 +54,7 @@ Same five steps for every format. Extra UI steps only for banner and native.
 
 1. Delete load/show (and XML container) from the screen.
 2. Delete the config row and enum value.
-3. Delete the `ad_ids.xml` string.
+3. Delete the `resValue` from both `debug` and `release` in `gmaAds/build.gradle.kts`.
 4. Delete the RC key from `:data` and Firebase.
 5. Search the key name and confirm nothing still references it.
 
@@ -70,10 +70,10 @@ Placement fields: `adUnitResId`, `canBeUsedAsFallback`, `canUseAvailableFallback
 
 Two roles:
 
-| Key | When |
-|---|---|
-| `ENTRANCE` | Load on Entrance with interstitial. Show via `showAppOpenOrInterstitialAd` (app open first; interstitial if app open did not display). |
-| `LIFECYCLE` | Process foreground. |
+| Key         | When                                                                                                                                   |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `ENTRANCE`  | Load on Entrance with interstitial. Show via `showAppOpenOrInterstitialAd` (app open first; interstitial if app open did not display). |
+| `LIFECYCLE` | Process foreground.                                                                                                                    |
 
 `AppOpenAdConfig.LOAD_LIFECYCLE_WITH_LOADING_SCREEN`:
 
@@ -82,7 +82,7 @@ Two roles:
 
 `shouldBlock` is true on Entrance (`blockAppOpen()`). `showAppOpenOrInterstitialAd` clears it. Keep it true through splash so a process `ON_START` does not steal the splash ad. Dashboard calls `unblockAppOpen()`.
 
-**Add:** key + config + `ad_ids.xml` + RC (`!= 0` on). Load where you want inventory; show on the event. For a new splash-style ad, use `showAppOpenOrInterstitialAd` or `showAppOpenAd`. For a new resume ad, you usually extend `LIFECYCLE`, not a third key.
+**Add:** key + config + `resValue` + RC (`!= 0` on). Load where you want inventory; show on the event. For a new splash-style ad, use `showAppOpenOrInterstitialAd` or `showAppOpenAd`. For a new resume ad, you usually extend `LIFECYCLE`, not a third key.
 
 **Remove:** drop load/show. If you remove `LIFECYCLE`, also stop `AppOpenLifecycle` / loading activity usage. If you remove `ENTRANCE`, Entrance should `showInterstitialAd` only (or navigate with no fullscreen).
 
@@ -96,11 +96,11 @@ Placement fields: `adUnitResId`, `slot`, `format`, `canBeUsedAsFallback`, `canUs
 
 Slots (fallback never crosses slots):
 
-| Slot | Format | RC |
-|---|---|---|
-| `TOP` / `BOTTOM` | adaptive or collapsible | `0` off, `1` adaptive, `2` collapsible |
-| `MREC` | 300×250 | `0` off, `!= 0` on |
-| `INLINE` | inline adaptive, `maxHeightDp` | `0` off, `!= 0` on |
+| Slot             | Format                         | RC                                     |
+|------------------|--------------------------------|----------------------------------------|
+| `TOP` / `BOTTOM` | adaptive or collapsible        | `0` off, `1` adaptive, `2` collapsible |
+| `MREC`           | 300×250                        | `0` off, `!= 0` on                     |
+| `INLINE`         | inline adaptive, `maxHeightDp` | `0` off, `!= 0` on                     |
 
 Fallback only if the source ad has **not** received an impression. Same slot only (top adaptive ↔ collapsible_top, never MREC ↔ adaptive, never top ↔ bottom).
 
@@ -235,12 +235,12 @@ showRewardedInterstitialAd(RewardedInterstitialAdKey.HOME) { granted -> }
 
 ## Remote Config cheat sheet
 
-| Format | Off | On |
-|---|---|---|
-| App Open, interstitial, native, rewarded, rewarded interstitial | `0` | `!= 0` |
-| Banner TOP/BOTTOM | `0` | `1` adaptive, `2` collapsible |
-| Banner MREC/INLINE | `0` | `!= 0` |
-| Interstitial counter | — | integer `n` for n-1 cap |
+| Format                                                          | Off | On                            |
+|-----------------------------------------------------------------|-----|-------------------------------|
+| App Open, interstitial, native, rewarded, rewarded interstitial | `0` | `!= 0`                        |
+| Banner TOP/BOTTOM                                               | `0` | `1` adaptive, `2` collapsible |
+| Banner MREC/INLINE                                              | `0` | `!= 0`                        |
+| Interstitial counter                                            | —   | integer `n` for n-1 cap       |
 
 RC is fetched into `SharedPrefManager`. Placements read prefs, not Firebase, at load time.
 

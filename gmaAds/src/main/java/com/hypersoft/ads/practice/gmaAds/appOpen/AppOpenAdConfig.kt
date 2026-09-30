@@ -10,7 +10,7 @@ import com.hypersoft.ads.practice.gmaAds.appOpen.model.AppOpenPlacement
 /**
  * Placement ids used by the app (`adsManager.appOpen.load(ENTRANCE)`).
  * Add a new constant here, then a matching row in [AppOpenAdConfig],
- * plus a string in `ad_ids.xml`. See `gmaAds/README.md`.
+ * plus a resValue in `gmaAds/build.gradle.kts` (debug and release). See `gmaAds/README.md`.
  */
 enum class AppOpenAdKey(val value: String) {
     LIFECYCLE("lifecycle"),
@@ -20,7 +20,7 @@ enum class AppOpenAdKey(val value: String) {
 /* ------------------------------------------- Catalog ------------------------------------------- */
 
 /**
- * Single catalog for app-open placements. Edit this file (and `ad_ids.xml`)
+ * Single catalog for app-open placements. Edit this file (and `gmaAds/build.gradle.kts`)
  * to add, remove, or change ads. See `gmaAds/README.md`.
  *
  * [LOAD_LIFECYCLE_WITH_LOADING_SCREEN]:
@@ -30,7 +30,7 @@ enum class AppOpenAdKey(val value: String) {
  *   and reload after [AppOpenLifecycle] show dismisses).
  *
  * [AppOpenPlacement] fields:
- * - **adUnitResId** — AdMob unit from `ad_ids.xml`.
+ * - **adUnitResId** — AdMob unit from `gmaAds/build.gradle.kts`.
  * - **canBeUsedAsFallback** — other placements may show this ad if theirs is missing.
  * - **canUseAvailableFallback** — this placement may show another fallback ad.
  * - **navigateOn** — [AppOpenNavigateOn.IMPRESSION] or [AppOpenNavigateOn.DISMISS].
