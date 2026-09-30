@@ -6,4 +6,5 @@ sealed class EntranceEffect {
     data object NavigateToLanguage : EntranceEffect()
     data object NavigateToOnboarding : EntranceEffect()
     data object NavigateToMenu : EntranceEffect()
+    data object NavigateToDashboard : EntranceEffect()
 }

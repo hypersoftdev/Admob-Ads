@@ -27,9 +27,12 @@ Screens run in this order. Do not skip or reorder this funnel unless product log
 
 Forward navigation:
 
-- First-time user: `Entrance → Language → OnBoarding → Dashboard`
+- First-time user: `Entrance → Language → OnBoarding → Dashboard` (purchased or not)
 - Returning user: `Entrance → Menu → Dashboard`
+- Purchased returning user: `Entrance → Dashboard` (skip Menu and ads)
 - Language already selected, onboarding incomplete: `Entrance → OnBoarding → Dashboard`
+
+Entrance starts Remote Config and does not wait for it. Consent is capped at 8 seconds, then ad load/show at 8 seconds. When `isAppPurchased` is true, that work is cancelled. A first-time purchase still opens Language or Onboarding.
 
 ## Conventions
 

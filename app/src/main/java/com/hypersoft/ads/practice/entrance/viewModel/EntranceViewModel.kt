@@ -40,6 +40,7 @@ class EntranceViewModel(
 
     private var consentTimerJob: Job? = null
     private var adsTimerJob: Job? = null
+    private var purchaseWatchJob: Job? = null
     private var screenStarted: Boolean = false
     private var adsFlowStarted: Boolean = false
 
@@ -58,9 +59,16 @@ class EntranceViewModel(
         if (screenStarted) return
         screenStarted = true
 
-        val cached = remoteConfigRepository.fetchAndCache()
-        Log.d(TAG, "EntranceViewModel: onScreenStarted: Success: remoteConfigCached=$cached")
+        viewModelScope.launch(exceptionHandler) {
+            remoteConfigRepository.fetchAndCache()
+        }
 
+        if (sharedPrefRepository.isAppPurchased()) {
+            onPurchased()
+            return
+        }
+
+        watchPurchase()
         _state.update { it.copy(isConsentTimerRunning = true) }
         _effect.emit(EntranceEffect.InitializeConsent)
 
@@ -70,12 +78,40 @@ class EntranceViewModel(
         }
     }
 
+    private fun watchPurchase() {
+        purchaseWatchJob = viewModelScope.launch(exceptionHandler) {
+            while (!_state.value.hasResolvedDestination) {
+                if (sharedPrefRepository.isAppPurchased()) {
+                    onPurchased()
+                    return@launch
+                }
+                delay(PURCHASE_POLL_MS.milliseconds)
+            }
+        }
+    }
+
+    private suspend fun onPurchased() {
+        if (_state.value.hasResolvedDestination) return
+        consentTimerJob?.cancel()
+        adsTimerJob?.cancel()
+        _state.update {
+            it.copy(
+                isConsentTimerRunning = false,
+                isAdsTimerRunning = false,
+                skipAds = true,
+            )
+        }
+        Log.d(TAG, "EntranceViewModel: onPurchased: Success: skipAds")
+        resolveDestination()
+    }
+
     private fun onConsentFormShown() {
         consentTimerJob?.cancel()
         _state.update { it.copy(isConsentTimerRunning = false) }
     }
 
     private suspend fun onAdsCanBeLoaded() {
+        if (_state.value.skipAds || _state.value.hasResolvedDestination) return
         if (adsFlowStarted) return
         adsFlowStarted = true
 
@@ -115,6 +151,12 @@ class EntranceViewModel(
         if (_state.value.hasResolvedDestination) return
         _state.update { it.copy(isLoading = false, hasResolvedDestination = true) }
 
+        val purchased = _state.value.skipAds || sharedPrefRepository.isAppPurchased()
+        if (purchased && !sharedPrefRepository.isFirstTimeUser()) {
+            _effect.emit(EntranceEffect.NavigateToDashboard)
+            return
+        }
+
         if (!sharedPrefRepository.isFirstTimeUser()) {
             _effect.emit(EntranceEffect.NavigateToMenu)
             return
@@ -138,6 +180,7 @@ class EntranceViewModel(
 
     private companion object {
         const val CONSENT_TIMEOUT_MS = 8000L
-        const val ADS_TIMEOUT_MS = 9000L
+        const val ADS_TIMEOUT_MS = 8000L
+        const val PURCHASE_POLL_MS = 200L
     }
 }
