@@ -12,7 +12,7 @@ Each format is a pipeline: **config → validation → (interstitial counter) �
 - **`AdsManager`** is the facade: `adsManager.appOpen` / `banner` / `interstitial` / `native` / `rewarded` / `rewardedInterstitial`.
 - **Extensions** (`FragmentExtenions.kt`, `ActivityExtenions.kt`) are what `:app` calls.
 
-Consent runs on Entrance (`ConsentManager`). SDK init is inside each `load`. Fullscreen formats share `FullscreenAdGate` so two overlays do not show at once.
+Consent runs on Entrance (`ConsentManager`). Each `load` validates premium, remote config, and internet before `MobileAds.initialize()`, so a paid or offline user fails immediately and ad placeholders can hide without waiting on the SDK. Fullscreen formats share `FullscreenAdGate` so two overlays do not show at once.
 
 ## Paid user
 

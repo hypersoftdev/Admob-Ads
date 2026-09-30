@@ -10,12 +10,9 @@ import com.hypersoft.ads.practice.gmaAds.appOpen.request.AppOpenShowRequest
 import com.hypersoft.ads.practice.gmaAds.appOpen.validation.AppOpenAdValidator
 import com.hypersoft.ads.practice.gmaAds.appOpen.validation.AppOpenLoadValidation
 import com.hypersoft.ads.practice.gmaAds.appOpen.validation.AppOpenShowValidation
-import com.hypersoft.ads.practice.gmaAds.common.AdFailureReason
 import com.hypersoft.ads.practice.gmaAds.common.AdLoadResult
 import com.hypersoft.ads.practice.gmaAds.common.AdShowResult
 import com.hypersoft.ads.practice.gmaAds.common.AdsSdk
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -51,22 +48,10 @@ class AppOpenAds internal constructor(
     /**
      * Request an ad for [key].
      *
-     * Order: init GMA SDK → read [AppOpenAdConfig] → validate
-     * (premium / RC / internet / ad unit) → controller load.
+     * Order: read [AppOpenAdConfig] → validate
+     * (premium / RC / internet / ad unit) → init GMA SDK → controller load.
      */
     fun load(key: AppOpenAdKey): Flow<AdLoadResult> = flow {
-        try {
-            adsSdk.initialize()
-        } catch (e: TimeoutCancellationException) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout")))
-            return@flow
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed")))
-            return@flow
-        }
-
         val placement = AppOpenAdConfig[key]
         val request = AppOpenLoadRequest(
             key = key,
@@ -77,11 +62,15 @@ class AppOpenAds internal constructor(
             isAppPurchased = sharedPrefManager.isAppPurchased,
         )
         when (val validation = validator.validateLoad(request)) {
-            is AppOpenLoadValidation.Valid -> emitAll(
-                controller.load(key, validation.context, validation.adUnitId),
-            )
-
             is AppOpenLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
+            is AppOpenLoadValidation.Valid -> {
+                val sdkFailure = adsSdk.initializeForLoad()
+                if (sdkFailure != null) {
+                    emit(sdkFailure)
+                    return@flow
+                }
+                emitAll(controller.load(key, validation.context, validation.adUnitId))
+            }
         }
     }
 

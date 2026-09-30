@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import com.hypersoft.ads.practice.core.platform.InternetManager
 import com.hypersoft.ads.practice.data.sharedPreferences.dataSource.SharedPrefManager
-import com.hypersoft.ads.practice.gmaAds.common.AdFailureReason
 import com.hypersoft.ads.practice.gmaAds.common.AdLoadResult
 import com.hypersoft.ads.practice.gmaAds.common.AdShowResult
 import com.hypersoft.ads.practice.gmaAds.common.AdsSdk
@@ -16,8 +15,6 @@ import com.hypersoft.ads.practice.gmaAds.interstitial.request.InterstitialShowRe
 import com.hypersoft.ads.practice.gmaAds.interstitial.validation.InterstitialAdValidator
 import com.hypersoft.ads.practice.gmaAds.interstitial.validation.InterstitialLoadValidation
 import com.hypersoft.ads.practice.gmaAds.interstitial.validation.InterstitialShowValidation
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -43,24 +40,12 @@ class InterstitialAds internal constructor(
     /**
      * Request an ad for [key].
      *
-     * Order: init GMA SDK → read [InterstitialAdConfig] → validate
-     * (premium / RC / internet / ad unit) → frequency counter (if configured) → controller load.
+     * Order: read [InterstitialAdConfig] → validate
+     * (premium / RC / internet / ad unit) → frequency counter (if configured) → init GMA SDK → controller load.
      * Frequency-cap load ticks commit only when the controller starts a real SDK request.
      * Controller may skip when a fallback is already loaded or still in flight.
      */
     fun load(key: InterstitialAdKey): Flow<AdLoadResult> = flow {
-        try {
-            adsSdk.initialize()
-        } catch (e: TimeoutCancellationException) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout")))
-            return@flow
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed")))
-            return@flow
-        }
-
         val placement = InterstitialAdConfig[key]
         val request = InterstitialLoadRequest(
             key = key,
@@ -71,22 +56,33 @@ class InterstitialAds internal constructor(
             isAppPurchased = sharedPrefManager.isAppPurchased,
         )
         when (val validation = validator.validateLoad(request)) {
+            is InterstitialLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
             is InterstitialLoadValidation.Valid -> when (val decision = counter.evaluate(key)) {
                 CounterDecision.Skip -> emit(AdLoadResult.SkippedCounter)
-                CounterDecision.Allow -> emitAll(
-                    controller.load(key, validation.context, validation.adUnitId),
-                )
-                is CounterDecision.Arm -> emitAll(
-                    controller.load(
-                        key = key,
-                        context = validation.context,
-                        adUnitId = validation.adUnitId,
-                        onSdkRequest = { counter.commit(key, decision.nextCount) },
-                    ),
-                )
+                CounterDecision.Allow -> {
+                    val sdkFailure = adsSdk.initializeForLoad()
+                    if (sdkFailure != null) {
+                        emit(sdkFailure)
+                        return@flow
+                    }
+                    emitAll(controller.load(key, validation.context, validation.adUnitId))
+                }
+                is CounterDecision.Arm -> {
+                    val sdkFailure = adsSdk.initializeForLoad()
+                    if (sdkFailure != null) {
+                        emit(sdkFailure)
+                        return@flow
+                    }
+                    emitAll(
+                        controller.load(
+                            key = key,
+                            context = validation.context,
+                            adUnitId = validation.adUnitId,
+                            onSdkRequest = { counter.commit(key, decision.nextCount) },
+                        ),
+                    )
+                }
             }
-
-            is InterstitialLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
         }
     }
 

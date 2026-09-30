@@ -23,6 +23,23 @@ internal class AdsSdk(context: Context) {
     @Volatile
     private var isInitialized = false
 
+    /**
+     * Starts the SDK only after load validation has passed.
+     * Returns a failure when init times out or throws. Cancellation is rethrown.
+     */
+    suspend fun initializeForLoad(): AdLoadResult.Failed? {
+        return try {
+            initialize()
+            null
+        } catch (e: TimeoutCancellationException) {
+            AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout"))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed"))
+        }
+    }
+
     suspend fun initialize() {
         if (isInitialized) return
         initMutex.withLock {

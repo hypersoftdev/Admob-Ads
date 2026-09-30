@@ -19,8 +19,6 @@ import com.hypersoft.ads.practice.gmaAds.nativeAd.validation.NativeAdValidator
 import com.hypersoft.ads.practice.gmaAds.nativeAd.validation.NativeLoadValidation
 import com.hypersoft.ads.practice.gmaAds.nativeAd.validation.NativeShowValidation
 import com.hypersoft.ads.practice.gmaAds.nativeAd.view.NativeContainerView
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
@@ -42,18 +40,6 @@ class NativeAds internal constructor(
     private val context: Context = context.applicationContext
 
     fun load(key: NativeAdKey): Flow<AdLoadResult> = flow {
-        try {
-            adsSdk.initialize()
-        } catch (e: TimeoutCancellationException) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize timeout")))
-            return@flow
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            emit(AdLoadResult.Failed(AdFailureReason.Sdk(0, e.message ?: "SDK initialize failed")))
-            return@flow
-        }
-
         val placement = NativeAdConfig[key]
         val request = NativeLoadRequest(
             key = key,
@@ -64,11 +50,15 @@ class NativeAds internal constructor(
             isAppPurchased = sharedPrefManager.isAppPurchased,
         )
         when (val validation = validator.validateLoad(request)) {
-            is NativeLoadValidation.Valid -> emitAll(
-                controller.load(key, validation.context, validation.adUnitId),
-            )
-
             is NativeLoadValidation.Invalid -> emit(AdLoadResult.Failed(validation.reason))
+            is NativeLoadValidation.Valid -> {
+                val sdkFailure = adsSdk.initializeForLoad()
+                if (sdkFailure != null) {
+                    emit(sdkFailure)
+                    return@flow
+                }
+                emitAll(controller.load(key, validation.context, validation.adUnitId))
+            }
         }
     }
 
