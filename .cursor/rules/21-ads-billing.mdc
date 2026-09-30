@@ -40,7 +40,7 @@ release { resValue("string", "admob_banner_home_id", "ca-app-pub-…") } // prod
 - Persist entitlement (e.g. `isAppPurchased`) in SharedPreferences / DataStore via repository
 - Premium screens follow normal MVI feature packages (`premium/`)
 - Product IDs: constants in data/domain — not duplicated in UI
-- After purchase success: update entitlement, then let ads/UI react
+- After purchase success: save `isAppPurchased`, then `adsManager.destroyCachedAds()` from `:app` (not from `:data`). See `gmaAds/README.md` Paid user
 - Full subs + in-app playbook: [reference/premium-billing.md](reference/premium-billing.md)
 - Skills: `premium/implement-in-app-billing`, `premium/add-subscription-packages`, `premium/add-inapp-packages`
 

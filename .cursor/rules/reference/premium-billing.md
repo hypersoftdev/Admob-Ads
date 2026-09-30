@@ -267,14 +267,14 @@ koin.get<BillingDataSource>().start(applicationScope)
 
 ## 8. Pitfalls
 
-| Symptom                         | Cause                                                       |
-|---------------------------------|-------------------------------------------------------------|
-| Sheet has no free trial         | `offerId` null/omitted                                      |
-| “Product unavailable”           | ID mismatch, app not on tester track, `productsState` empty |
-| Premium lost after reinstall    | Not collecting `purchasesState`                             |
-| Ads after purchase              | Ads not reading `isAppPurchased`                            |
-| Duplicate BillingClient crashes | Multiple `BillingManager` instances                         |
-| In-app price missing            | Product not in `setNonConsumables` / `setConsumables`       |
+| Symptom                         | Cause                                                                                      |
+|---------------------------------|--------------------------------------------------------------------------------------------|
+| Sheet has no free trial         | `offerId` null/omitted                                                                     |
+| “Product unavailable”           | ID mismatch, app not on tester track, `productsState` empty                                |
+| Premium lost after reinstall    | Not collecting `purchasesState`                                                            |
+| Ads after purchase              | Flag not saved, or cached ads not released via `adsManager.destroyCachedAds()` from `:app` |
+| Duplicate BillingClient crashes | Multiple `BillingManager` instances                                                        |
+| In-app price missing            | Product not in `setNonConsumables` / `setConsumables`                                      |
 
 Never log purchase tokens or PII.
 
@@ -286,6 +286,6 @@ Never log purchase tokens or PII.
 
 **Console:** Option 1 IDs, trial offers active, license testers, in-app products created
 
-**Code:** `BillingProductIds` single source, singleton + Application connect, offerId in purchase calls, ads gated, fake purchase debug only, strings in `:core-ui`, portrait + landscape
+**Code:** `BillingProductIds` single source, singleton + Application connect, offerId in purchase calls, ads gated, `adsManager.destroyCachedAds()` from `:app` after `isAppPurchased = true` (not from `:data` — see `gmaAds/README.md` Paid user), fake purchase debug only, strings in `:core-ui`, portrait + landscape
 
 **QA:** Trial sheet matches UI, restore works, cancel no error toast
