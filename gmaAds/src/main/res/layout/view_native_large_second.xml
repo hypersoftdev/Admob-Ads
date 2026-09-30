@@ -14,7 +14,7 @@
             android:id="@+id/adMediaView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginVertical="8dp"
+            android:layout_margin="8dp"
             app:layout_constraintDimensionRatio="h,2.2:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHeight_min="120dp"
@@ -46,13 +46,14 @@
             android:includeFontPadding="false"
             android:paddingHorizontal="4dp"
             android:paddingVertical="2dp"
-            android:text="@string/native_ad_label"
+            android:text="Ad"
             android:textSize="10sp"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/adHeadline"
             app:layout_constraintStart_toEndOf="@+id/adAppIcon"
             app:layout_constraintTop_toTopOf="@+id/adHeadline"
+            tools:ignore="HardcodedText,SmallSp"
             tools:visibility="visible" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -60,15 +61,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="12dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/adBody"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/adAttribute"
-            app:layout_constraintTop_toTopOf="@+id/adAppIcon"
+            app:layout_constraintTop_toBottomOf="@+id/adMediaView"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="Test Ad: Google Ads" />
 
@@ -80,23 +79,19 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="12dp"
             android:maxLines="1"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            app:layout_constraintBottom_toBottomOf="@+id/adAppIcon"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/adAppIcon"
             app:layout_constraintTop_toBottomOf="@+id/adHeadline"
+            tools:ignore="SmallSp"
             tools:text="@tools:sample/lorem/random" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/mtvLoadingAds"
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrierNative"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/native_ad_loading"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="adAppIcon, adBody" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/adCallToAction"
@@ -107,15 +102,28 @@
             android:layout_marginBottom="8dp"
             android:insetTop="0dp"
             android:insetBottom="0dp"
-            android:paddingVertical="12dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:paddingVertical="16dp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:textSize="16sp"
+            android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/adAppIcon"
+            app:layout_constraintTop_toBottomOf="@+id/barrierNative"
             tools:text="Visit Site"
             tools:visibility="visible" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/mtvLoadingAds"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Loading Advertisement…"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
