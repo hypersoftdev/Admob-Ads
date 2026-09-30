@@ -73,6 +73,14 @@ internal class AppOpenLifecycle(
     }
 
     private fun canShowLifecycle(): Boolean {
+        if (appOpenAds.isAppPurchased) {
+            Log.d(TAG_ADS, "AppOpenLifecycle: canShowLifecycle: Blocked: premium")
+            return false
+        }
+        if (!appOpenAds.isInternetConnected) {
+            Log.d(TAG_ADS, "AppOpenLifecycle: canShowLifecycle: Blocked: no internet")
+            return false
+        }
         if (appOpenAds.shouldBlock) {
             Log.e(TAG_ADS, "lifecycle -> appOpen -> blocked (splash/premium)")
             return false

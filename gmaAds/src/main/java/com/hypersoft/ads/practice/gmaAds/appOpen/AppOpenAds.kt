@@ -25,7 +25,8 @@ import kotlinx.coroutines.flow.flowOf
  * Public app-open API: `adsManager.appOpen.load / show / destroy`.
  *
  * Placement policy lives in [AppOpenAdConfig]. This class only runs the pipeline.
- * [shouldBlock] is for the process-lifecycle observer (splash / premium), not for between-screen show.
+ * [shouldBlock] is for the process-lifecycle observer (splash), not for between-screen show.
+ * Paid users and offline devices are skipped via [isAppPurchased] and [isInternetConnected] before the loading activity opens.
  */
 class AppOpenAds internal constructor(
     context: Context,
@@ -40,6 +41,12 @@ class AppOpenAds internal constructor(
 
     @Volatile
     var shouldBlock: Boolean = true
+
+    val isAppPurchased: Boolean
+        get() = sharedPrefManager.isAppPurchased
+
+    val isInternetConnected: Boolean
+        get() = internetManager.isInternetConnected
 
     /**
      * Request an ad for [key].
