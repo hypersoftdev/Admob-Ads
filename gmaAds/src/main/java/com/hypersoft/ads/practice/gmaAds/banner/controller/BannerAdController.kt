@@ -194,26 +194,72 @@ internal class BannerAdController {
         val adView = AdView(activity)
         adView.adUnitId = adUnitId
         adView.setAdSize(resolveAdSize(activity, adWidthDp, format, maxHeightDp))
-        adView.adListener = object : AdListener() {
+        lateinit var listener: AdListener
+        listener = object : AdListener() {
+            private var hasLoaded = false
+
             override fun onAdLoaded() {
-                Log.i(TAG_ADS, "${key.value} -> banner -> load: Loaded")
+                val isRefresh = hasLoaded
+                hasLoaded = true
+                Log.i(
+                    TAG_ADS,
+                    if (isRefresh) {
+                        "${key.value} -> banner -> load: Refreshed"
+                    } else {
+                        "${key.value} -> banner -> load: Loaded"
+                    },
+                )
                 scope.launch {
-                    mutex.withLock {
+                    val discarded = mutex.withLock {
+                        if (adView.adListener !== listener) return@withLock true
                         finishLoadingLocked(key, success = true)
                         val previous = loadedAds[key]
-                        if (previous != null && shownViews[key] !== previous.adView) {
+                        if (
+                            previous != null &&
+                            previous.adView !== adView &&
+                            shownViews[key] !== previous.adView
+                        ) {
                             previous.adView.destroySafely()
                         }
-                        loadedAds[key] = LoadedBanner(adView, SystemClock.elapsedRealtime())
+                        val stillShown = previous != null && previous.adView === adView && previous.shown
+                        loadedAds[key] = LoadedBanner(
+                            adView = adView,
+                            loadedAtMs = SystemClock.elapsedRealtime(),
+                            shown = stillShown,
+                        )
                         pendingOwnLoadKeys.remove(key)
                         enqueueFallbackLocked(key)
+                        false
                     }
+                    if (discarded) {
+                        if (!isRefresh) {
+                            trySend(
+                                AdLoadResult.Failed(
+                                    AdFailureReason.Sdk(0, "Banner destroyed before load completed"),
+                                ),
+                            )
+                            close()
+                        }
+                        return@launch
+                    }
+                    if (isRefresh) return@launch
                     trySend(AdLoadResult.Loaded)
                     close()
                 }
             }
 
             override fun onAdFailedToLoad(error: LoadAdError) {
+                // AdMob reuses this listener for automatic refresh. A no-fill
+                // must leave the creative that is already on screen in place.
+                // Destroying it blanks the slot and keeps that dead AdView in
+                // cache, so the next visit reshows nothing and never reloads.
+                if (hasLoaded) {
+                    Log.w(
+                        TAG_ADS,
+                        "${key.value} -> banner -> load: Refresh failed, keeping current ad: ${error.message}",
+                    )
+                    return
+                }
                 Log.e(TAG_ADS, "${key.value} -> banner -> load: Failed: ${error.message}")
                 adView.destroySafely()
                 scope.launch {
@@ -225,10 +271,14 @@ internal class BannerAdController {
 
             override fun onAdImpression() {
                 scope.launch {
-                    mutex.withLock { markImpressionLocked(adView, key) }
+                    mutex.withLock {
+                        if (adView.adListener !== listener) return@withLock
+                        markImpressionLocked(adView, key)
+                    }
                 }
             }
         }
+        adView.adListener = listener
 
         var requested = false
         try {
@@ -284,8 +334,8 @@ internal class BannerAdController {
         return loadingKeys
             .filter {
                 it != except &&
-                    BannerAdConfig[it].canBeUsedAsFallback &&
-                    BannerAdConfig[it].slot == BannerAdConfig[except].slot
+                        BannerAdConfig[it].canBeUsedAsFallback &&
+                        BannerAdConfig[it].slot == BannerAdConfig[except].slot
             }
             .mapNotNull { loadingDeferreds[it] }
     }
